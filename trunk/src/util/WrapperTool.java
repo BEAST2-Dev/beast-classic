@@ -70,7 +70,7 @@ public class WrapperTool {
 						imports.addAll(typeToClasses(gpType[j]));
 						type = typeToShortString(gpType[j]);
 					}
-					inputs += "    Input<" + type + "> " + inputNames[j] + " = new Input<" + type + ">(\""
+					inputs += "    public Input<" + type + "> " + inputNames[j] + " = new Input<" + type + ">(\""
 							+ inputNames[j] + "\", \"description here\");\n";
 				}
 				break;

@@ -2,12 +2,13 @@ package beast.math.distributions;
 
 
 import beast.core.*;
+import beast.core.parameter.RealParameter;
 
 
 @Description("...")
 class MultivariateNormalDistribution extends Plugin {
-    Input<double []> mean = new Input<double []>("mean", "description here");
-    Input<double [][]> precision = new Input<double [][]>("precision", "description here");
+    public Input<RealParameter> mean = new Input<RealParameter>("mean", "description here");
+    public Input<RealParameter> precision = new Input<RealParameter>("precision", "description here");
 
 
 
@@ -17,14 +18,10 @@ class MultivariateNormalDistribution extends Plugin {
     @Override
     public void initAndValidate() throws Exception {
         multivariatenormaldistribution = new dr.math.distributions.MultivariateNormalDistribution(
-                             mean.get(),
-                             precision.get());
+                             mean.get().getValues(),
+                             precision.get().getValues());
     }
 
-
-    void main(String [] arg0) {
-        multivariatenormaldistribution.main(arg0);
-     }
     String getType() {
         return multivariatenormaldistribution.getType();
      }
@@ -97,5 +94,17 @@ class MultivariateNormalDistribution extends Plugin {
     void testRandomDraws() {
         multivariatenormaldistribution.testRandomDraws();
      }
+    public static void main(String[] args) {
+    	try {
+    		beast.math.distributions.MultivariateNormalDistribution m = new MultivariateNormalDistribution();
+	    	RealParameter mean = new RealParameter("0.0");
+	    	RealParameter precision = new RealParameter("1.0");
+	    	m.initByName("mean", mean, "precision", precision);
+	        m.testPdf();
+	        m.testRandomDraws();
+    	} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
 
 }
