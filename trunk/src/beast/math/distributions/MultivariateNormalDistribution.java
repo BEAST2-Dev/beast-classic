@@ -6,7 +6,7 @@ import beast.core.parameter.RealParameter;
 
 
 @Description("...")
-class MultivariateNormalDistribution extends Plugin {
+public class MultivariateNormalDistribution extends Plugin {
     public Input<RealParameter> mean = new Input<RealParameter>("mean", "description here");
     public Input<RealParameter> precision = new Input<RealParameter>("precision", "description here");
 
