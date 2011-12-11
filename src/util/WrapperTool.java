@@ -3,10 +3,12 @@ package util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,30 +69,66 @@ public class WrapperTool {
 						type = "Double";
 					}
 					if (type.contains(".")) {
-						if (type.contains("<")) {
-							imports.add(type.substring(0, type.indexOf('<')));
-							type = type.substring(type.lastIndexOf('.', type
-									.indexOf('<')) + 1);
-						} else {
-							imports.add(type);
-							type = type.substring(type.lastIndexOf('.') + 1);
-						}
-
+						imports.addAll(typeToClasses(gpType[j]));
+						type = typeToShortString(gpType[j]);
 					}
-					inputs += "    new Input<" + type + "> " + inputNames[j]
+					inputs += "    Input<" + type + "> " + inputNames[j]
 							+ " = new Input<" + type + ">(\"" + inputNames[j]
 							+ "\", \"description here\");\n";
 				}
 				break;
 			}
 
-			System.out.println("package beast." + className.substring(3)
+			String methods = "";
+			String objectName = shortClass.toLowerCase();
+
+			Method[] pMethods = c.getDeclaredMethods();
+			for (int i = 0; i < pMethods.length; i++) {
+				Method method = pMethods[i];
+				if (true ||  method.isAccessible()) { // TODO: test whether this is a public method that we want
+				methods += "    "
+						+ typeToShortString(method.getGenericReturnType())
+						+ " " + method.getName() + "(";
+				imports.addAll(typeToClasses(method.getGenericReturnType()));
+				String[] argNames = guessArgnames(method);
+				Type[] args = method.getGenericParameterTypes();
+				for (int j = 0; j < args.length; j++) {
+					methods += typeToShortString(args[j]);
+					imports.addAll(typeToClasses(args[j]));
+					methods += " " + argNames[j];
+					if (j < args.length - 1) {
+						methods += ", ";
+					}
+				}
+				methods += ") {\n";
+				methods += "        ";
+				if (!method.getGenericReturnType().toString().equals("void")) {
+					methods += "return ";
+				}
+				methods += objectName + "." + method.getName() + "(";
+				for (int j = 0; j < args.length; j++) {
+					methods += argNames[j];
+					if (j < args.length - 1) {
+						methods += ", ";
+					}
+				}
+				methods += ");\n";
+				methods += "     }\n";
+				}
+			}
+
+			System.out.println("package beast." + className.substring(className.indexOf(".") + 1, className.lastIndexOf('.'))
 					+ ";\n\n");
 
+			imports.remove("java.lang.Integer");
+			imports.remove("java.lang.Object");
+			imports.remove("java.lang.String");
+			imports.remove(className);
 			String[] s = imports.toArray(new String[0]);
 			Arrays.sort(s);
 			for (String importName : s) {
-				System.out.println("import " + importName + ";");
+				if (importName.indexOf("[]") < 0 && importName.indexOf('.') > 0)
+					System.out.println("import " + importName + ";");
 			}
 			System.out.println("\n\n@Description(\"...\")");
 			System.out.println("class "
@@ -98,18 +136,17 @@ public class WrapperTool {
 					+ " extends Plugin {");
 			System.out.println(inputs);
 			System.out.println("\n");
-			String objectName = shortClass.toLowerCase();
-			System.out.println("    " + shortClass + " " + objectName);
+			System.out.println("    " + className + " " + objectName + ";");
 			System.out.println("\n");
 
 			System.out.println("    @Override");
 			System.out
 					.println("    public void initAndValidate() throws Exception {");
-			System.out.println("        " + objectName + " = new " + shortClass
+			System.out.println("        " + objectName + " = new " + className
 					+ "(");
 			for (int j = 0; j < pType.length; j++) {
-				System.out.print("                             " + inputNames[j]
-						+ ".get()");
+				System.out.print("                             "
+						+ inputNames[j] + ".get()");
 				if (j < pType.length - 1) {
 					System.out.println(",");
 				}
@@ -117,7 +154,7 @@ public class WrapperTool {
 			System.out.println(");");
 			System.out.println("    }");
 			System.out.println("\n");
-
+			System.out.println(methods);
 			System.out.println("}");
 		} catch (ClassNotFoundException x) {
 			throw new RuntimeException("Could not find class " + className
@@ -125,6 +162,94 @@ public class WrapperTool {
 		}
 
 	}
+
+	private static String[] guessArgnames(Method method) {
+		Type[] args = method.getGenericParameterTypes();
+		String[] argNames = new String[args.length];
+		for (int i = 0; i < args.length; i++) {
+			argNames[i] = "arg" + i;
+		}
+		try {
+			// build regexp
+			String regexp = ".*" + method.getName() + "\\s*\\(";
+			for (int i = 0; i < args.length; i++) {
+				regexp += "\\s*";
+				regexp += "(" + typeToShortString(args[i]) + "[^,\\)]*)";
+				if (i < args.length - 1) {
+					regexp += ",";
+				}
+			}
+			regexp += ".*\\).*";
+			 System.err.println(regexp);
+
+			// match regexp
+			Pattern pattern = Pattern.compile(regexp, Pattern.MULTILINE);
+			Matcher matcher = pattern.matcher(javatext);
+			matcher.find();
+			for (int i = 0; i < args.length; i++) {
+				String param = matcher.group(i + 1);
+				param = param.replaceAll("^\\s+", "");
+				param = param.replaceAll("\\s+$", "");
+				param = param.split(" ")[1];
+				argNames[i] = param;
+			}
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+
+		return argNames;
+	}
+
+	private static String typeToString(Type type) {
+		String sType = type.toString();
+		if (sType.indexOf(' ') >= 0) {
+			String[] sTypes = sType.split(" ");
+			if (sTypes[1].equals("[D")) {
+				sType = "double []";
+			} else if (sTypes[1].equals("[I")) {
+				sType = "int []";
+			} else if (sTypes[1].equals("[S")) {
+				sType = "String []";
+			} else if (sTypes[sTypes.length - 1].charAt(0) == '[') {
+				sType = sTypes[1].substring(2, sTypes[1].length() - 1) + " []";
+			} else {
+				sType = sTypes[1];
+			}
+		}
+		sType = sType.replaceAll("\\$", ".");
+		return sType;
+	}
+
+	private static String typeToShortString(Type type) {
+		String sType = typeToString(type);
+		if (sType.indexOf('.') >= 0) {
+			String[] sTypes = sType.split("<");
+			sType = sTypes[0].substring(sTypes[0].lastIndexOf('.') + 1);
+			for (int i = 1; i < sTypes.length; i++) {
+				sType += "<"
+						+ sTypes[i].substring(sTypes[i].lastIndexOf('.') + 1);
+			}
+		}
+		return sType;
+	}
+
+	private static List<String> typeToClasses(Type type) {
+		List<String> sPackages = new ArrayList<String>();
+		String sType = typeToString(type);
+		sType = sType.replaceAll(">", "");
+		if (sType.indexOf('<') >= 0) {
+			String[] sTypes = sType.split("<");
+			sPackages.add(sTypes[0].replaceAll("\\[\\]", ""));
+			for (int i = 1; i < sTypes.length; i++) {
+				sPackages.add(sTypes[i].replaceAll("\\[\\]", ""));
+			}
+		} else {
+			sPackages.add(sType);
+		}
+		return sPackages;
+	}
+
+	static String javatext;
 
 	private static String[] guessInputNames(String srcPath, String className,
 			int length) {
@@ -141,18 +266,21 @@ public class WrapperTool {
 				buf.append('\n');
 			}
 			fin.close();
-			String text = buf.toString();
-			
+			javatext = buf.toString();
+
 			// remove comments
-			text = text.replaceAll("//[^\n]*\n", "");
-			text = text.replaceAll(
+			javatext = javatext.replaceAll("//[^\n]*\n", "");
+			javatext = javatext.replaceAll(
 					"(?:/\\*(?:[^*]|(?:\\*+[^*/]))*\\*+/)|(?://.*)", "");
-			String shortClass = className.substring(1+className.lastIndexOf('.'));
-			text = text.replaceAll(".*" + shortClass, shortClass);
-			
+			String shortClass = className.substring(1 + className
+					.lastIndexOf('.'));
+			javatext = javatext.replaceAll(".*" + shortClass, shortClass);
+
 			// build regexp
 			String[] inputNames = new String[length];
-			String regexp = ".*" + className.substring(1+className.lastIndexOf('.')) + "\\s*\\(";
+			String regexp = ".*"
+					+ className.substring(1 + className.lastIndexOf('.'))
+					+ "\\s*\\(";
 			for (int i = 0; i < length; i++) {
 				regexp += "([^,\\)]*)";
 				if (i < length - 1) {
@@ -160,11 +288,11 @@ public class WrapperTool {
 				}
 			}
 			regexp += ".*\\).*";
-			//System.err.println(regexp);
-			
+			// System.err.println(regexp);
+
 			// match regexp
 			Pattern pattern = Pattern.compile(regexp, Pattern.MULTILINE);
-			Matcher matcher = pattern.matcher(text);
+			Matcher matcher = pattern.matcher(javatext);
 			matcher.find();
 			for (int i = 0; i < length; i++) {
 				String param = matcher.group(i + 1);
