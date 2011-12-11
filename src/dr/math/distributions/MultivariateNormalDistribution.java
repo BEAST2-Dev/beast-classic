@@ -16,9 +16,17 @@ public class MultivariateNormalDistribution implements MultivariateDistribution 
     private double[][] cholesky = null;
     private Double logDet = null;
 
-    public MultivariateNormalDistribution(double[] mean, double[][] precision) {
-        this.mean = mean;
-        this.precision = precision;
+    public MultivariateNormalDistribution(Double[] mean, Double[] precision) {
+        this.mean = new double[mean.length];
+        for (int i = 0; i < mean.length; i++) {
+        	this.mean[i] = mean[i];
+        }
+        this.precision = new double[mean.length][mean.length];
+        for (int i = 0; i < mean.length; i++) {
+            for (int j = 0; j < mean.length; j++) {
+            	this.precision[i][j] = precision[i * mean.length + j];
+            }
+        }
     }
 
     public String getType() {
