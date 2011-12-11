@@ -128,7 +128,7 @@ public class WrapperTool {
 					System.out.println("import " + importName + ";");
 			}
 			System.out.println("\n\n@Description(\"...\")");
-			System.out.println("class " + className.substring(className.lastIndexOf('.') + 1) + " extends Plugin {");
+			System.out.println("public class " + className.substring(className.lastIndexOf('.') + 1) + " extends Plugin {");
 			System.out.println(inputs);
 			System.out.println("\n");
 			System.out.println("    " + className + " " + objectName + ";");
