@@ -1,5 +1,5 @@
 <!-- Build BEAST_CLASSIC. It is also used by Hudson BEAST_CLASSIC project. JUnit test is available for this build. -->
-<project basedir="." default="build_jar_all_BEAST_CLASSIC_NoJUnitTest" name="BUILD_BEAST_CLASSIC">
+<project basedir="." default="build_jar_all_BEAST_CLASSIC" name="BUILD_BEAST_CLASSIC">
 	<description>
 	    Build BEAST_CLASSIC. 
             Also used by Hudson BEAST_CLASSIC project. 
@@ -140,10 +140,12 @@
 				<fileset dir="${srcBEAST_CLASSIC}">
                     <include name="test/**/*Test.java"/>                                         
 				</fileset>
+<!--
 				<fileset dir="${srcBeast2}">
                     <include name="test/beast/integration/**/*Test.java"/>                                         
                     <exclude name="test/beast/integration/**/ResumeTest.java"/>                                         
 				</fileset>
+-->
 			</batchtest>
 		</junit>
 		<echo message="JUnit test finished." />
