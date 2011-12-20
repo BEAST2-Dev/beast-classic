@@ -1,0 +1,196 @@
+<!-- Build BEAST_CLASSIC. It is also used by Hudson BEAST_CLASSIC project. JUnit test is available for this build. -->
+<project basedir="." default="build_jar_all_BEAST_CLASSIC_NoJUnitTest" name="BUILD_BEAST_CLASSIC">
+	<description>
+	    Build BEAST_CLASSIC. 
+            Also used by Hudson BEAST_CLASSIC project. 
+	    JUnit test is available for this build.
+	    $Id: build_BEAST_CLASSIC.xml $
+	</description>
+
+	<!-- set global properties for this build -->
+	<property name="srcBEAST_CLASSIC" location="src" />
+	<property name="buildBEAST_CLASSIC" location="build" />
+	<property name="libBEAST_CLASSIC" location="lib" />
+	<property name="release_dir" value="release" />
+	<property name="distBEAST_CLASSIC" location="${buildBEAST_CLASSIC}/dist" />
+	<property name="beast2path" location="../beast2" />
+	<property name="libBeast2" location="${beast2path}/lib" />
+	<property name="srcBeast2" location="${beast2path}/src" />
+	<property name="beast2classpath" location="${beast2path}/build" />
+	<property name="Add_on_dir" value="${release_dir}/add-on" />
+
+    <import file="${beast2path}/build.xml" />
+
+	<property name="main_class_BEAST" value="beast.app.BeastMCMC" />
+	<property name="report" value="${buildBEAST_CLASSIC}/junitreport"/>
+
+	<path id="classpath">
+        <pathelement path="${buildBEAST_CLASSIC}"/>
+		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
+        <pathelement path="${beast2classpath}"/>
+	</path>
+
+	<!-- start -->
+	<target name="initBEAST_CLASSIC">
+		<echo message="${ant.project.name}: ${ant.file}" />
+	</target>
+
+	<target name="cleanBEAST_CLASSIC">
+    	<delete dir="${buildBEAST_CLASSIC}" />
+	</target>
+
+	<!-- clean previous build, and then compile Java source code, and Juint test -->
+	<target name="build_all_BEAST_CLASSIC" depends="cleanBEAST_CLASSIC,compile-allBEAST_CLASSIC,junitBEAST_CLASSIC"
+        description="Clean and Build all run-time stuff">
+	</target>
+
+	<!-- clean previous build, compile Java source code, and Junit test, and make the beast.jar and beauti.jar -->
+	<target name="build_jar_all_BEAST_CLASSIC" depends="cleanBEAST_CLASSIC,compile-allBEAST_CLASSIC,junitBEAST_CLASSIC,dist_all_BEAST_CLASSIC"
+        description="Clean and Build all run-time stuff">
+	</target>
+
+
+	<!-- No JUnit Test, clean previous build, compile Java source code, and make the BEAST_CLASSIC.jar and beauti.jar -->
+	<target name="build_jar_all_BEAST_CLASSIC_NoJUnitTest" depends="cleanBEAST_CLASSIC,compile-allBEAST_CLASSIC,dist_all_BEAST_CLASSIC"
+        description="Clean and Build all run-time stuff">
+	</target>
+
+	<!-- compile Java source code -->
+	<target name="compile-allBEAST_CLASSIC" depends="initBEAST_CLASSIC,compile-all">
+
+
+	    <!-- Capture the path as a delimited property using the refid attribute -->
+	    <property name="myclasspath" refid="classpath"/>
+	    <!-- Emit the property to the ant console -->
+	    <echo message="Classpath = ${myclasspath}"/>
+
+		<mkdir dir="${buildBEAST_CLASSIC}" />
+
+		<!-- Compile the java code from ${srcBEAST_CLASSIC} into ${buildBEAST_CLASSIC} /bin -->
+		<javac srcdir="${srcBEAST_CLASSIC}" destdir="${buildBEAST_CLASSIC}" classpathref="classpath" 
+		       fork="true"
+		       memoryinitialsize="256m"
+		       memorymaximumsize="256m">
+			<include name="beast/**/**" />
+			<!-- compile JUnit test classes -->
+			<include name="test/beast/**" />
+		</javac>
+		<echo message="Successfully compiled." />
+	</target>
+
+	<!-- make the beast.jar and beauti.jar -->
+	<target name="dist_all_BEAST_CLASSIC" depends="compile-allBEAST_CLASSIC" description="create BEAST_CLASSIC jar">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${distBEAST_CLASSIC}" />
+
+		<!-- Put everything in ${buildBEAST_CLASSIC} into the beast.jar file -->
+		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Main-Class" value="${main_class_BEAST}" />
+			</manifest>
+			<fileset dir="${buildBEAST_CLASSIC}">
+				<include name="beast/**/*.class" />
+			</fileset>
+			<fileset dir="${beast2classpath}">
+				<include name="beast/**/*.class" />
+				<include name="beast/**/*.properties" />
+				<include name="beast/**/*.png" />
+				<include name="beagle/**/*.class" />
+				<include name="org/**/*.class" />
+			</fileset>
+		</jar>
+		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.src.jar">
+			<fileset dir="${srcBEAST_CLASSIC}">
+				<include name="beast/**/*.java" />
+				<include name="beast/**/*.png" />
+				<include name="beast/**/*.xsl" />
+			</fileset>
+        </jar>
+		<jar jarfile="${dist}/BEAST_CLASSIC.addon.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+			<fileset dir="${build}">
+				<include name="beast/**/*.class" />
+				<include name="util/**/*.class" />
+				<include name="**/*.properties" />
+			</fileset>
+		</jar>
+	</target>
+
+	<!-- run beast.jar -->
+	<target name="run_BEAST_CLASSIC">
+		<java jar="${distBEAST_CLASSIC}/BEAST_CLASSIC.jar" fork="true" />
+	</target>
+
+	
+	<!-- JUnit test -->
+	<target name="junitBEAST_CLASSIC">
+		<mkdir dir="${report}" />
+		<junit printsummary="yes"> <!--showoutput='yes'-->
+			<classpath>
+				<path refid="classpath" />
+				<path location="${buildBEAST_CLASSIC}" />
+			</classpath>
+
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir="${report}">
+				<fileset dir="${srcBEAST_CLASSIC}">
+                    <include name="test/**/*Test.java"/>                                         
+				</fileset>
+				<fileset dir="${srcBeast2}">
+                    <include name="test/beast/integration/**/*Test.java"/>                                         
+                    <exclude name="test/beast/integration/**/ResumeTest.java"/>                                         
+				</fileset>
+			</batchtest>
+		</junit>
+		<echo message="JUnit test finished." />
+	</target>
+    
+    <target name="junitreport">
+		<junitreport todir="${report}">
+			<fileset dir="${report}" includes="*.xml"/>
+			<report format="frames" todir="${report}"/>
+		</junitreport>
+		<echo message="JUnit test report finished." />
+	</target>
+
+
+	<target name="addon"
+	        depends="build_jar_all_BEAST_CLASSIC_NoJUnitTest"
+	        description="release BEAST 2 add-on version of BDSKY">
+
+		<delete dir="${Add_on_dir}" />
+		<!-- Create the release directory -->
+		<mkdir dir="${Add_on_dir}" />
+		<mkdir dir="${Add_on_dir}/lib" />
+		<mkdir dir="${Add_on_dir}/examples" />
+		<mkdir dir="${Add_on_dir}/templates" />
+
+		<copy todir="${Add_on_dir}">
+			<fileset file="version.xml"/>
+		</copy>
+		<copy todir="${Add_on_dir}/examples">
+			<fileset dir="examples" />
+		</copy>
+		<copy todir="${Add_on_dir}/lib">
+			<fileset dir="${dist}" includes="BEAST_CLASSIC.addon.jar" />
+		</copy>
+		<copy todir="${Add_on_dir}">
+			<fileset dir="${dist}" includes="BEAST_CLASSIC.src.jar" />
+		</copy>
+		<copy todir="${Add_on_dir}/templates">
+			<fileset file="templates/BDSKY.xml" />
+		</copy>
+
+		<jar jarfile="${dist}/BDSKY.addon.zip">
+			<fileset dir="${Add_on_dir}">
+				<include name="**/*" />
+			</fileset>
+        </jar>
+		<echo message="Add-on version release is finished." />
+	</target>
+
+</project>
