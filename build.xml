@@ -74,7 +74,7 @@
 			<include name="beast/**/**" />
 			<include name="dr/**/**" />
 			<!-- compile JUnit test classes -->
-			<include name="test/beast/**" />
+			<include name="test/**" />
 		</javac>
 		<echo message="Successfully compiled." />
 	</target>
