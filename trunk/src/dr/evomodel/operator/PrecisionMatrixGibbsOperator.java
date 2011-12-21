@@ -95,7 +95,7 @@ public class PrecisionMatrixGibbsOperator extends Operator {
                     (SymmetricMatrix) (new SymmetricMatrix(priorDistribution.scaleMatrix())).inverse();
         this.treeModel = traitModel.getTreeModel();
         traitName = traitModel.getTraitName();
-        dim = precisionParam.getStride1();//getRowDimension(); // assumed to be square
+        dim = precisionParam.getMinorDimension1();//getRowDimension(); // assumed to be square
 
 //        isSampledTraitLikelihood = (traitModel instanceof SampledMultivariateTraitLikelihood);
 

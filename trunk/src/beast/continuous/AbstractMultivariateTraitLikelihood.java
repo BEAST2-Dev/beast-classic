@@ -109,7 +109,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution
         this.reciprocalRates = reciprocalRatesInput.get();;
 
         dimTrait = diffusionModel.getPrecisionmatrix().length;
-        dim = traitParameter != null ? traitParameter.getStride1() : 0;
+        dim = traitParameter != null ? traitParameter.getMinorDimension1() : 0;
         numData = dim / dimTrait;
 
         if (dim % dimTrait != 0)
