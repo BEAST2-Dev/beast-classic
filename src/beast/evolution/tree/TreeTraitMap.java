@@ -1,5 +1,7 @@
 package beast.evolution.tree;
 
+import java.util.List;
+
 import dr.evolution.tree.TreeTrait;
 import beast.core.CalculationNode;
 import beast.core.Description;
@@ -15,7 +17,9 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	public Input<String> traitName = new Input<String>("traitName", "name of the trait", "unnamed");
 	public Input<Intent> intent = new Input<Intent>("intent", "intent of the trait, one of " + Intent.values()
 			+ " (Default whole tree)", Intent.WHOLE_TREE);
-
+	public Input<String> value = new Input<String>("value","initialisation values for traits in the form of " +
+			"a comma separated string of taxon-name, value pairs. For example, for a two-dimensional trait " +
+			"the value could be Taxon1=10 20,Taxon2=20 30,Taxon3=10 10");
 	Tree tree;
 	RealParameter parameter;
 
@@ -30,9 +34,9 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		tree = treeInput.get();
 		int nNodes = tree.getNodeCount();
 		parameter = parameterInput.get();
-		if (parameter.getStride1() > 0) {
-			parameter.setDimension(nNodes * parameter.getStride1());
-			traitvalues = new double[parameter.getStride1()];
+		if (parameter.getMinorDimension1() > 0) {
+			parameter.setDimension(nNodes * parameter.getMinorDimension1());
+			traitvalues = new double[parameter.getMinorDimension1()];
 		} else {
 			parameter.setDimension(nNodes);
 			traitvalues = new double[1];
@@ -48,7 +52,74 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 			nodeToParameterIndexMap[tree.getRoot().getNr()] = -1;
 		}
 		System.arraycopy(nodeToParameterIndexMap, 0, storedNodeToParameterIndexMap, 0, nNodes);
+		
+		
+		if (value.get() != null) {
+	        String [] sTaxa = tree.getTaxaNames();
+	        boolean [] bDone = new boolean[sTaxa.length];
+	        
+			// we need to initialise the trait parameter
+	        int dim = traitvalues.length;
+			Double [] values = new Double[nNodes * dim];
+			String [] sValues = value.get().split(",");
+	        for (String sTrait : sValues) {
+	            sTrait = sTrait.replaceAll("\\s+", " ");
+	            String[] sStrs = sTrait.split("=");
+	            if (sStrs.length != 2) {
+	                throw new Exception("could not parse trait: " + sTrait);
+	            }
+	            String sTaxonID = normalize(sStrs[0]);
+	            int iTaxon = indexOf(sTaxa, sTaxonID);
+	            if (iTaxon < 0) {
+	                throw new Exception("Trait (" + sTaxonID + ") is not a known taxon. Spelling error perhaps?");
+	            }
+	            String sTraitValue = normalize(sStrs[1]);
+	            String [] sTraitValues = sTraitValue.split("\\s");
+	            for (int i = 0; i < sTraitValues.length; i++) {
+	            	values[iTaxon * dim + i] = Double.parseDouble(sTraitValues[i]);
+	            }
+	            if (bDone[iTaxon]) {
+	            	throw new Exception("Trait for taxon " + sTaxa[iTaxon]+ " defined twice");
+	            }
+	            bDone[iTaxon] = true;
+	        }
+
+	        // sanity check: did we cover all taxa?
+	        for (int i = 0; i < sTaxa.length; i++) {
+	            if (!bDone[i]) {
+	                System.out.println("WARNING: no trait specified for " + sTaxa[i]);
+	            }
+	        }
+	        
+	        // initialise internal nodes
+	        //todo
+	        
+	        RealParameter tmp = new RealParameter(values);	        
+	        tmp.setBounds(parameter.getLower(), parameter.getUpper());
+	        parameter.assignFromWithoutID(tmp);
+		}
 	}
+
+	private int indexOf(String[] sTaxa, String sTaxonID) {
+		int i = sTaxa.length - 1;
+		while (i >= 0 && !sTaxa[i].equals(sTaxonID)) {
+			i--;
+		}
+		return i;
+	}
+
+	/**
+     * remove start and end spaces
+     */
+    String normalize(String sStr) {
+        if (sStr.charAt(0) == ' ') {
+            sStr = sStr.substring(1);
+        }
+        if (sStr.endsWith(" ")) {
+            sStr = sStr.substring(0, sStr.length() - 1);
+        }
+        return sStr;
+    }
 
 	public String getTraitName() {
 		return traitName.get();

@@ -99,7 +99,7 @@ public class TraitGibbsOperator extends Operator {
 		this.traitName = traitModel.getTraitName();
 		this.onlyInternalNodes = onlyInternalNodes;
 		this.onlyTipsWithPriors = onlyTipsWithPriors;
-		this.dim = precisionMatrixParameter.getStride1();
+		this.dim = precisionMatrixParameter.getMinorDimension1();
 	}
 
 	public void setRootPrior(MultivariateNormalDistribution rootPrior) {
