@@ -3,6 +3,7 @@ package beast.evolution.MSSD;
 
 
 import beast.core.*;
+import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.branchratemodel.BranchRateModel;
@@ -18,14 +19,14 @@ import beast.evolution.tree.Tree;
 
 
 @Description("...")
-class AbstractObservationProcess extends CalculationNode {
-    Input<String> Name = new Input<String>("Name", "description here");
-    Input<Tree> treeModel = new Input<Tree>("treeModel", "description here");
-    Input<Alignment> patterns = new Input<Alignment>("patterns", "description here");
-    Input<SiteModel> siteModel = new Input<SiteModel>("siteModel", "description here");
-    Input<BranchRateModel> branchRateModel = new Input<BranchRateModel>("branchRateModel", "description here");
-    Input<RealParameter> mu = new Input<RealParameter>("mu", "description here");
-    Input<RealParameter> lam = new Input<RealParameter>("lam", "description here");
+public class AbstractObservationProcess extends CalculationNode {
+//    Input<String> Name = new Input<String>("Name", "description here");
+    public Input<Tree> treeModel = new Input<Tree>("tree", "description here", Validate.REQUIRED);
+    public Input<Alignment> patterns = new Input<Alignment>("data", "description here", Validate.REQUIRED);
+    public Input<SiteModel> siteModel = new Input<SiteModel>("siteModel", "description here", Validate.REQUIRED);
+    public Input<BranchRateModel> branchRateModel = new Input<BranchRateModel>("branchRateModel", "description here");
+    public Input<RealParameter> mu = new Input<RealParameter>("mu", "description here", Validate.REQUIRED);
+    public Input<RealParameter> lam = new Input<RealParameter>("lam", "description here");
 
 
 
