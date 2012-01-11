@@ -1,5 +1,6 @@
 package dr.evomodel.MSSD;
 
+
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.branchratemodel.BranchRateModel;
@@ -31,8 +32,8 @@ public class AnyTipObservationProcess extends AbstractObservationProcess {
     protected double[] p;
 
     public AnyTipObservationProcess(String modelName, Tree treeModel, Alignment patterns, SiteModel siteModel,
-                                    BranchRateModel branchRateModel, RealParameter mu, RealParameter lam) {
-        super(modelName, treeModel, patterns, siteModel, branchRateModel, mu, lam);
+                                    BranchRateModel branchRateModel, RealParameter mu, RealParameter lam, boolean integrateGainRate) {
+        super(modelName, treeModel, patterns, siteModel, branchRateModel, mu, lam, integrateGainRate);
     }
 
     public double calculateLogTreeWeight() {
@@ -51,7 +52,7 @@ public class AnyTipObservationProcess extends AbstractObservationProcess {
             p[i] = 1.0 - getNodeSurvivalProbability(i, averageRate);
         }
 
-        /*Tree.Utils.*/postOrderTraversalList(treeModel.getRoot(), postOrderNodeList, 0);
+        /*Tree.Utils.*/postOrderTraversalList(treeModel, postOrderNodeList);
 
         for (int postOrderIndex = 0; postOrderIndex < nodeCount; postOrderIndex++) {
 
@@ -75,19 +76,23 @@ public class AnyTipObservationProcess extends AbstractObservationProcess {
     }
 
 
-    private int postOrderTraversalList(Node node, int[] postOrderNodeList2, int i) {
-    	if (node.isLeaf()) {
-    		postOrderNodeList2[i] = node.getNr();
-    	} else {
-    		for (int j = 0; j < node.getChildCount(); j++) {
-    			i = postOrderTraversalList(node.getChild(j), postOrderNodeList2, i);
-    		}
-    		postOrderNodeList2[i] = node.getNr();
-    	}
-    	return i + 1;
+    private void postOrderTraversalList(Tree tree, int[] postOrderList) {
+        int idx = nodeCount - 1;
+        int cidx = nodeCount - 1;
+
+        postOrderList[idx] = tree.getRoot().getNr();
+
+        while (cidx > 0) {
+            Node cNode = tree.getNode(postOrderList[idx]);
+            for(int i = 0; i < cNode.getChildCount(); ++i) {
+                cidx -= 1;
+                postOrderList[cidx] = cNode.getChild(i).getNr();
+            }
+            idx -= 1;
+        }
 	}
 
-	private void setTipNodePatternInclusion() { // These values never change
+	public void setTipNodePatternInclusion() { // These values never change
         for (int i = 0; i < treeModel.getLeafNodeCount(); i++) {
             Node node = treeModel.getNode(i);
 
@@ -113,7 +118,7 @@ public class AnyTipObservationProcess extends AbstractObservationProcess {
         }
     }
 
-    void setNodePatternInclusion() {
+    public void setNodePatternInclusion() {
 
         if (postOrderNodeList == null) {
             postOrderNodeList = new int[nodeCount];         
@@ -131,8 +136,9 @@ public class AnyTipObservationProcess extends AbstractObservationProcess {
         }
 
         // Determine post-order traversal
-        /*Tree.Utils.*/postOrderTraversalList(treeModel.getRoot(), postOrderNodeList, 0);
+        /*Tree.Utils.*/postOrderTraversalList(treeModel, postOrderNodeList);
 
+        // Do post-order traversal
         // Do post-order traversal
         for (int postOrderIndex = 0; postOrderIndex < nodeCount; postOrderIndex++) {
             Node node = treeModel.getNode(postOrderNodeList[postOrderIndex]);

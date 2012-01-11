@@ -17,7 +17,7 @@ public class MutationDeathType extends DataType.Base {
 	
     protected static String DESCRIPTION = "MutationDeathType";
     
-    public final static int DEATHSTATE = 0;
+    public static int DEATHSTATE = 0;
 
     @Override
     public void initAndValidate() throws Exception {
@@ -34,15 +34,17 @@ public class MutationDeathType extends DataType.Base {
     		m_nStateCount = 2;
     		m_mapCodeToStateSet = x;
     		m_nCodeLength = 1;
-    		m_sCodeMap = "" + deathCode + extantCode + GAP_CHAR + MISSING_CHAR;
+    		m_sCodeMap = "" + extantCode + deathCode + GAP_CHAR + MISSING_CHAR;
+    		DEATHSTATE = 1;
     	} else {
     		DataType.Base dataType = dataTypeInput.get();
     		m_nStateCount = dataType.getStateCount() + 1;
     		m_mapCodeToStateSet = new int[dataType.m_mapCodeToStateSet.length + 1][];
-    		m_mapCodeToStateSet[0] = new int[] {deathCode};
-    		System.arraycopy(dataType.m_mapCodeToStateSet, 0, m_mapCodeToStateSet, 1, dataType.m_mapCodeToStateSet.length);
+    		System.arraycopy(dataType.m_mapCodeToStateSet, 0, m_mapCodeToStateSet, 0, dataType.m_mapCodeToStateSet.length);
+    		m_mapCodeToStateSet[m_nStateCount - 1] = new int[] {deathCode};
     		m_nCodeLength = 1;
-    		m_sCodeMap = "" + deathCode + dataType.m_sCodeMap;
+    		m_sCodeMap = "" + dataType.m_sCodeMap + deathCode;
+    		DEATHSTATE = m_nStateCount - 1;
     	}
     }
 

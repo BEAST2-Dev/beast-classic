@@ -27,14 +27,12 @@ public class AbstractObservationProcess extends CalculationNode {
     public Input<BranchRateModel> branchRateModel = new Input<BranchRateModel>("branchRateModel", "description here");
     public Input<RealParameter> mu = new Input<RealParameter>("mu", "description here", Validate.REQUIRED);
     public Input<RealParameter> lam = new Input<RealParameter>("lam", "description here");
+	public Input<Boolean> integrateGainRateInput = new Input<Boolean>("integrateGainRate", "description here", false);
 
 
 
     dr.evomodel.MSSD.AbstractObservationProcess abstractobservationprocess;
 
-    public void store() {
-        abstractobservationprocess.store();
-     }
 //    void setNodePatternInclusion() {
 //        abstractobservationprocess.setNodePatternInclusion();
 //     }
@@ -71,8 +69,21 @@ public class AbstractObservationProcess extends CalculationNode {
 //    void handleVariableChangedEvent(Variable arg0, int arg1, ChangeType arg2) {
 //        abstractobservationprocess.handleVariableChangedEvent(arg0, arg1, arg2);
 //     }
+    @Override
+    public void store() {
+        abstractobservationprocess.store();
+     }
+    @Override
     public void restore() {
         abstractobservationprocess.restore();
+     }
+    @Override
+    protected boolean requiresRecalculation() {
+    	return abstractobservationprocess.requiresRecalculation();
+    }
+    
+    public void re() {
+        abstractobservationprocess.store();
      }
 //    void accept() {
 //        abstractobservationprocess.acceptState();
