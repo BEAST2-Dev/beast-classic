@@ -30,8 +30,9 @@ public class SingleTipObservationProcess extends AnyTipObservationProcess {
     protected Taxon sourceTaxon;
 
     public SingleTipObservationProcess(Tree treeModel, Alignment patterns, SiteModel siteModel,
-                                       BranchRateModel branchRateModel, RealParameter mu, RealParameter lam, Taxon sourceTaxon) {
-        super("SingleTipObservationProcess", treeModel, patterns, siteModel, branchRateModel, mu, lam);
+                                       BranchRateModel branchRateModel, RealParameter mu, RealParameter lam, Taxon sourceTaxon,
+                                       boolean integrateGainRate) {
+        super("SingleTipObservationProcess", treeModel, patterns, siteModel, branchRateModel, mu, lam, integrateGainRate);
         this.sourceTaxon = sourceTaxon;
     }
 

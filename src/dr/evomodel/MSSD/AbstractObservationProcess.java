@@ -68,7 +68,8 @@ abstract public class AbstractObservationProcess { // extends AbstractModel {
     BranchRateModel branchRateModel;
 
     public AbstractObservationProcess(String Name, Tree treeModel, Alignment patterns, SiteModel siteModel,
-                                      BranchRateModel branchRateModel, RealParameter mu, RealParameter lam) {
+                                      BranchRateModel branchRateModel, RealParameter mu, RealParameter lam,
+                                      boolean integrateGainRate) {
         //super(Name);
         this.treeModel = treeModel;
         this.patterns = patterns;
@@ -105,6 +106,8 @@ abstract public class AbstractObservationProcess { // extends AbstractModel {
         cumLike = new double[patternCount];
         nodeLikelihoods = new double[patternCount];
         weightKnown = false;
+        
+        this.integrateGainRate = integrateGainRate;
     }
 
     public RealParameter getMuParameter() {
@@ -274,6 +277,17 @@ abstract public class AbstractObservationProcess { // extends AbstractModel {
         return 1.0 - Math.exp(-deathRate * branchTime);
     }
 
+
+    public boolean requiresRecalculation() {
+      if (siteModel.isDirtyCalculation()) {
+    	  averageRateKnown = false;
+      }
+      if (treeModel.somethingIsDirty()) {
+    	  weightKnown = false;
+    	  nodePatternInclusionKnown = false;
+      }
+    	return true;
+    }
 //    protected void handleModelChangedEvent(Model model, Object object, int index) {
 //        if (model == siteModel) {
 //            averageRateKnown = false;
