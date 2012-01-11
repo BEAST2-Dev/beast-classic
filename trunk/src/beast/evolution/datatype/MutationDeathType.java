@@ -26,10 +26,10 @@ public class MutationDeathType extends DataType.Base {
     		char extantCode = extantCodeInput.get().charAt(0);
     		
     		int [][] x = {
-    				{deathCode},  // 0
-    				{extantCode},  // 1
-    				{deathCode,extantCode}, // -
-    				{deathCode,extantCode}, // ?
+    				{0},  // 0
+    				{1},  // 1
+    				{0,1}, // -
+    				{0,1}, // ?
     				};
     		m_nStateCount = 2;
     		m_mapCodeToStateSet = x;
