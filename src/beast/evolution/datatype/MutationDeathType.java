@@ -9,7 +9,7 @@ import beast.core.Input.Validate;
  * Description:
  * Time: 1:09:40 PM
  */
-@Description("Data type for mutation death models")
+@Description("Data type for mutation death models including Multi-State Stochastic Dollo")
 public class MutationDeathType extends DataType.Base {
 	public Input<String> deathCharInput = new Input<String>("deathChar","character representing death state (default 0)","0"); 
 	public Input<DataType.Base> dataTypeInput = new Input<DataType.Base>("dataType","base datatype, extended by death char");

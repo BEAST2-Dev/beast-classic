@@ -1,5 +1,5 @@
 /*
- * AnyTipObservationProcess.java
+ * SingleTipObservationProcess.java
  *
  * Copyright (C) 2002-2012 Alexei Drummond,
  * Andrew Rambaut, Marc Suchard and Alexander V. Alekseyenko
@@ -26,50 +26,43 @@
 
 package beast.evolution.MSSD;
 
-import beast.core.parameter.RealParameter;
+import beast.evolution.sitemodel.SiteModel;
+import beast.evolution.alignment.Taxon;
+import beast.core.Input;
 import beast.core.Description;
+import beast.core.parameter.RealParameter;
 
+/**
+ * Package: SingleTimeObservationProcess
+ * Description:
+ * <p/>
+ * <p/>
+ * Created by
+ *
+ * @author Alexander V. Alekseyenko (alexander.alekseyenko@gmail.com)
+ *         Date: Jan 13, 2012
+ *         Time: 11:32:28 AM
+ */
+@Description("Observation process for Multi-State Stochastic Dollo model. Defines a data collection process where the traits must be present in a specific tip node.")
+public class SingleTipObservationProcess extends AnyTipObservationProcess{
 
-//import beast.core.*;
-//import dr.evolution.alignment.PatternList;
-//import dr.evomodel.branchratemodel.BranchRateModel;
-//import dr.evomodel.sitemodel.SiteModel;
-//import dr.evomodel.tree.TreeModel;
-//import dr.inference.model.Parameter;
+    public Input<Taxon> theTip = new Input<Taxon>("taxon", "A taxon in which the traits must be present", Input.Validate.REQUIRED);
 
+    dr.evomodel.MSSD.AnyTipObservationProcess singletipobservationprocess;
 
-@Description("Observation process for Multi-State Stochastic Dollo model. Defines a data collection process where the traits must be present in at least one tip node.")
-public class AnyTipObservationProcess extends AbstractObservationProcess {
-
-
-    dr.evomodel.MSSD.AnyTipObservationProcess anytipobservationprocess;
-
-
-    @Override
     public void initAndValidate() throws Exception {
-        anytipobservationprocess = new dr.evomodel.MSSD.AnyTipObservationProcess(
-                "AnyTip",
-                treeModel.get(),
+        singletipobservationprocess = new dr.evomodel.MSSD.SingleTipObservationProcess(treeModel.get(),
                 patterns.get(),
                 siteModel.get(),
                 branchRateModel.get(),
                 mu.get(),
                 (lam.get() == null ? new RealParameter("1.0") : lam.get()),
+                theTip.get(),
                 integrateGainRateInput.get());
-        abstractobservationprocess = anytipobservationprocess;
+        anytipobservationprocess = singletipobservationprocess;
     }
 
-
-    double calculateLogTreeWeight() {
-        return anytipobservationprocess.calculateLogTreeWeight();
+    public double calculateLogTreeWeight() {
+        return singletipobservationprocess.calculateLogTreeWeight();
     }
-
-    void setTipNodePatternInclusion() {
-        anytipobservationprocess.setTipNodePatternInclusion();
-    }
-
-    void setNodePatternInclusion() {
-        anytipobservationprocess.setNodePatternInclusion();
-    }
-
 }
