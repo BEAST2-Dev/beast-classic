@@ -1,3 +1,29 @@
+/*
+ * ALSTreeLikelihood.java
+ *
+ * Copyright (C) 2002-2012 Alexei Drummond,
+ * Andrew Rambaut, Marc Suchard and Alexander V. Alekseyenko
+ *
+ * This file is part of BEAST.
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership and licensing.
+ *
+ * BEAST is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * BEAST is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with BEAST; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301  USA
+ */
+
 package beast.evolution.MSSD;
 
 import beast.core.Description;
@@ -5,29 +31,29 @@ import beast.core.Input;
 import beast.evolution.likelihood.TreeLikelihood;
 
 
-@Description("Treelikelihood for running the stochastic dollo process")
+@Description("Treelikelihood for running the Multi-State Stochastic Dollo process")
 public class ALSTreeLikelihood extends TreeLikelihood {
-	public Input<AbstractObservationProcess> op = new Input<AbstractObservationProcess>("observationprocess","description here");
-	
+    public Input<AbstractObservationProcess> op = new Input<AbstractObservationProcess>("observationprocess", "description here");
+
     protected AbstractObservationProcess observationProcess;
 
     @Override
     public void initAndValidate() throws Exception {
-    	observationProcess = op.get();
+        observationProcess = op.get();
         // ensure TreeLikelihood initialises the partials for tips
-    	m_useAmbiguities.setValue(true, this);
-    	super.initAndValidate();
+        m_useAmbiguities.setValue(true, this);
+        super.initAndValidate();
     }
- 
+
     @Override
     public double calculateLogP() throws Exception {
         // Calculate the partial likelihoods
-    	super.calculateLogP();
+        super.calculateLogP();
         // get the frequency model
-    	double [] freqs = m_pSiteModel.get().m_pSubstModel.get().getFrequencies();
+        double[] freqs = m_pSiteModel.get().m_pSubstModel.get().getFrequencies();
         // let the observationProcess handle the rest
         logP = observationProcess.nodePatternLikelihood(freqs, m_likelihoodCore);
         return logP;
     }
-	
+
 }
