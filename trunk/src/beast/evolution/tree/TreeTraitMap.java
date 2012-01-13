@@ -2,7 +2,6 @@ package beast.evolution.tree;
 
 import java.util.List;
 
-import dr.evolution.tree.TreeTrait;
 import beast.core.CalculationNode;
 import beast.core.Description;
 import beast.core.Input;

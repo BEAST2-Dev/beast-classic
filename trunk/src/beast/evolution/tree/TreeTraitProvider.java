@@ -1,4 +1,4 @@
-package dr.evolution.tree;
+package beast.evolution.tree;
 
 import java.util.Collection;
 import java.util.HashMap;
