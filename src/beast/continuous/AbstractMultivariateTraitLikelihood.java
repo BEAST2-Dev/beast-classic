@@ -3,8 +3,6 @@ package beast.continuous;
 
 //import dr.evolution.tree.NodeRef;
 //import dr.evolution.tree.Tree;
-import dr.evolution.tree.TreeTrait;
-import dr.evolution.tree.TreeTraitProvider;
 //import dr.evolution.util.Taxon;
 //import dr.evomodel.branchratemodel.BranchRateModel;
 //import dr.evomodel.tree.TreeModel;
@@ -24,7 +22,9 @@ import beast.evolution.alignment.Taxon;
 import beast.evolution.branchratemodel.BranchRateModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitMap;
+import beast.evolution.tree.TreeTraitProvider;
 
 import java.util.ArrayList;
 import java.util.List;
