@@ -2,7 +2,6 @@ package beast.evolution.tree;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +17,7 @@ public interface TreeTraitProvider {
      * Returns an array of all the available traits
      * @return the array
      */
-    TreeTrait[] getTreeTraits();
+    TreeTrait<?>[] getTreeTraits();
 
     /**
      * Returns a trait that is stored using a specific key. This will often be the same
@@ -26,7 +25,7 @@ public interface TreeTraitProvider {
      * @param key a unique key
      * @return the trait
      */
-    TreeTrait getTreeTrait(String key);
+    TreeTrait<?> getTreeTrait(String key);
 
     /**
      * This is a concrete helper class that can be used either as a mix in base to another
@@ -45,7 +44,7 @@ public interface TreeTraitProvider {
          * Constructor taking a single initial trait
          * @param trait the TreeTrait
          */
-        public Helper(TreeTrait trait) {
+        public Helper(TreeTrait<?> trait) {
            addTrait(trait);
         }
 
@@ -53,7 +52,7 @@ public interface TreeTraitProvider {
          * Constructor taking a single initial trait
          * @param trait the TreeTrait
          */
-        public Helper(String key, TreeTrait trait) {
+        public Helper(String key, TreeTrait<?> trait) {
            addTrait(key, trait);
         }
 
@@ -61,7 +60,7 @@ public interface TreeTraitProvider {
          * Constructor taking an array of initial traits
          * @param traits the array of TreeTraits
          */
-        public Helper(TreeTrait[] traits) {
+        public Helper(TreeTrait<?>[] traits) {
             addTraits(traits);
         }
 
@@ -69,7 +68,7 @@ public interface TreeTraitProvider {
          * Constructor taking a collection of initial traits
          * @param traits the collection of TreeTraits
          */
-        public Helper(Collection<TreeTrait> traits) {
+        public Helper(Collection<TreeTrait<?>> traits) {
             addTraits(traits);
         }
 
@@ -77,7 +76,7 @@ public interface TreeTraitProvider {
          * Add a single trait to the list keyed by its name
          * @param trait the TreeTrait
          */
-        public void addTrait(TreeTrait trait) {
+        public void addTrait(TreeTrait<?> trait) {
             traits.put(trait.getTraitName(), trait);
         }
 
@@ -86,7 +85,7 @@ public interface TreeTraitProvider {
          * @param key the key
          * @param trait the TreeTrait
          */
-        public void addTrait(String key, TreeTrait trait) {
+        public void addTrait(String key, TreeTrait<?> trait) {
             if (traits.containsKey(key)) {
                 throw new RuntimeException("All traits must have unique names");
             }
@@ -98,8 +97,8 @@ public interface TreeTraitProvider {
          * respective name
          * @param traits the array of TreeTraits
          */
-        public void addTraits(TreeTrait[] traits) {
-            for (TreeTrait trait : traits) {
+        public void addTraits(TreeTrait<?>[] traits) {
+            for (TreeTrait<?> trait : traits) {
                 this.traits.put(trait.getTraitName(), trait);
             }
         }
@@ -109,8 +108,8 @@ public interface TreeTraitProvider {
          * respective name
          * @param traits the collection of TreeTraits
          */
-        public void addTraits(Collection<TreeTrait> traits) {
-            for (TreeTrait trait : traits) {
+        public void addTraits(Collection<TreeTrait<?>> traits) {
+            for (TreeTrait<?> trait : traits) {
                 this.traits.put(trait.getTraitName(), trait);
             }
         }
@@ -118,17 +117,17 @@ public interface TreeTraitProvider {
 
         // Implementation of TreeTraitProvider interface
 
-        public TreeTrait[] getTreeTraits() {
-            TreeTrait[] traitArray = new TreeTrait[traits.values().size()];
+        public TreeTrait<?>[] getTreeTraits() {
+            TreeTrait<?>[] traitArray = new TreeTrait[traits.values().size()];
             return traits.values().toArray(traitArray);
         }
 
-        public TreeTrait getTreeTrait(String key) {
+        public TreeTrait<?> getTreeTrait(String key) {
             return traits.get(key);
         }
 
         // Private members
 
-        private Map<String, TreeTrait> traits = new HashMap<String, TreeTrait>();
+        private Map<String, TreeTrait<?>> traits = new HashMap<String, TreeTrait<?>>();
     }
 }

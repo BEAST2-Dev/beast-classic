@@ -36,7 +36,7 @@ public interface TreeTrait<T> {
      *
      * @return the class
      */
-    Class getTraitClass();
+    Class<?> getTraitClass();
 
     /**
      * Returns the trait values for the given node. If this is a branch trait then
@@ -84,7 +84,7 @@ public interface TreeTrait<T> {
      */
     public abstract class D extends DefaultBehavior implements TreeTrait<Double> {
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return Double.class;
         }
 
@@ -105,7 +105,7 @@ public interface TreeTrait<T> {
      */
     public abstract class I extends DefaultBehavior implements TreeTrait<Integer> {
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return Integer.class;
         }
 
@@ -126,7 +126,7 @@ public interface TreeTrait<T> {
      */
     public abstract class S extends DefaultBehavior implements TreeTrait<String> {
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return String.class;
         }
 
@@ -140,7 +140,7 @@ public interface TreeTrait<T> {
      */
     public abstract class DA extends DefaultBehavior implements TreeTrait<double[]> {
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return double[].class;
         }
 
@@ -171,7 +171,7 @@ public interface TreeTrait<T> {
      */
     public abstract class IA extends DefaultBehavior implements TreeTrait<int[]> {
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return int[].class;
         }
 
@@ -275,7 +275,7 @@ public interface TreeTrait<T> {
             return DA.formatTrait(getTrait(tree, node));
         }
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return double[].class;
         }
 
@@ -320,7 +320,7 @@ public interface TreeTrait<T> {
             return D.formatTrait(getTrait(tree, node));
         }
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return double[].class;
         }
 
@@ -395,7 +395,7 @@ public interface TreeTrait<T> {
             super(base);
         }
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return Double.class;
         }
 
@@ -454,7 +454,7 @@ public interface TreeTrait<T> {
             super(name, base, index);
         }
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return Double.class;
         }
 
@@ -492,7 +492,7 @@ public interface TreeTrait<T> {
             super(name, base, index);
         }
 
-        public Class getTraitClass() {
+        public Class<?> getTraitClass() {
             return Double.class;
         }
 
