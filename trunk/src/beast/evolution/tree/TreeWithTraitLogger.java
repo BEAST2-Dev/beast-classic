@@ -1,5 +1,7 @@
 package beast.evolution.tree;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.io.PrintStream;
 
 import beast.core.Description;
@@ -9,14 +11,13 @@ import beast.core.Plugin;
 import beast.core.Input.Validate;
 import beast.core.StateNode;
 import beast.core.Valuable;
-import beast.evolution.branchratemodel.BranchRateModel;
 
 @Description("Logs tree annotated with metadata and/or rates")
 public class TreeWithTraitLogger extends Plugin implements Loggable {
 	public Input<Tree> m_tree = new Input<Tree>("tree","tree to be logged",Validate.REQUIRED);
 	// TODO: make this input a list of valuables
 	public Input<Valuable> m_parameter = new Input<Valuable>("metadata","meta data to be logged with the tree nodes");
-	public Input<TreeTraitProvider> trait = new Input<TreeTraitProvider>("trait", "trait with branches of the tree");
+	public Input<List<TreeTraitProvider>> trait = new Input<List<TreeTraitProvider>>("trait", "trait with branches of the tree", new ArrayList<TreeTraitProvider>());
 	
 
 	String m_sMetaDataLabel;
@@ -44,7 +45,14 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
         if (metadata != null && metadata instanceof StateNode) {
         	metadata = ((StateNode) metadata).getCurrent();
         }
-        TreeTrait[] treeTraits = trait.get().getTreeTraits();
+        List<TreeTrait<?>> treeTraits = new ArrayList<TreeTrait<?>>();
+        for (TreeTraitProvider provider : trait.get()) {
+            TreeTrait<?>[] treeTraits2 = provider.getTreeTraits();
+            for (TreeTrait<?> treeTrait : treeTraits2) {
+            	treeTraits.add(treeTrait);
+            }
+        }
+        
         // write out the log tree with meta data
         out.print("tree STATE_" + nSample + " = ");
 		tree.getRoot().sort();
@@ -53,8 +61,8 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
         out.print(";");
 	}
 
-	
-	String toNewick(Node node, Valuable metadata, TreeTrait[] treeTraits) {
+	/** convert tree to Newick string annotated with meta-data provided through treeTraits **/
+	String toNewick(Node node, Valuable metadata, List<TreeTrait<?>> treeTraits) {
 		StringBuffer buf = new StringBuffer();
 		if (node.m_left != null) {
 			buf.append("(");
@@ -76,7 +84,7 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
 			}
 		}
 		if (treeTraits != null) {
-			for (TreeTrait trait : treeTraits) {
+			for (TreeTrait<?> trait : treeTraits) {
 				buf.append(trait.getTraitName()).append('=');
 				buf.append(trait.getTrait(node.m_tree, node));
 				buf.append(',');

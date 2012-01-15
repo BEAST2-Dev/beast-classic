@@ -1,7 +1,5 @@
 package beast.evolution.tree;
 
-import java.util.List;
-
 import beast.core.CalculationNode;
 import beast.core.Description;
 import beast.core.Input;
@@ -143,7 +141,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	}
 
 	@Override
-	public Class getTraitClass() {
+	public Class<?> getTraitClass() {
 		return double[].class;
 	}
 
