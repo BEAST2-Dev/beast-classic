@@ -23,7 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-package dr.evomodel.operator;
+package beast.evolution.operators;
 
 
 import beast.continuous.AbstractMultivariateTraitLikelihood;

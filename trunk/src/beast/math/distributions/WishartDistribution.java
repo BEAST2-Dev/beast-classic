@@ -1,24 +1,39 @@
 package beast.math.distributions;
 
+import java.util.List;
+import java.util.Random;
+
 import beast.core.*;
 import beast.core.parameter.RealParameter;
 import dr.math.matrixAlgebra.Matrix;
 
 
 @Description("...")
-public class WishartDistribution extends Plugin {
+public class WishartDistribution extends Distribution {
     public Input<Double> df = new Input<Double>("df", "description here");
     public Input<RealParameter> scaleMatrix = new Input<RealParameter>("scaleMatrix", "description here");
+    public Input<Valuable> argInput = new Input<Valuable>("arg", "argument of distribution");
 
     dr.math.distributions.WishartDistribution wishartdistribution;
-
+    Valuable arg;
+    
     @Override
     public void initAndValidate() throws Exception {
         wishartdistribution = new dr.math.distributions.WishartDistribution(
                              df.get(),
                              scaleMatrix.get().getValues());
+        arg = argInput.get();
     }
 
+    @Override
+    public double calculateLogP() throws Exception {
+    	double [] y = new double[arg.getDimension()];
+    	for (int i = 0; i < y.length; i++) {
+    		y[i] = arg.getArrayValue(i);
+    	}
+    	logP = logPdf(y);
+    	return logP;
+    }
 
     void main(String [] arg0) {
         wishartdistribution.main(arg0);
@@ -68,5 +83,23 @@ public class WishartDistribution extends Plugin {
     void testBivariateMethod() {
         wishartdistribution.testBivariateMethod();
      }
+
+	@Override
+	public List<String> getArguments() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getConditions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void sample(State state, Random random) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

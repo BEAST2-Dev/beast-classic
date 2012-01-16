@@ -23,7 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-package dr.evomodel.operator;
+package beast.evolution.operators;
 
 //import dr.evomodel.continuous.AbstractMultivariateTraitLikelihood;
 //import dr.evomodel.continuous.SampledMultivariateTraitLikelihood;
@@ -62,7 +62,10 @@ public class TraitGibbsOperator extends Operator {
 			"parameter representing precision matrix", Validate.REQUIRED);
     public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
 	public Input<SampledMultivariateTraitLikelihood> traitModelInput = new Input<SampledMultivariateTraitLikelihood>("likelihood","", Validate.REQUIRED);
-
+	public Input<MultivariateNormalDistribution> rootPrior = new Input<MultivariateNormalDistribution>("rootprior", "", Validate.REQUIRED);
+	public Input<Boolean> onlyInternalNodesInput = new Input<Boolean>("onlyInternalNodesInput", "" ,true);
+	public Input<Boolean> onlyTipsWithPriorsInput = new Input<Boolean>("onlyTipsWithPriorsInput", "" ,true);
+	
 	public static final String GIBBS_OPERATOR = "traitGibbsOperator";
 	public static final String INTERNAL_ONLY = "onlyInternalNodes";
 	public static final String TIP_WITH_PRIORS_ONLY = "onlyTipsWithPriors";
@@ -97,8 +100,10 @@ public class TraitGibbsOperator extends Operator {
 		this.treeModel = treeInput.get();
 		this.precisionMatrixParameter = precisionParamInput.get();
 		this.traitName = traitModel.getTraitName();
-		this.onlyInternalNodes = onlyInternalNodes;
-		this.onlyTipsWithPriors = onlyTipsWithPriors;
+		setRootPrior(rootPrior.get());
+		
+		this.onlyInternalNodes = onlyInternalNodesInput.get();
+		this.onlyTipsWithPriors = onlyTipsWithPriorsInput.get();
 		this.dim = precisionMatrixParameter.getMinorDimension1();
 	}
 

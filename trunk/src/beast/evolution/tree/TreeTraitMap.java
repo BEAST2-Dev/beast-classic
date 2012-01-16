@@ -5,6 +5,8 @@ import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
+import beast.evolution.operators.UpDownOperator;
+import beast.util.Randomizer;
 
 @Description("Maps nodes in a tree to entries of a parameter")
 public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]> {
@@ -17,6 +19,9 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	public Input<String> value = new Input<String>("value","initialisation values for traits in the form of " +
 			"a comma separated string of taxon-name, value pairs. For example, for a two-dimensional trait " +
 			"the value could be Taxon1=10 20,Taxon2=20 30,Taxon3=10 10");
+	
+	public Input<String> randomizeupper = new Input<String>("randomizeupper", "if specified, used as upper bound for randomly initialising unassigned nodes");
+	public Input<String> randomizelower = new Input<String>("randomizelower", "if specified, used as lower bound for randomly initialising unassigned nodes");
 	Tree tree;
 	RealParameter parameter;
 
@@ -38,6 +43,8 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 			parameter.setDimension(nNodes);
 			traitvalues = new double[1];
 		}
+		
+		
 		rootHasNoTrait = intent.get().equals(Intent.BRANCH);
 
 		nodeToParameterIndexMap = new int[nNodes];
@@ -51,13 +58,41 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		System.arraycopy(nodeToParameterIndexMap, 0, storedNodeToParameterIndexMap, 0, nNodes);
 		
 		
-		if (value.get() != null) {
+		if (value.get() != null || randomizelower.get() != null || randomizeupper.get() != null) {
 	        String [] sTaxa = tree.getTaxaNames();
 	        boolean [] bDone = new boolean[sTaxa.length];
 	        
 			// we need to initialise the trait parameter
 	        int dim = traitvalues.length;
 			Double [] values = new Double[nNodes * dim];
+			if (randomizelower.get() != null || randomizeupper.get() != null) {
+				// randomly assign values in the provided range
+				// defaults to range with extremes zero if nothing is specified
+				double [] upper = new double[dim];
+				double [] lower = new double[dim];
+				if (randomizelower.get() != null) {
+					String [] lowers = randomizelower.get().split("\\s+");
+					int i = 0;
+					while (i < dim) {
+						lower[i] = Double.parseDouble(lowers[i % lowers.length]);
+						i++;
+					}
+				}
+				if (randomizeupper.get() != null) {
+					String [] uppers = randomizeupper.get().split("\\s+");
+					int i = 0;
+					while (i < dim) {
+						upper[i] = Double.parseDouble(uppers[i % uppers.length]);
+						i++;
+					}
+				}
+				for (int i = 0; i < nNodes; i++) {
+					for (int j = 0; i < dim; j++) {
+						values[i * dim + j] = lower[j] + Randomizer.nextDouble() * (upper[j] - lower[j]);
+					}
+				}
+			}
+			
 			String [] sValues = value.get().split(",");
 	        for (String sTrait : sValues) {
 	            sTrait = sTrait.replaceAll("\\s+", " ");
