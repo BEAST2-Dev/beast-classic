@@ -1,25 +1,39 @@
 package beast.math.distributions;
 
 
+import java.util.List;
+import java.util.Random;
+
 import beast.core.*;
 import beast.core.parameter.RealParameter;
 
 
 @Description("...")
-public class MultivariateNormalDistribution extends Plugin {
+public class MultivariateNormalDistribution extends Distribution {
     public Input<RealParameter> mean = new Input<RealParameter>("mean", "description here");
     public Input<RealParameter> precision = new Input<RealParameter>("precision", "description here");
-
-
+    public Input<Valuable> argInput = new Input<Valuable>("arg", "argument of distribution");
 
     dr.math.distributions.MultivariateNormalDistribution multivariatenormaldistribution;
 
 
+    Valuable arg;
     @Override
     public void initAndValidate() throws Exception {
         multivariatenormaldistribution = new dr.math.distributions.MultivariateNormalDistribution(
                              mean.get().getValues(),
                              precision.get().getValues());
+        arg = argInput.get();
+    }
+
+    @Override
+    public double calculateLogP() throws Exception {
+    	double [] y = new double[arg.getDimension()];
+    	for (int i = 0; i < y.length; i++) {
+    		y[i] = arg.getArrayValue(i);
+    	}
+    	logP = logPdf(y);
+    	return logP;
     }
 
     String getType() {
@@ -106,5 +120,23 @@ public class MultivariateNormalDistribution extends Plugin {
 			e.printStackTrace();
 		}
     }
+
+	@Override
+	public List<String> getArguments() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<String> getConditions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void sample(State state, Random random) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

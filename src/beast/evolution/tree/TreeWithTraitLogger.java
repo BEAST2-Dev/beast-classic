@@ -15,20 +15,23 @@ import beast.core.Valuable;
 @Description("Logs tree annotated with metadata and/or rates")
 public class TreeWithTraitLogger extends Plugin implements Loggable {
 	public Input<Tree> m_tree = new Input<Tree>("tree","tree to be logged",Validate.REQUIRED);
-	// TODO: make this input a list of valuables
-	public Input<Valuable> m_parameter = new Input<Valuable>("metadata","meta data to be logged with the tree nodes");
-	public Input<List<TreeTraitProvider>> trait = new Input<List<TreeTraitProvider>>("trait", "trait with branches of the tree", new ArrayList<TreeTraitProvider>());
+	public Input<List<Valuable>> parameters = new Input<List<Valuable>>("metadata","meta data to be logged with the tree nodes", new ArrayList<Valuable>());
+	public Input<List<TreeTraitProvider>> traits = new Input<List<TreeTraitProvider>>("trait", "trait with branches of the tree", new ArrayList<TreeTraitProvider>());
 	
 
-	String m_sMetaDataLabel;
+	List<String> m_sMetaDataLabel;
 	
 	@Override
 	public void initAndValidate() throws Exception {
-		if (m_parameter.get() == null && trait.get() == null) {
+		if (parameters.get().size() == 0 && traits.get().size() == 0) {
 			throw new Exception("At least one of the metadata and branchratemodel inputs must be defined");
 		}
-		if (m_parameter.get() != null) {
-			m_sMetaDataLabel = ((Plugin) m_parameter.get()).getID() + "=";
+		m_sMetaDataLabel = new ArrayList<String>();
+		for (Valuable parameter : parameters.get()) {
+			if (!(parameter instanceof Plugin)) {
+				throw new Exception("Metadata input must be a Plugin");
+			}
+			m_sMetaDataLabel.add(((Plugin) parameter).getID() + "=");
 		}
 	}
 	
@@ -41,12 +44,15 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
 	public void log(int nSample, PrintStream out) {
 		// make sure we get the current version of the inputs
         Tree tree = (Tree) m_tree.get().getCurrent();
-        Valuable metadata = m_parameter.get();
-        if (metadata != null && metadata instanceof StateNode) {
-        	metadata = ((StateNode) metadata).getCurrent();
+        List<Valuable> metadatas = new ArrayList<Valuable>();
+        for (Valuable metadata : parameters.get()) {
+	        if (metadata != null && metadata instanceof StateNode) {
+	        	metadata = ((StateNode) metadata).getCurrent();
+	        }
+	        metadatas.add(metadata);
         }
         List<TreeTrait<?>> treeTraits = new ArrayList<TreeTrait<?>>();
-        for (TreeTraitProvider provider : trait.get()) {
+        for (TreeTraitProvider provider : traits.get()) {
             TreeTrait<?>[] treeTraits2 = provider.getTreeTraits();
             for (TreeTrait<?> treeTrait : treeTraits2) {
             	treeTraits.add(treeTrait);
@@ -56,34 +62,38 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
         // write out the log tree with meta data
         out.print("tree STATE_" + nSample + " = ");
 		tree.getRoot().sort();
-		out.print(toNewick(tree.getRoot(), metadata, treeTraits));
+		out.print(toNewick(tree.getRoot(), metadatas, treeTraits));
         //out.print(tree.getRoot().toShortNewick(false));
         out.print(";");
 	}
 
-	/** convert tree to Newick string annotated with meta-data provided through treeTraits **/
-	String toNewick(Node node, Valuable metadata, List<TreeTrait<?>> treeTraits) {
+	/** convert tree to Newick string annotated with meta-data provided through Valuables and treeTraits **/
+	String toNewick(Node node, List<Valuable> metadatas, List<TreeTrait<?>> treeTraits) {
 		StringBuffer buf = new StringBuffer();
 		if (node.m_left != null) {
 			buf.append("(");
-			buf.append(toNewick(node.m_left, metadata, treeTraits));
+			buf.append(toNewick(node.m_left, metadatas, treeTraits));
 			if (node.m_right != null) {
 				buf.append(',');
-				buf.append(toNewick(node.m_right, metadata, treeTraits));
+				buf.append(toNewick(node.m_right, metadatas, treeTraits));
 			}
 			buf.append(")");
 		} else {
 			buf.append(node.m_iLabel);
 		}
 		buf.append("[");
-		if (metadata != null) {
-			buf.append(m_sMetaDataLabel);
-			buf.append(metadata.getArrayValue(node.m_iLabel));
-			if (treeTraits != null) {
-				buf.append(",");
+		if (metadatas.size() > 0) {
+			for (int i = 0; i < metadatas.size(); i++) {
+				buf.append(m_sMetaDataLabel.get(i));
+				buf.append(metadatas.get(i).getArrayValue(node.m_iLabel));
+				buf.append(',');
+			}
+			// remove last comma
+			if (treeTraits.size() == 0) {
+				buf.deleteCharAt(buf.length() - 1);
 			}
 		}
-		if (treeTraits != null) {
+		if (treeTraits.size() > 0) {
 			for (TreeTrait<?> trait : treeTraits) {
 				buf.append(trait.getTraitName()).append('=');
 				buf.append(trait.getTrait(node.m_tree, node));
