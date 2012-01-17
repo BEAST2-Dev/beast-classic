@@ -128,4 +128,28 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
     } // setupRateMatrix
 
 
+    @Override
+    protected boolean requiresRecalculation() {
+    	// if the rate is only dirty for a value that the indicators block out,
+    	// no recalculation is required, so check this first.
+    	Valuable v = m_rates.get(); 
+    	if (v instanceof Parameter<?>) {
+    		Parameter<?> p = (Parameter<?>) v;
+    		if (p.somethingIsDirty()) {
+    			if (m_frequencies.isDirtyCalculation()) {
+			    	return super.requiresRecalculation();
+    			}
+        		Parameter<Boolean> indicator2 = indicator.get(); 
+    			for (int i = 0; i < p.getDimension(); i++) {
+    				if (indicator2.getValue(i) && p.isDirty(i)) {
+    			    	return super.requiresRecalculation();
+    				}
+    			}
+    			// no calculation is affected
+    			return false;
+    		}
+    	}
+
+    	return super.requiresRecalculation();
+    }
 }

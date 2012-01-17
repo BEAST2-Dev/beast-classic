@@ -27,6 +27,7 @@
 	<path id="classpath">
         <pathelement path="${buildBEAST_CLASSIC}"/>
 		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
+		<fileset dir="${libBEAST_CLASSIC}" includes="colt.jar"/>
         <pathelement path="${beast2classpath}"/>
 	</path>
 
@@ -179,6 +180,7 @@
 			<fileset dir="examples" />
 		</copy>
 		<copy todir="${Add_on_dir}/lib">
+			<fileset dir="${libBEAST_CLASSIC}" includes="colt.jar"/>
 			<fileset dir="${dist}" includes="BEAST_CLASSIC.addon.jar" />
 		</copy>
 		<copy todir="${Add_on_dir}">

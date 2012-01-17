@@ -45,8 +45,8 @@ import beast.evolution.tree.Tree;
 
 @Description("Abstract Observation Process defines how the integration of gain events is done along the tree."+
         "Specific instances should define how the data is collected."+
-        "Alekseyenko, AV., Lee, CJ., Suchard, MA. “Wagner and Dollo: a stochastic duet" +
-        "by composing two parsimonious solos”. Systematic Biology 2008 57(5): 772 - 784; doi:" +
+        "Alekseyenko, AV., Lee, CJ., Suchard, MA. Wagner and Dollo: a stochastic duet" +
+        "by composing two parsimonious solos. Systematic Biology 2008 57(5): 772 - 784; doi:" +
         "10.1080/10635150802434394. PMID: 18853363")
 public class AbstractObservationProcess extends CalculationNode {
     //    Input<String> Name = new Input<String>("Name", "description here");

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beast xmlns="http://www.w3.org/TR/xhtml1/strict" version="2.0" namespace="beast.core:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood"><data dataType="nucleotide" id="alignment">
+<beast xmlns="http://www.w3.org/TR/xhtml1/strict" version="2.0" namespace="beast.core:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.core.parameter:beast.evolution.branchratemodel."><data dataType="nucleotide" id="alignment">
 <sequence taxon="hOH10_97.2_41.053_80.706">
 TTCCCTATCTACACAATACCAGACAAGCTAGGTCCTTGGAGTCCTATCGACATACATCATCTCAGTTGTCCCAATAATCTTGTTGTGGAAGACGAGGGGTGTAATAGTCTGTCGGGGTTTTCTTACATGGAACTAAAAGTGGGATACATCTCTGCCATAAAAGTGAACGGGTTCACTTGTACTGGTGTCGTGACGGAAGCCGAGACCTACACTAACTTCGTTGGTTATGTCACCACCACATTCAAGAGAAAACACTTTCGCCCGATGCCCGATGCATGTAGATCCGCATACAATTGGAAAATGGCAGGCGATCCTAGGTATGAAGAGTCCCTTCACAACCCATACCCTGATTATCATTGGCTGCGGACAGTTAAAACCACCAAGGAGTCTCTTATCATCATCTCACCAAGTGTGGCTGACCTAGACCCGTATGACAAATCCCTTCATTCAAGGATTTTTCCTGGGGGGAAATGCACGGGTCTAACAGTCTCTTCCACCTACTGCTCGACCAACCATGACTACACCATCTGGATGCCTGAAAAAGCAGGGCTCGGGACATCTTGTGACATCTTCACCAATAGTAAAGGGAAGAGAGCGTCTAAAGGAGGCAAGACTTGTGGATTTGTGGACGAGAGAGGTTTGTATAAGTCCTTGAAAGGAGCTTGTAAGCTCAAGTTGTGCGGAGTTTCTGGGCTTAGACTTATGGATGGAACTTGGGTTGCGATTCAGACATTGGATGAAACCAAATGGTGCTCTCCTGATCAACTGGTGAATCTGCATGACTTCCACTCGGATGAGCTTGAGCATCTTGTTGTAGAGGAGTTGGTTAGAAAGAGGGAGGAATGTCTGGATGCATTAGAATCCATCATGACCACCAAATCAGTAAGCTTCAGACGTCTAAGCCACCTGAGAAAACTAGTTCCTGGGTTTGGGAAGGCATACACCATATTCAACAAAACCCTAATGGAGGCCGATGCCCACTACAAGTCCGTTCGGACTTGGAGCGAGATCATCCCCTCAAAAGGGTGTTTGAGAGTAGGGGGGAGATGTCATCCTCATGTAAATGGAGTATTTTTCAATGGCATCATTCTAGGTCCGGACGGGCATGTGTTGATCCCAGAAATGCAGTCATCCCTTCTCCAACAACATGTGGAACTGTTGGAGTCCTCAGTGATCCCCCTCATGCACCCCCTGGCAGATCCTTCAGCAGTTTTCAAAGATGGTGACGAGGCAGAGGATTTTGTTGAGGTTCATCTCCCAGATGTTCACAAACAGATCTCAGGGGTGGACCTAGGCCTCCCAAGCTGGGGAAAGTATATGCTGATGATTGCAGGTGCTCTAACGACTCTAATGCTGTTCAACACCTCTACAATGGATACCGACAAAATTGTATTCAAAGTCAATAACCAGGTTGTCTCTCTAAAACCTGAAATTATTGTAGATCAATATGAGTACAAATACCCGGCTATCAAAGACTTAAAAAAGCCCAGTATCTCCCTGGGAAAAGCTCCTGATTTGAACAAGGCGTATAAGTCAATTTTGTCCGGTATGAATGCAGCTAAGCTCGACCCTGACGATGTGTGCTCTTACTTGGCAGCTGCAATGCAGTTCTTTGAAGGAACATGTCCAGAAGACTGGACTAGCTATGGAATCTTGATTGCAAGGAAGGGAGACAAGATAACTCCAAACTCTCTCGTAGACATAAAACGTACAGATGTAGAAGGGAACTGGGCTCTAACAGGAGGAATGGAGTTGACTAGAGATCCCACCATTCCAGAACATGCATCTTTGGTTGGTCTTCTCCTGAGTTTGTATCGATTGAGCAAAATATCCGGACAGAACACAGGCAATTACAAGACCAATATCTCTGATCGTATAGAGCAGATTTTTGAGACGGCCCCCTTTGTGAAGATCGTGGAACATCACACTTTGATGACAACTCACAAAATGTGCGCTAACTGGAGCACCATACCGAATTTTAGATTCCTAGCAGGAACTTATGACATGTTTTTCTCTCGGATCGAACATCTATATTCAGCAATCAGAGTGGGTACAGTTGTCACTGCTTACGAGGACTGCTCAGGGCTAGTATCTTTTACAGGTTTTATAAAGCAGATAAACCTTACAGCAAAGGAAGCAATACTTTATTTCTTCCACAAAAATTTTGAGGGAGAGATAAGAAGAATGTTTGAGCCGGGACAGGAAACTGCAGTCCCTCACTCCTATTTCATCCATTTCCGGTCTTTGGGCCTGAGTGGGAAATCTCCATATTCGTCAAGTGCAGTTGGTCACGTGTTCAACCTCATTCACTTTGTTGGATGCTATATGGGTCAAGTGAGGTCTTTGAATGCAACAGTTATTGCCACATGTGCTCCACATGAGATGTCTGTTCTCGGGGGTTATCTGGGGGAGGAGTTCTTTGGCAAGGGGACTTTTGAGAGAAGATTCTTCAGAAACGAGAAGGAACTTCAGGACTATGAAGCAGCAGAGTTGACAAAGACTGAGGTCGCTCTGGCAGATGACGGAACAGTCAATTCTGACGACGAAGACTACTTCTCTGGTGAAACCAGGAGTCCAGAGGCGGTCTATACTCGGATCATGATTAATGGGGGCCGACTCAAAAGATCACATATAAGAAGGTATGTATCAGTCAGTTCCAATCATCAAGCTCGCCCCAATTCATTTGCTGAATTTCTAAACAAGACATATTCTAACGACCCGTAGGGAGTCGAACTTCAAGATTGTCAACAATAATAAATTGTTTAATTCCTCCACGAAAAAAACTAACACCCCTCCTTTTGAACCATCCCA
 		</sequence>
@@ -151,7 +151,45 @@ TTCCCTATCTACACAATACCAGACAAGCTAGGTCCTTGGAGTCCTATCGACATACATCATCTCAGTTGTCCCAATAATCT
         <taxa idref='alignment'/>
     </tree>
 
-<!-- locations
+
+
+	<diffusionModel id="diffusionModel" spec='beast.continuous.MultivariateDiffusionModel'>
+		<precisionMatrix spec='RealParameter' id='precisionMatrix' minordimension='2'>
+				0.05 0.002 
+				0.002 0.05
+		</precisionMatrix>
+	</diffusionModel>
+
+	<distribution  id="precisionPrior" spec='beast.math.distributions.WishartDistribution' df='2' arg='@precisionMatrix'>
+		<scaleMatrix spec='RealParameter' minordimension='2'>
+				1.0 0.0
+				0.0 1.0
+		</scaleMatrix>
+	</distribution>
+
+	<distribution id="rootPrior" spec='beast.math.distributions.MultivariateNormalDistribution'>
+		<arg id='rootTrait' spec='beast.evolution.tree.RootTrait' traitmap='@traitmap'/>
+		<mean spec='RealParameter' value='0.0 0.0'/>
+		<precision spec='RealParameter' minordimension='2'>
+				0.001 0.0
+				0.0   0.001
+		</precision>
+	</distribution>
+
+    <branchRateModel id="branchRatesDiffusion" spec='UCRelaxedClockModel' tree='@tree'>
+        <parameter name='clock.rate' id='ucld.mean' value='1.0'/>
+        <distr id='lognormal' spec="beast.math.distributions.LogNormalDistributionModel"  meanInRealSpace="true">
+            <M id='ucldDiffusion.mean' spec='RealParameter' value="1"/>
+            <S id='ucldDiffusion.stdev' spec='RealParameter' value="0.1" lower="0" upper="5"/>
+        </distr>
+        <parameter spec='IntegerParameter' name='rateCategories' id='rateCategories' dimension="92" value="1"/>
+    </branchRateModel>
+
+    <log id='rateStat' spec='RateStatistic' tree='@tree' branchratemodel='@branchRatesDiffusion'/>
+
+
+	<traitmap id='traitmap' spec='beast.evolution.tree.TreeTraitMap' tree='@tree' parameter='@traitParameter' traitName='location' 
+		randomizeupper="45 -70" randomizelower="28 -122">
 				hOH10_97.2_41.053_80.706=41.053 -80.706,
 				hWVa01_93.2_40.505_80.575=40.505 -80.575,
 				NY01_03.4_41.057_73.794=41.057 -73.794,
@@ -199,8 +237,47 @@ TTCCCTATCTACACAATACCAGACAAGCTAGGTCCTTGGAGTCCTATCGACATACATCATCTCAGTTGTCCCAATAATCT
 				WVa08_02.6_38.677_79.349=38.677 -79.349,
 				WVa14_02.7_39.050_78.886=39.050 -78.886,
 				WVa22_02.7_39.635_79.995=39.635 -79.995
--->
+	</traitmap>
+    
 
+	<multivariateTraitLikelihood id="traitLikelihood" spec='beast.continuous.SampledMultivariateTraitLikelihood'
+		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@tree'>
+		<traitParameter id='traitParameter' spec='RealParameter' value='0 0' minordimension='2'/>
+		<traitmap idref='traitmap'/>
+		<diffusionmodel idref='diffusionModel'/>
+		<branchratemodel idref="branchRatesDiffusion"/>
+    </multivariateTraitLikelihood>
+
+
+
+<!--
+	<correlation id="locationCorrelation" dimension1="1" dimension2="2">
+		<matrixParameter idref="precisionMatrix"/>
+	</correlation>
+
+    <treeLengthStatistic id="treeLength">
+         <treeModel idref="treeModel"/>
+     </treeLengthStatistic>
+
+     <productStatistic id="treeLengthPrecision1">
+         <treeLengthStatistic idref="treeLength"/>
+         <subStatistic id="precision1" dimension="0"> 
+             <parameter idref="col1"/>
+         </subStatistic>
+     </productStatistic>
+
+     <productStatistic id="treeLengthPrecision2">
+         <treeLengthStatistic idref="treeLength"/>
+         <subStatistic id="precision2" dimension="1">
+             <parameter idref="col2"/>
+         </subStatistic>
+     </productStatistic>
+
+	<treeDispersionStatistic id="dispersionRate" greatCircleDistance="true">
+		<treeModel idref="treeModel"/>
+		<multivariateTraitLikelihood idref="traitLikelihood"/>
+	</treeDispersionStatistic>
+-->
 
 
 
@@ -208,8 +285,7 @@ TTCCCTATCTACACAATACCAGACAAGCTAGGTCCTTGGAGTCCTATCGACATACATCATCTCAGTTGTCCCAATAATCT
     <distribution spec="CompoundDistribution" id="posterior">
         <distribution spec="CompoundDistribution" id="prior">
             <distribution id="hky.kappa.prior" spec="beast.math.distributions.Prior" x="@hky.kappa">
-                <distr id="LogNormalDistributionModel" M="1.0" S="1.25" meanInRealSpace="false"
-                              spec="beast.math.distributions.LogNormalDistributionModel"/>
+                <distr spec="beast.math.distributions.OneOnX"/>
             </distribution>
 
             <distribution spec="BayesianSkyline" id='skyline'>
@@ -223,33 +299,47 @@ TTCCCTATCTACACAATACCAGACAAGCTAGGTCCTTGGAGTCCTATCGACATACATCATCTCAGTTGTCCCAATAATCT
             <distribution id='eml1' spec="beast.math.distributions.MarkovChainDistribution" 
 				jeffreys="true"
 				parameter="@skyline.popSize"/>
-        </distribution>
-		<distribution idref="geolikelihood">
 
-		<distribution spec='TreeLikelihood' id="likelihood">
-		    <data idref="alignment"/>
-		    <tree idref="tree"/>
-			<siteModel spec='SiteModel' id="siteModel" gammaCategoryCount="4">
-				<parameter id='siteModel.alpha' name='shape' value='5.40372E-2'/>
-				<substModel spec='HKY' id="hky">
-					<parameter name='kappa' id="hky.kappa" value="21.5056" lower="0.0"/>
-					<frequencies id='freqs' spec='Frequencies' data="@alignment"/>
-				</substModel>
-			</siteModel>
-			<branchRateModel spec='beast.evolution.branchratemodel.StrictClockModel' id="branchRates">
-				<parameter name='clock.rate' id='clock.rate' value="8.8579E-4" lower="0.0" upper="100.0"/>
-			</branchRateModel>
+			<distribution idref='rootPrior'/>
+			<distribution idref='precisionPrior'/>
+            <distribution id="ucldDiffusion.stdev.prior" spec="beast.math.distributions.Prior" x="@ucldDiffusion.stdev">
+                <distr spec="beast.math.distributions.Exponential" lambda='10'/>
+			</distribution>
+        </distribution>
+
+        <distribution spec="CompoundDistribution" id="likelihood">
+			<distribution spec='TreeLikelihood' id="treeLikelihood">
+				<data idref="alignment"/>
+				<tree idref="tree"/>
+				<siteModel spec='SiteModel' id="siteModel" gammaCategoryCount="4">
+					<parameter id='siteModel.alpha' name='shape' value='5.40372E-2'/>
+					<substModel spec='HKY' id="hky">
+						<parameter name='kappa' id="hky.kappa" value="21.5056" lower="0.0"/>
+						<frequencies id='freqs' spec='Frequencies' data="@alignment"/>
+					</substModel>
+				</siteModel>
+				<branchRateModel spec='beast.evolution.branchratemodel.StrictClockModel' id="branchRates">
+					<parameter name='clock.rate' id='clock.rate' value="8.8579E-4" lower="0.0" upper="100.0"/>
+				</branchRateModel>
+			</distribution>
+			<distribution idref='traitLikelihood'/>
 		</distribution>
     </distribution>
 
+
     <run spec="MCMC" id="mcmc" chainLength="10000000">
         <state>
-			<parameter name='stateNode' id="skyline.popSize" dimension="5" value="380.0" lower="0.0" upper="38000.0"/>
-			<stateNode spec='parameter.IntegerParameter' id='skyline.groupSize' dimension="5" value="0"/>
+			<parameter name='stateNode' id="skyline.popSize" dimension="6" value="380.0" lower="0.0" upper="38000.0"/>
+			<stateNode spec='parameter.IntegerParameter' id='skyline.groupSize' dimension="6" value="0"/>
             <stateNode idref="hky.kappa"/>
             <stateNode idref="tree"/>
             <stateNode idref="clock.rate"/>
             <stateNode idref="siteModel.alpha"/>
+
+			<stateNode idref='ucldDiffusion.stdev'/>
+			<stateNode idref='rateCategories'/>
+			<stateNode idref='traitParameter'/>
+			<stateNode idref='precisionMatrix'/>
         </state>
 
         <distribution idref="posterior"/>
@@ -278,28 +368,56 @@ TTCCCTATCTACACAATACCAGACAAGCTAGGTCCTTGGAGTCCTATCGACATACATCATCTCAGTTGTCCCAATAATCT
         <operator id='wide' spec='Exchange' isNarrow='false' weight="3" tree="@tree"/>
         <operator spec='WilsonBalding' weight="3" tree="@tree"/>
 
+	<!-- phylogeography -->
+        <operator id='ucldStdevScaler' spec='ScaleOperator' scaleFactor="0.75" weight="3" parameter="@ucldDiffusion.stdev"/>
+        <operator id='CategoriesSwapOperator' spec='SwapOperator' howMany="1" weight="30" intparameter='@rateCategories'/>
+        <operator id="CategoriesRandomWalk" spec="IntRandomWalkOperator" windowSize='1' weight="10" parameter="@rateCategories"/>
+        <operator id='CategoriesUniform' spec='UniformOperator' weight="10" parameter='@rateCategories'/>
+		
+		<operator id='precisionGibbsOperator' spec='PrecisionMatrixGibbsOperator' tree='@tree' parameter='@precisionMatrix' traitmap='@traitmap'  weight="15">
+			<likelihood idref='traitLikelihood'/>
+			<prior idref='precisionPrior'/>
+		</operator>
 
-        <logger logEvery="1000" fileName="test.$(seed).log">
+
+        <operator id='traitGibbsOperator' spec='TraitGibbsOperator' tree='@tree' parameter='@traitParameter' traitmap='@traitmap' weight="50">
+			<likelihood idref='traitLikelihood'/>
+			<rootprior idref="rootPrior"/>
+		</operator>
+		
+<!--
+    	<randomWalkOperator windowSize="10.0" weight="5">
+			<parameter idref="rootTrait"/>
+	    </randomWalkOperator>
+-->
+        <logger logEvery="1000" fileName="RacRABV_LogN.$(seed).log">
             <log idref="posterior"/>
-            <log idref="siteModel.alpha"/>
+            <log idref="prior"/>
+            <log idref="likelihood"/>
             <log idref="clock.rate"/>
+            <log spec='beast.evolution.tree.TreeHeightLogger' tree='@tree' id='treeModel.rootHeight'/>
             <log idref="skyline.popSize"/>
             <log idref="skyline.groupSize"/>
             <log idref="hky.kappa"/>
-            <log spec='beast.evolution.tree.TreeHeightLogger' tree='@tree' id='treeModel.rootHeight'/>
-            <log idref="likelihood"/>
-            <log idref="skyline"/>
-            <log idref="eml1"/>
+            <log idref="siteModel.alpha"/>
+			<log idref="precisionMatrix"/>
+			<log idref="rootTrait"/>
+			<log idref='rateStat'/>
+			<log idref="ucldDiffusion.stdev"/>
+			<log idref="treeLikelihood"/>
+			<log idref="skyline"/>
+            <log idref="traitLikelihood"/>
         </logger>
 
-        <logger logEvery="1000" fileName="test.$(seed).trees">
-			<log idref="tree"/>
+        <logger logEvery="1000" fileName="RacRABV_LogN.$(seed).trees">
+			<log idref='tree'/>
 		</logger>              
 
         <logger logEvery="10000">
             <log idref="posterior"/>
             <log idref="likelihood"/>
             <log idref="prior"/>
+			<log idref="precisionMatrix"/>
             <log spec='beast.evolution.tree.TreeHeightLogger' tree='@tree'/>
         </logger>
 
