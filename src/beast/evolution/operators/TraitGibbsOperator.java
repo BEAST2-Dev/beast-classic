@@ -36,7 +36,7 @@ import dr.geo.GeoSpatialDistribution;
 import dr.math.MathUtils;
 import dr.math.matrixAlgebra.SymmetricMatrix;
 import dr.math.distributions.MultivariateDistribution;
-import dr.math.distributions.MultivariateNormalDistribution;
+//import dr.math.distributions.MultivariateNormalDistribution;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +52,7 @@ import beast.evolution.alignment.Taxon;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTraitMap;
+import beast.math.distributions.MultivariateNormalDistribution;
 
 /**
  * @author Marc Suchard
