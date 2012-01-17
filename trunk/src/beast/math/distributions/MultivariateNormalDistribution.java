@@ -54,10 +54,10 @@ public class MultivariateNormalDistribution extends Distribution {
     double calculatePrecisionMatrixDeterminate(double [][] arg0) {
         return multivariatenormaldistribution.calculatePrecisionMatrixDeterminate(arg0);
      }
-    double [][] getScaleMatrix() {
+    public double [][] getScaleMatrix() {
         return multivariatenormaldistribution.getScaleMatrix();
      }
-    double [] getMean() {
+    public double [] getMean() {
         return multivariatenormaldistribution.getMean();
      }
     double [] nextMultivariateNormal() {
@@ -93,8 +93,8 @@ public class MultivariateNormalDistribution extends Distribution {
 //    double [][] getInverse(double [][] arg0) {
 //        return multivariatenormaldistribution.getInverse(arg0);
 //     }
-    double [] nextMultivariateNormalPrecision(double [] arg0, double [][] arg1) {
-        return multivariatenormaldistribution.nextMultivariateNormalPrecision(arg0, arg1);
+    static public double [] nextMultivariateNormalPrecision(double [] arg0, double [][] arg1) {
+        return dr.math.distributions.MultivariateNormalDistribution.nextMultivariateNormalPrecision(arg0, arg1);
      }
     double [] nextMultivariateNormalVariance(double [] arg0, double [][] arg1) {
         return multivariatenormaldistribution.nextMultivariateNormalVariance(arg0, arg1);

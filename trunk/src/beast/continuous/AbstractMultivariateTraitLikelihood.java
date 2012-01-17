@@ -281,20 +281,24 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution
 //    }
 
     private void updateAllNodes() {
-        for (int i = 0; i < treeModel.getNodeCount(); i++)
-            validLogLikelihoods[i] = false;
+    	if (cacheBranches)
+    		for (int i = 0; i < treeModel.getNodeCount(); i++)
+    			validLogLikelihoods[i] = false;
         likelihoodKnown = false;
     }
 
     private void updateNode(Node node) {
-        validLogLikelihoods[node.getNr()] = false;
+    	if (cacheBranches)
+    		validLogLikelihoods[node.getNr()] = false;
         likelihoodKnown = false;
     }
 
     private void updateNodeAndChildren(Node node) {
-        validLogLikelihoods[node.getNr()] = false;
-        for (int i = 0; i < node.getChildCount(); i++)
-            validLogLikelihoods[node.getChild(i).getNr()] = false;
+    	if (cacheBranches) {
+	        validLogLikelihoods[node.getNr()] = false;
+	        for (int i = 0; i < node.getChildCount(); i++)
+	            validLogLikelihoods[node.getChild(i).getNr()] = false;
+    	}
         likelihoodKnown = false;
     }
 
@@ -319,7 +323,8 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution
     @Override
     protected boolean requiresRecalculation() {
     	if (diffusionModel.isDirtyCalculation() || rateModel.isDirtyCalculation()
-    			|| traitParameter.somethingIsDirty() || deltaParameter.somethingIsDirty()) {
+    			|| traitParameter.somethingIsDirty() 
+    			|| (deltaParameter != null && deltaParameter.somethingIsDirty())) {
             likelihoodKnown = false;
     	}
     	if (treeModel.somethingIsDirty()) {

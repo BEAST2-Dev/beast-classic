@@ -41,10 +41,10 @@ public class WishartDistribution extends Distribution {
     String getType() {
         return wishartdistribution.getType();
      }
-    double df() {
+    public double df() {
         return wishartdistribution.df();
      }
-    double [][] scaleMatrix() {
+    public double [][] scaleMatrix() {
         return wishartdistribution.scaleMatrix();
      }
 //    void computeNormalizationConstant() {
@@ -62,11 +62,11 @@ public class WishartDistribution extends Distribution {
     void testMe() {
         wishartdistribution.testMe();
      }
-    double [][] nextWishart() {
+    public double [][] nextWishart() {
         return wishartdistribution.nextWishart();
      }
-    double [][] nextWishart(double arg0, double [][] arg1) {
-        return wishartdistribution.nextWishart(arg0, arg1);
+    public static double [][] nextWishart(double arg0, double [][] arg1) {
+        return dr.math.distributions.WishartDistribution.nextWishart(arg0, arg1);
      }
     double logPdf(double [] arg0) {
         return wishartdistribution.logPdf(arg0);

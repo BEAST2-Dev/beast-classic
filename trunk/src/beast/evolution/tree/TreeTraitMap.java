@@ -87,7 +87,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 					}
 				}
 				for (int i = 0; i < nNodes; i++) {
-					for (int j = 0; i < dim; j++) {
+					for (int j = 0; j < dim; j++) {
 						values[i * dim + j] = lower[j] + Randomizer.nextDouble() * (upper[j] - lower[j]);
 					}
 				}
@@ -162,8 +162,9 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	}
 
 	public double [] getTrait(Tree tree, Node node) {
-		parameter.getMatrixValues1(nodeToParameterIndexMap[node.getNr()], traitvalues);
-		return traitvalues;
+		int id = nodeToParameterIndexMap[node.getNr()];
+		parameter.getMatrixValues1(id, traitvalues);
+		return traitvalues.clone();
 	}
 
 	public void setTrait(Node node, double [] values) {
