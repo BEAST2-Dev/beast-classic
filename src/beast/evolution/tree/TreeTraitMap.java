@@ -166,6 +166,11 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		parameter.getMatrixValues1(id, traitvalues);
 		return traitvalues.clone();
 	}
+	
+	public int getTraitNr(Node node) {
+		int id = nodeToParameterIndexMap[node.getNr()];
+		return id;
+	}
 
 	public void setTrait(Node node, double [] values) {
 		assert values.length == traitvalues.length;
