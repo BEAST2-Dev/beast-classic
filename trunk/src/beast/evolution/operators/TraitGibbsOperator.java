@@ -63,7 +63,7 @@ public class TraitGibbsOperator extends Operator {
 			"parameter representing precision matrix", Validate.REQUIRED);
     public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
 	public Input<SampledMultivariateTraitLikelihood> traitModelInput = new Input<SampledMultivariateTraitLikelihood>("likelihood","", Validate.REQUIRED);
-	public Input<MultivariateNormalDistribution> rootPrior = new Input<MultivariateNormalDistribution>("rootprior", "", Validate.REQUIRED);
+	public Input<MultivariateNormalDistribution> rootPrior = new Input<MultivariateNormalDistribution>("rootprior", "");
 	public Input<Boolean> onlyInternalNodesInput = new Input<Boolean>("onlyInternalNodesInput", "" ,true);
 	public Input<Boolean> onlyTipsWithPriorsInput = new Input<Boolean>("onlyTipsWithPriorsInput", "" ,true);
 	
@@ -101,7 +101,9 @@ public class TraitGibbsOperator extends Operator {
 		this.treeModel = treeInput.get();
 		this.precisionMatrixParameter = precisionParamInput.get();
 		this.traitName = traitModel.getTraitName();
-		setRootPrior(rootPrior.get());
+		if (rootPrior.get() != null) {
+			setRootPrior(rootPrior.get());
+		}
 		
 		this.onlyInternalNodes = onlyInternalNodesInput.get();
 		this.onlyTipsWithPriors = onlyTipsWithPriorsInput.get();
@@ -203,7 +205,8 @@ public class TraitGibbsOperator extends Operator {
 				do {
 					if (count > maxTries) {
 						traitMap.setTrait(node, initialValue);
-						throw new Exception("Truncated Gibbs is stuck!");
+						//throw new Exception("Truncated Gibbs is stuck!");
+						return Double.NEGATIVE_INFINITY;
 					}
 
 					draw = MultivariateNormalDistribution.nextMultivariateNormalPrecision(mp.mean, mp.precision);

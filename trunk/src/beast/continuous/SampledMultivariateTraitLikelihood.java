@@ -13,7 +13,9 @@ import dr.math.matrixAlgebra.Vector;
 import java.util.List;
 import java.util.Random;
 
+import beast.core.Input;
 import beast.core.State;
+import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 
@@ -35,6 +37,28 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
 //                useTreeLength, rateModel, samplingDensity, reportAsMultivariate, reciprocalRates);
 //    }
 
+	public Input<Boolean> initFromTree = new Input<Boolean>("initFromTree","initiliase initial state from tree", false);
+	
+	@Override
+	public void initAndValidate() throws Exception {
+		super.initAndValidate();
+		if (initFromTree.get()) {
+			Node [] nodes = treeModel.getNodesAsArray();
+			Double [] trait = new Double[nodes.length * 2];
+			int k = 0;
+			for (Node node : nodes) {
+				Object o = node.getMetaData("lat");
+				trait[k++] = (Double) o;
+				o =  node.getMetaData("long");
+				trait[k++] = (Double) o;
+			}
+			RealParameter traitParameter = new RealParameter(trait);
+			traitParameter.setBounds(this.traitParameter.getLower(), this.traitParameter.getUpper());
+			this.traitParameter.assignFromWithoutID(traitParameter);
+		}
+	}
+	
+	
     protected String extraInfo() {
         return "\tSampling internal trait values: true\n";
     }
@@ -46,16 +70,14 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
      */
     public double calculateLogLikelihood() {
 
-        double logLikelihood;
-
         if (!cacheBranches)
-            logLikelihood = traitLogLikelihood(null, treeModel.getRoot());
+            logP= traitLogLikelihood(null, treeModel.getRoot());
         else
-            logLikelihood = traitCachedLogLikelihood(null, treeModel.getRoot());
-        if (logLikelihood > maxLogLikelihood) {
-            maxLogLikelihood = logLikelihood;
+        	logP = traitCachedLogLikelihood(null, treeModel.getRoot());
+        if (logP > maxLogLikelihood) {
+            maxLogLikelihood = logP;
         }
-        return logLikelihood;
+        return logP;
     }
 
     protected  double calculateAscertainmentCorrection(int taxonIndex) {
@@ -121,6 +143,9 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
 
             double time = getRescaledBranchLength(node);
             logL = diffusionModel.getLogLikelihood(parentTrait, childTrait, time);
+//            if (logL > 0) {
+//                logL = diffusionModel.getLogLikelihood(parentTrait, childTrait, time);
+//            }
             if (new Double(logL).isNaN()) {
                 System.err.println("AbstractMultivariateTraitLikelihood: likelihood is undefined");
                 System.err.println("time = " + time);

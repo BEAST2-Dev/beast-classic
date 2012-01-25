@@ -17,6 +17,7 @@ import dr.math.distributions.MultivariateNormalDistribution;
 import beast.core.Distribution;
 import beast.core.Input;
 import beast.core.Input.Validate;
+import beast.core.Loggable;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Taxon;
 import beast.evolution.branchratemodel.BranchRateModel;
@@ -26,6 +27,7 @@ import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitMap;
 import beast.evolution.tree.TreeTraitProvider;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -34,7 +36,7 @@ import java.util.logging.Logger;
  * @author Marc Suchard
  */
 
-public abstract class AbstractMultivariateTraitLikelihood extends Distribution
+public abstract class AbstractMultivariateTraitLikelihood extends Distribution implements Loggable
 //        implements TreeTraitProvider, Citable 
 {
     public Input<Tree> treeModelInput = new Input<Tree>("tree","", Validate.REQUIRED);
@@ -322,6 +324,13 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution
     
     @Override
     protected boolean requiresRecalculation() {
+    	if (true) {
+	    	recalculateTreeLength();
+	    	updateAllNodes();
+	        likelihoodKnown = false;
+	        return true;
+    	}
+    	
     	if (diffusionModel.isDirtyCalculation() || rateModel.isDirtyCalculation()
     			|| traitParameter.somethingIsDirty() 
     			|| (deltaParameter != null && deltaParameter.somethingIsDirty())) {
@@ -448,6 +457,13 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution
         }
         return logLikelihood;
     }
+    
+    @Override
+    public double calculateLogP() throws Exception {
+    	logP = getLogLikelihood();
+    	return logP;
+    }
+    
 
     protected abstract double calculateAscertainmentCorrection(int taxonIndex);
 
@@ -459,6 +475,9 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution
             updateAllNodes();
     }
 
+    
+    
+    
 //    public LogColumn[] getColumns() {
 //        return new LogColumn[]{
 //                new LikelihoodColumn(getId() + ".joint"),
@@ -470,6 +489,18 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution
 //        };
 //    }
 
+    
+    /** loggable implementation **/
+    @Override
+    public void init(PrintStream out) throws Exception {
+    	out.print(getID() + ".joint\t" + getID() + ".data\t");
+    }
+    
+    @Override
+    public void log(int nSample, PrintStream out) {
+    	out.print(logP + "\t" + getLogDataLikelihood() + "\t");
+    }
+    
     public abstract double calculateLogLikelihood();
 
 //    public double getMaxLogLikelihood() {
