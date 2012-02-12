@@ -706,7 +706,7 @@
             <log idref="actualGeoRates"/>
         </logger>
         
-        <logger logEvery="10000" fileName="H5N1_discrete_geo.$(seed).trees">
+        <logger logEvery="10000" fileName="H5N1_discrete_geo.$(seed).trees" mode='tree'>
 			<log spec='TreeWithTraitLogger' tree='@tree'>
 				<metadata idref="posterior"/>
 				<metadata idref="geoTreeLikelihood"/>
