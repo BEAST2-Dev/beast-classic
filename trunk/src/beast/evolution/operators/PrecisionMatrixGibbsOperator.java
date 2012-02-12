@@ -177,8 +177,8 @@ public class PrecisionMatrixGibbsOperator extends Operator {
         }
         // recurse down tree
         if (!node.isLeaf()) {
-	        incrementOuterProduct(S, node.m_left);
-	        incrementOuterProduct(S, node.m_right);
+	        incrementOuterProduct(S, node.getLeft());
+	        incrementOuterProduct(S, node.getRight());
         }
     }
 

@@ -346,8 +346,8 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution i
             	for (int i = 0; i < nodes.length; i++) {
             		if (nodes[i].isDirty() != Tree.IS_CLEAN) {
                         validLogLikelihoods[nodes[i].getNr()] = false;
-                        validLogLikelihoods[nodes[i].m_left.getNr()] = false;
-                        validLogLikelihoods[nodes[i].m_right.getNr()] = false;
+                        validLogLikelihoods[nodes[i].getLeft().getNr()] = false;
+                        validLogLikelihoods[nodes[i].getRight().getNr()] = false;
             		}
             	}
                 likelihoodKnown = false;
