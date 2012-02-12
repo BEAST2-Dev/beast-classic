@@ -8,6 +8,7 @@ import beast.core.Input.Validate;
 import beast.evolution.datatype.DataType;
 import beast.evolution.datatype.UserDataType;
 import beast.evolution.tree.Node;
+import beast.evolution.tree.TraitSet;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitProvider;
@@ -22,7 +23,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     public Input<String> tagInput = new Input<String>("tag","label used to report trait", Validate.REQUIRED);
     public Input<Boolean> useMAPInput = new Input<Boolean>("useMAP","whether to use maximum aposteriori assignments or sample", false);
     public Input<Boolean> returnMLInput = new Input<Boolean>("returnML", "report integrate likelihood of tip data", true);
-
+    
     /**
      * Constructor.
      * Now also takes a DataType so that ancestral states are printed using data codes
@@ -44,9 +45,10 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     @Override
     public void initAndValidate() throws Exception {
     	super.initAndValidate();
-        this.tag = tag;
+        this.tag = tagInput.get();
         Tree treeModel = m_tree.get();
         patternCount = m_data.get().getPatternCount();
+        dataType = m_data.get().getDataType();
         stateCount = dataType.getStateCount();
 
         reconstructedStates = new int[treeModel.getNodeCount()][patternCount];

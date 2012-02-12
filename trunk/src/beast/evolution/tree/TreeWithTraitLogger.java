@@ -117,7 +117,7 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
 		if (treeTraits.size() > 0) {
 			for (TreeTrait<?> trait : treeTraits) {
 				buf.append(trait.getTraitName()).append('=');
-				buf.append(trait.getTrait(node.m_tree, node));
+				buf.append(trait.getTraitString(node.m_tree, node));
 				buf.append(',');
 			}
 		}
