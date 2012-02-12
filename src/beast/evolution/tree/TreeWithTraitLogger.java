@@ -95,12 +95,12 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
 	/** convert tree to Newick string annotated with meta-data provided through Valuables and treeTraits **/
 	String toNewick(Node node, List<TreeTrait<?>> treeTraits) {
 		StringBuffer buf = new StringBuffer();
-		if (node.m_left != null) {
+		if (node.getLeft() != null) {
 			buf.append("(");
-			buf.append(toNewick(node.m_left, treeTraits));
-			if (node.m_right != null) {
+			buf.append(toNewick(node.getLeft(), treeTraits));
+			if (node.getRight() != null) {
 				buf.append(',');
-				buf.append(toNewick(node.m_right, treeTraits));
+				buf.append(toNewick(node.getRight(), treeTraits));
 			}
 			buf.append(")");
 		} else {
