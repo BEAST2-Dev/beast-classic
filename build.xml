@@ -115,6 +115,7 @@
 			</manifest>
 			<fileset dir="${build}">
 				<include name="beast/**/*.class" />
+				<include name="dr/**/*.class" />
 				<include name="util/**/*.class" />
 				<include name="**/*.properties" />
 			</fileset>
