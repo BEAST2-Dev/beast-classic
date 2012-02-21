@@ -3,6 +3,7 @@ package beast.evolution.likelihood;
 import java.util.logging.Logger;
 
 
+import beagle.Beagle;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.evolution.datatype.DataType;
@@ -262,6 +263,15 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         System.arraycopy(tipStates[tipNum], 0, states, 0, states.length);
     }
 
+	public void getPartials(int number, double[] partials) {
+        int cumulativeBufferIndex = Beagle.NONE;
+        /* No need to rescale partials */
+        m_beagle.beagle.getPartials(m_beagle.partialBufferHelper.getOffsetIndex(number), cumulativeBufferIndex, partials);
+	}
+
+	public void getTransitionMatrix(int matrixNum, double[] probabilities) {
+		m_beagle.beagle.getTransitionMatrix(m_beagle.matrixBufferHelper.getOffsetIndex(matrixNum), probabilities);
+	}
     
     /**
      * Traverse (pre-order) the tree sampling the internal node states.
@@ -330,8 +340,8 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 //
 
             	if (m_beagle != null) {
-            		m_beagle.getPartials(node.getNr(), partialLikelihood);
-            		m_beagle.getTransitionMatrix(nodeNum, m_fProbabilities);
+            		getPartials(node.getNr(), partialLikelihood);
+            		getTransitionMatrix(nodeNum, m_fProbabilities);
             	} else {
                     m_likelihoodCore.getNodePartials(nodeNum, partialLikelihood);
                     /*((AbstractLikelihoodCore)*/ m_likelihoodCore.getNodeMatrix(nodeNum, 0, m_fProbabilities);
