@@ -44,7 +44,15 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     int stateCount;
     @Override
     public void initAndValidate() throws Exception {
+    	String sJavaOnly = System.getProperty("java.only");
+    	System.setProperty("java.only", "" + true);
     	super.initAndValidate();
+    	if (sJavaOnly != null) {
+    		System.setProperty("java.only", sJavaOnly);
+    	} else {
+    		System.clearProperty("java.only");
+    	}
+    	
         this.tag = tagInput.get();
         Tree treeModel = m_tree.get();
         patternCount = m_data.get().getPatternCount();
