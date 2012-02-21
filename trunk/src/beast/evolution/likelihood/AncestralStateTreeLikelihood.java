@@ -24,6 +24,8 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     public Input<Boolean> useMAPInput = new Input<Boolean>("useMAP","whether to use maximum aposteriori assignments or sample", false);
     public Input<Boolean> returnMLInput = new Input<Boolean>("returnML", "report integrate likelihood of tip data", true);
     
+    public Input<Boolean> useJava = new Input<Boolean>("useJava", "prefer java, even if beagle is available", true);
+    
     /**
      * Constructor.
      * Now also takes a DataType so that ancestral states are printed using data codes
@@ -42,15 +44,23 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
      */
     int patternCount;
     int stateCount;
+
+    private int[][] tipStates; // used to store tip states when using beagle
+    
     @Override
     public void initAndValidate() throws Exception {
-    	String sJavaOnly = System.getProperty("java.only");
-    	System.setProperty("java.only", "" + true);
+    	String sJavaOnly = null;
+    	if (useJava.get()) {
+    		sJavaOnly = System.getProperty("java.only");
+    		System.setProperty("java.only", "" + true);
+    	}
     	super.initAndValidate();
-    	if (sJavaOnly != null) {
-    		System.setProperty("java.only", sJavaOnly);
-    	} else {
-    		System.clearProperty("java.only");
+    	if (useJava.get()) {
+	    	if (sJavaOnly != null) {
+	    		System.setProperty("java.only", sJavaOnly);
+	    	} else {
+	    		System.clearProperty("java.only");
+	    	}
     	}
     	
         this.tag = tagInput.get();
@@ -88,6 +98,24 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
             "not support without BEAGLE");
             System.exit(-1);
         }
+        if (m_beagle != null) {
+        	m_siteModel = m_pSiteModel.get();
+        	m_substitutionModel = m_siteModel.m_pSubstModel.get();
+            int nStateCount = m_data.get().getMaxStateCount();
+            m_fProbabilities = new double[(nStateCount + 1) * (nStateCount + 1)];
+            
+            int tipCount = treeModel.getLeafNodeCount();
+            tipStates = new int[tipCount][];
+
+            for (int k = 0; k < tipCount; k++) {
+            	int[] states = new int[patternCount];
+                for (int i = 0; i < patternCount; i++) {
+                    states[i] = m_data.get().getPattern(k, i);
+                }
+                tipStates[k] = states;
+            }
+        }
+        
         if (m_siteModel.getCategoryCount() > 1)
             throw new RuntimeException("Reconstruction not implemented for multiple categories yet.");
 
@@ -229,6 +257,12 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         }
     }
 
+    public void getStates(int tipNum, int[] states)  {
+        // Saved locally to reduce BEAGLE library access
+        System.arraycopy(tipStates[tipNum], 0, states, 0, states.length);
+    }
+
+    
     /**
      * Traverse (pre-order) the tree sampling the internal node states.
      *
@@ -256,8 +290,11 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 
                 // This is the root node
                 for (int j = 0; j < patternCount; j++) {
-
-                    System.arraycopy(rootPartials, j * stateCount, conditionalProbabilities, 0, stateCount);
+                	if (m_beagle != null) {
+                		m_beagle.beagle.getPartials(node.getNr(), 0, conditionalProbabilities);
+                	} else {
+                		System.arraycopy(rootPartials, j * stateCount, conditionalProbabilities, 0, stateCount);
+                	}
                     double[] frequencies = m_substitutionModel.getFrequencies();
                     for (int i = 0; i < stateCount; i++) {
                         conditionalProbabilities[i] *= frequencies[i];
@@ -280,8 +317,6 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
                 // This is an internal node, but not the root
                 double[] partialLikelihood = new double[stateCount * patternCount];
 
-                m_likelihoodCore.getNodePartials(nodeNum, partialLikelihood);
-
 //				final double branchRate = branchRateModel.getBranchRate(tree, node);
 //
 //				            // Get the operational time of the branch
@@ -294,14 +329,12 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 //				}
 //
 
-
-
-
             	if (m_beagle != null) {
-                    /*((AbstractLikelihoodCore)*/ m_beagle.beagle.getTransitionMatrix(nodeNum, m_fProbabilities);
+            		m_beagle.getPartials(node.getNr(), partialLikelihood);
+            		m_beagle.getTransitionMatrix(nodeNum, m_fProbabilities);
             	} else {
+                    m_likelihoodCore.getNodePartials(nodeNum, partialLikelihood);
                     /*((AbstractLikelihoodCore)*/ m_likelihoodCore.getNodeMatrix(nodeNum, 0, m_fProbabilities);
-            		
             	}
 
 
@@ -334,7 +367,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
             // This is an external leaf
 
         	if (m_beagle != null) {
-                /*((AbstractLikelihoodCore)*/ m_beagle.beagle.getTipStates(nodeNum, reconstructedStates[nodeNum]);
+                /*((AbstractLikelihoodCore)*/ getStates(nodeNum, reconstructedStates[nodeNum]);
         	} else {
             /*((AbstractLikelihoodCore)*/ m_likelihoodCore.getNodeStates(nodeNum, reconstructedStates[nodeNum]);
         	}
