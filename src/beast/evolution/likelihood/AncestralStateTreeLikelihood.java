@@ -301,7 +301,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
                 // This is the root node
                 for (int j = 0; j < patternCount; j++) {
                 	if (m_beagle != null) {
-                		m_beagle.beagle.getPartials(node.getNr(), 0, conditionalProbabilities);
+                		getPartials(node.getNr(), conditionalProbabilities);
                 	} else {
                 		System.arraycopy(rootPartials, j * stateCount, conditionalProbabilities, 0, stateCount);
                 	}
@@ -389,7 +389,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
                 final int thisState = reconstructedStates[nodeNum][j];
                 final int parentIndex = parentState[j] * stateCount;
             	if (m_beagle != null) {
-                    /*((AbstractLikelihoodCore) */m_beagle.beagle.getTransitionMatrix(nodeNum, m_fProbabilities);
+                    /*((AbstractLikelihoodCore) */ getTransitionMatrix(nodeNum, m_fProbabilities);
             	} else {
                 /*((AbstractLikelihoodCore) */m_likelihoodCore.getNodeMatrix(nodeNum, 0, m_fProbabilities);
             	}
