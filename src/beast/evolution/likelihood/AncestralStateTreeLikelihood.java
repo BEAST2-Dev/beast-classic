@@ -9,7 +9,6 @@ import beast.core.Input.Validate;
 import beast.evolution.datatype.DataType;
 import beast.evolution.datatype.UserDataType;
 import beast.evolution.tree.Node;
-import beast.evolution.tree.TraitSet;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitProvider;
@@ -46,7 +45,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     int patternCount;
     int stateCount;
 
-    private int[][] tipStates; // used to store tip states when using beagle
+    int[][] tipStates; // used to store tip states when using beagle
     
     @Override
     public void initAndValidate() throws Exception {
@@ -406,7 +405,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         }
     }
 
-    private DataType dataType;
+    protected DataType dataType;
     private int[][] reconstructedStates;
     private int[][] storedReconstructedStates;
 
