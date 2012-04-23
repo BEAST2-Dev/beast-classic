@@ -49,6 +49,11 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     
     @Override
     public void initAndValidate() throws Exception {
+    	if (m_data.get().getSiteCount() == 0) {
+    		return;
+    	}
+    	
+    	
     	String sJavaOnly = null;
     	if (useJava.get()) {
     		sJavaOnly = System.getProperty("java.only");
