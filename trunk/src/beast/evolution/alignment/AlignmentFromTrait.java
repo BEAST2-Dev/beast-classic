@@ -24,7 +24,6 @@ public class AlignmentFromTrait extends Alignment {
 	    @Override
 	    public void initAndValidate() throws Exception {
 	    	traitSet = traitInput.get();
-
 	    	if (m_userDataType.get() != null) {
 	            m_dataType = m_userDataType.get();
 	        } else {
@@ -44,6 +43,13 @@ public class AlignmentFromTrait extends Alignment {
 
 	        m_sTaxaNames = traitSet.m_taxa.get().m_taxonList;
 	        m_counts = new ArrayList<List<Integer>>();
+	        
+	        if (traitSet.m_traits.get() == null || traitSet.m_traits.get().matches("^\\s*$")) {
+	        	// prevent initialisation when in beauti
+	        	m_nPatternIndex = new int[0];
+	            return;
+	        }
+	        
 	        for (int i = 0; i < m_sTaxaNames.size(); i++) {
 	        	String sValue = traitSet.getStringValue(i);
 	        	if (sValue == null) {
