@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import beast.core.Description;
+
 import dr.math.distributions.MultivariateDistribution;
 
 /**
@@ -45,6 +47,7 @@ import dr.math.distributions.MultivariateDistribution;
  * @author Alexei J. Drummond
  */
 
+@Description("Class ported from BEAST1")
 public class GeoSpatialDistribution implements MultivariateDistribution {
 
     public static final String FLAT_SPATIAL_DISTRIBUTION = "flatGeoSpatialPrior";

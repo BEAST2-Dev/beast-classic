@@ -33,6 +33,7 @@ package dr.geo;
 
 import java.util.List;
 
+import beast.core.Description;
 import beast.core.parameter.RealParameter;
 
 /**
@@ -43,6 +44,7 @@ import beast.core.parameter.RealParameter;
  *         when only a single point is updated
  */
 
+@Description("Class ported from BEAST1")
 public class GeoSpatialCollectionModel { // extends AbstractModelLikelihood {
 
     public GeoSpatialCollectionModel(/*String name, */

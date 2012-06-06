@@ -3,6 +3,8 @@ package dr.math.distributions;
 import org.apache.commons.math.distribution.GammaDistribution;
 import org.apache.commons.math.distribution.GammaDistributionImpl;
 
+import beast.core.Description;
+
 import dr.math.GammaFunction;
 import dr.math.MathUtils;
 import dr.math.matrixAlgebra.CholeskyDecomposition;
@@ -12,6 +14,7 @@ import dr.math.matrixAlgebra.Matrix;
 /**
  * @author Marc Suchard
  */
+@Description("Class ported from BEAST1")
 public class WishartDistribution implements MultivariateDistribution {
 
     public static final String TYPE = "Wishart";

@@ -1,5 +1,7 @@
 package dr.math.matrixAlgebra;
 
+import beast.core.Description;
+
 /**
  * Created by IntelliJ IDEA.
  * User: msuchard
@@ -7,6 +9,7 @@ package dr.math.matrixAlgebra;
  * Time: 9:05:44 PM
  * To change this template use File | Settings | File Templates.
  */
+@Description("Class ported from BEAST1")
 public class CholeskyDecomposition {
 
 	/**

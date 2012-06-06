@@ -11,31 +11,26 @@ package beast.continuous;
 //import dr.inference.loggers.LogColumn;
 //import dr.inference.loggers.NumberColumn;
 //import dr.inference.model.*;
-import dr.math.distributions.MultivariateDistribution;
-import dr.math.distributions.MultivariateNormalDistribution;
 
+import beast.core.Description;
 import beast.core.Distribution;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.Loggable;
 import beast.core.parameter.RealParameter;
-import beast.evolution.alignment.Taxon;
 import beast.evolution.branchratemodel.BranchRateModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitMap;
-import beast.evolution.tree.TreeTraitProvider;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * @author Marc Suchard
  */
-
+@Description("AbstractMultivariateTraitLikelihood ported from BEAST1")
 public abstract class AbstractMultivariateTraitLikelihood extends Distribution implements Loggable
 //        implements TreeTraitProvider, Citable 
 {
