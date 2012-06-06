@@ -8,7 +8,7 @@ import beast.core.parameter.RealParameter;
 import dr.math.matrixAlgebra.Matrix;
 
 
-@Description("...")
+@Description("WishartDistribution ported from BEAST1")
 public class WishartDistribution extends Distribution {
     public Input<Double> df = new Input<Double>("df", "description here");
     public Input<RealParameter> scaleMatrix = new Input<RealParameter>("scaleMatrix", "description here");

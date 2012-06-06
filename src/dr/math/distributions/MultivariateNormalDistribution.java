@@ -1,11 +1,13 @@
 package dr.math.distributions;
 
+import beast.core.Description;
 import dr.math.MathUtils;
 import dr.math.matrixAlgebra.*;
 
 /**
  * @author Marc Suchard
  */
+@Description("Class ported from BEAST1")
 public class MultivariateNormalDistribution implements MultivariateDistribution {
 
     public static final String TYPE = "MultivariateNormal";

@@ -1,6 +1,7 @@
 package dr.evomodel.MSSD;
 
 
+import beast.core.Description;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.branchratemodel.BranchRateModel;
@@ -27,6 +28,7 @@ import beast.evolution.tree.Tree;
  * Date: Mar 18, 2008
  * Time: 6:45:00 PM
  */
+@Description("Class ported from BEAST1")
 public class AnyTipObservationProcess extends AbstractObservationProcess {
     protected double[] u0;
     protected double[] p;
@@ -99,7 +101,8 @@ public class AnyTipObservationProcess extends AbstractObservationProcess {
             for (int patternIndex = 0; patternIndex < patternCount; patternIndex++) {
                 extantInTipsBelow[i * patternCount + patternIndex] = 1;
                 int taxonIndex = patterns.getTaxonIndex(node.getID());
-                int[] states = dataType.getStatesForCode(patterns.getPattern(taxonIndex, patternIndex));
+                int patternItem = patterns.getPattern(taxonIndex, patternIndex);
+                int[] states = dataType.getStatesForCode(patternItem);
                 for (int state : states) {
                     if (state == deathState) {
                         extantInTipsBelow[i * patternCount + patternIndex] = 0;

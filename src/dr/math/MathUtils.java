@@ -25,6 +25,8 @@
 
 package dr.math;
 
+import beast.core.Description;
+
 //import java.text.NumberFormat;
 //import java.text.ParseException;
 
@@ -38,6 +40,7 @@ package dr.math;
  * @author Gerton Lunter
  * @version $Id: MathUtils.java,v 1.13 2006/08/31 14:57:24 rambaut Exp $
  */
+@Description("Class ported from BEAST1")
 public class MathUtils {
 
 	private MathUtils() {

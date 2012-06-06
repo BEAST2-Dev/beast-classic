@@ -27,6 +27,8 @@ package dr.math;
 
 import java.io.Serializable;
 
+import beast.core.Description;
+
 
 /**
  * MersenneTwisterFast:
@@ -74,6 +76,7 @@ import java.io.Serializable;
  * <p/>
  * This is now package private - it should be accessed using the instance in Random
  */
+@Description("Class ported from BEAST1")
 class MersenneTwisterFast implements Serializable {
 	/**
 	 *

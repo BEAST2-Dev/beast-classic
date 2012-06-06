@@ -8,12 +8,15 @@ import java.awt.geom.Rectangle2D;
 import java.util.*;
 import java.util.List;
 
+import beast.core.Description;
+
 
 /**
  * @author Marc A. Suchard
  * @author Philippe Lemey
  */
 
+@Description("Class ported from BEAST1")
 public class Polygon2D {
     public static final String POLYGON = "polygon";
     public static final String CLOSED = "closed";

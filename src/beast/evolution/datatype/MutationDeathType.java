@@ -19,6 +19,7 @@ public class MutationDeathType extends DataType.Base {
     
     public static int DEATHSTATE = 0;
 
+    
     @Override
     public void initAndValidate() throws Exception {
     	char deathCode = deathCharInput.get().charAt(0);

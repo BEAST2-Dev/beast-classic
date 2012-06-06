@@ -1,5 +1,6 @@
 package dr.evomodel.MSSD;
 
+import beast.core.Description;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.Taxon;
@@ -26,6 +27,7 @@ import beast.evolution.tree.Tree;
  * Date: Feb 19, 2008
  * Time: 2:57:14 PM
  */
+@Description("Class ported from BEAST1")
 public class SingleTipObservationProcess extends AnyTipObservationProcess {
     protected Taxon sourceTaxon;
 

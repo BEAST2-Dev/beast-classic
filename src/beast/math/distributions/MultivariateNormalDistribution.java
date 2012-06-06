@@ -8,7 +8,7 @@ import beast.core.*;
 import beast.core.parameter.RealParameter;
 
 
-@Description("...")
+@Description("MultivariateNormalDistribution ported from BEAST1")
 public class MultivariateNormalDistribution extends Distribution {
     public Input<RealParameter> mean = new Input<RealParameter>("mean", "description here");
     public Input<RealParameter> precision = new Input<RealParameter>("precision", "description here");

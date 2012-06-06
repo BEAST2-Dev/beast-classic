@@ -13,6 +13,7 @@ import dr.math.matrixAlgebra.Vector;
 import java.util.List;
 import java.util.Random;
 
+import beast.core.Description;
 import beast.core.Input;
 import beast.core.State;
 import beast.core.parameter.RealParameter;
@@ -22,6 +23,7 @@ import beast.evolution.tree.Tree;
 /**
  * @author Marc A. Suchard
  */
+@Description("SampledMultivariateTraitLikelihood ported from BEAST1")
 public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTraitLikelihood {
 
 //    public SampledMultivariateTraitLikelihood(String traitName,

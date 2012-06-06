@@ -1,5 +1,6 @@
 package beast.phylogeography;
 
+import beast.core.Description;
 import beast.core.StateNodeInitialiser;
 import beast.core.Plugin;
 import beast.core.StateNode;
@@ -16,6 +17,7 @@ import java.util.Collections;
  *         Date: Oct 20, 2011
  *         Time: 12:20:27 PM
  */
+@Description("RateIndicatorInitializer ported from BEAST1")
 public class RateIndicatorInitializer extends Plugin implements StateNodeInitialiser{
 
     public Input<StateNode> indicator = new Input<StateNode>("rateIndicator",

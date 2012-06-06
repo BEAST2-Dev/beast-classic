@@ -3,6 +3,7 @@ package beast.inference;
 import beast.core.parameter.Parameter;
 import beast.core.parameter.RealParameter;
 import beast.core.CalculationNode;
+import beast.core.Description;
 import beast.core.Input;
 import beast.evolution.substitutionmodel.SubstitutionModel;
 import beast.evolution.substitutionmodel.GeneralSubstitutionModel;
@@ -18,6 +19,7 @@ import cern.colt.bitvector.BitVector;
  *
  * ported from beast1 - author: Marc Suchard
  */
+@Description("BayesianStochasticSearchVariableSelection ported from BEAST1")
 public interface BayesianStochasticSearchVariableSelection {
 
     public Parameter getIndicators();

@@ -2,6 +2,7 @@ package dr.evomodel.MSSD;
 
 import java.util.Set;
 
+import beast.core.Description;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AscertainedAlignment;
@@ -39,6 +40,7 @@ import beast.math.GammaFunction;
  * Date: Feb 19, 2008
  * Time: 12:41:01 PM
  */
+@Description("Class ported from BEAST1")
 abstract public class AbstractObservationProcess { // extends AbstractModel {
     protected boolean[] nodePatternInclusion;
     protected boolean[] storedNodePatternInclusion;
