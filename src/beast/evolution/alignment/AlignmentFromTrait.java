@@ -13,7 +13,7 @@ import beast.util.AddOnManager;
 @Description("Treats trait on taxa as single site alignment")
 public class AlignmentFromTrait extends Alignment {
 
-		public Input<TraitSet> traitInput = new Input<TraitSet>("traitSet", "trait to be interpreted as single site alignment", Validate.REQUIRED);
+		public Input<TraitSet> traitInput = new Input<TraitSet>("traitSet", "trait to be interpreted as single site alignment");
 			
 		TraitSet traitSet;
 		
@@ -24,6 +24,11 @@ public class AlignmentFromTrait extends Alignment {
 	    @Override
 	    public void initAndValidate() throws Exception {
 	    	traitSet = traitInput.get();
+	    	m_nPatternIndex = new int[0];
+	        m_counts = new ArrayList<List<Integer>>();
+	    	if (traitSet == null) { // assume we are in beauti
+	    		return;
+	    	}
 	    	if (m_userDataType.get() != null) {
 	            m_dataType = m_userDataType.get();
 	        } else {
@@ -42,7 +47,6 @@ public class AlignmentFromTrait extends Alignment {
 	        }
 
 	        m_sTaxaNames = traitSet.m_taxa.get().m_taxonList;
-	        m_counts = new ArrayList<List<Integer>>();
 	        
 	        if (traitSet.m_traits.get() == null || traitSet.m_traits.get().matches("^\\s*$")) {
 	        	// prevent initialisation when in beauti
