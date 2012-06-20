@@ -50,7 +50,7 @@ public class AlignmentFromTrait extends Alignment {
 	        
 	        if (traitSet.m_traits.get() == null || traitSet.m_traits.get().matches("^\\s*$")) {
 	        	// prevent initialisation when in beauti
-	        	m_nPatternIndex = new int[0];
+	        	m_nPatternIndex = new int[1];
 	            return;
 	        }
 	        
