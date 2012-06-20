@@ -3,6 +3,8 @@
 
 
 <mergewith point='aux-partitions-panels'>
+		<alignmentProvider id="Add Discrete Trait" spec='BeautiDiscreteTraitProvider' template='@DiscreteTrait'/>
+<!--
 		<panel spec='BeautiPanelConfig' panelname="Discrete Trait" tiptext="Discrete Trait details"
             path='distribution/distribution[id="prior"]/distribution[id="discrete-trait"]/distribution'
             hasPartitions="none" icon='9.pngx' forceExpansion='TRUE'
@@ -12,10 +14,16 @@
 
 
 <mergewith point='aux-partitiontemplate'>
+-->
+        <subtemplate id='DiscreteTrait' class='beast.evolution.alignment.AlignmentFromTrait' mainid='$(n)'
+suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.rates,
+				beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.rateIndicator,
+				beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.eigenSystem,
+				beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.frequencies'>
 <![CDATA[
         <!--distribution spec="CompoundDistribution" id="discrete-trait.$(n)" ignore="true"-->
 			<distribution id="traitedtreeLikelihood.$(n)" spec='AncestralStateTreeLikelihood' useJava="true" tag="location" tree='@Tree.t:$(n)'> 
-				<data spec="beast.evolution.alignment.AlignmentFromTrait" id='AlignmentFromTrait.$(n)'>
+				<data spec="beast.evolution.alignment.AlignmentFromTrait" id='$(n)'>
 					<userDataType spec='beast.evolution.datatype.UserDataType' id='traitDataType.$(n)' 
 						states='4'
 						codelength='-1'
@@ -28,6 +36,9 @@
 -->
 				</data>
 				<siteModel spec='SiteModel' id="geoSiteModel.s:$(n)" gammaCategoryCount='1'>
+				        <proportionInvariant spec='parameter.RealParameter' id='proportionInvariant.s:$(n)' value='0.0' lower='0' upper='1' estimate='false'/>
+				        <mutationRate        spec='parameter.RealParameter' id='mutationRate.s:$(n)' value='1.0'        estimate='false'/>
+				        <shape               spec='parameter.RealParameter' id='gammaShape.s:$(n)' value='1.0'         estimate='false'/>
 					<substModel spec="SVSGeneralSubstitutionModel" id="svs.s:$(n)">
 						<rateIndicator id='rateIndicator.s:$(n)' spec='parameter.BooleanParameter' value='1.' dimension='6'/>
 					    <frequencies id='traitfreqs.s:$(n)' spec='Frequencies'>
@@ -36,8 +47,8 @@
 					    <rates id='relativeGeoRates.s:$(n)' spec='parameter.RealParameter' value='1.' dimension='6'/>
 					</substModel>
 				</siteModel>
-				<branchRateModel id="TraitStrictClockModel.c:$(n)" spec="beast.evolution.branchratemodel.StrictClockModel">
-					<parameter id="geoclockrate.c:$(n)" name="clock.rate" value="1.0"/>
+				<branchRateModel id="StrictClockModel.c:$(n)" spec="beast.evolution.branchratemodel.StrictClockModel">
+					<parameter id="traitClockRate.c:$(n)" name="clock.rate" value="1.0"/>
 				</branchRateModel>
 			</distribution>
         <!--/distribution-->
@@ -49,10 +60,10 @@
 			</log>
 		</logger>
 
-		<distribution  id='geoclockPrior.$(n)' x="@geoclockrate.c:$(n)" spec='beast.math.distributions.Prior'>
+		<distribution  id='geoclockPrior.c:$(n)' x="@traitClockRate.c:$(n)" spec='beast.math.distributions.Prior'>
 			<distr spec='beast.math.distributions.Gamma' alpha="0.001" beta="1000." offset="0.0"/>
 		</distribution>
-		<distribution  id='relativeGeoRatesPrior.$(n)' x="@relativeGeoRates.s:$(n)" spec='beast.math.distributions.Prior'>
+		<distribution  id='relativeGeoRatesPrior.s:$(n)' x="@relativeGeoRates.s:$(n)" spec='beast.math.distributions.Prior'>
 			<distr spec='beast.math.distributions.Gamma' alpha="1." beta="1." offset="0.0"/>
 		</distribution>
 
@@ -60,37 +71,39 @@
         <operator id='georateScaler.s:$(n)' spec='ScaleOperator' scaleFactor="0.99" weight="30" parameter="@relativeGeoRates.s:$(n)" scaleAllIndependently="true"/>
 		<operator id="indicatorFlip.s:$(n)" spec="BitFlipOperator" parameter="@rateIndicator.s:$(n)" weight="30"/>
 
-	 	<operator id='geoMuScaler.c:$(n)' spec='ScaleOperator' scaleFactor="0.9" weight="3" parameter="@geoclockrate.c:$(n)"/>  
-		<operator id="BSSVSoperator.c:$(n)" spec="BitFlipBSSVSOperator" indicator="@rateIndicator.s:$(n)" mu="@geoclockrate.c:$(n)" weight="30"/>
+	 	<operator id='geoMuScaler.c:$(n)' spec='ScaleOperator' scaleFactor="0.9" weight="3" parameter="@traitClockRate.c:$(n)"/>  
+		<operator id="BSSVSoperator.c:$(n)" spec="BitFlipBSSVSOperator" indicator="@rateIndicator.s:$(n)" mu="@traitClockRate.c:$(n)" weight="30"/>
 ]]>
 
-         <connect srcID='traitedtreeLikelihood.$(n)'              targetID='discrete-trait' inputName='distribution' if="isInitializing"/>
+         <connect srcID='traitedtreeLikelihood.$(n)'              targetID='likelihood' inputName='distribution' if="isInitializing"/>
 
-         <connect srcID='geoclockPrior.$(n)'                      targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and geoclockrate.c:$(n)/estimate=true'/>
-         <connect srcID='relativeGeoRatesPrior.$(n)'              targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and relativeGeoRates.s:$(n)/estimate=true'/>
+         <connect srcID='geoclockPrior.c:$(n)'                      targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
+         <connect srcID='relativeGeoRatesPrior.s:$(n)'              targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'/>
 
-         <connect srcID='rateIndicator.s:$(n)'                    targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and rateIndicator.s:$(n)/estimate=true'/>
-         <connect srcID='relativeGeoRates.s:$(n)'                 targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and relativeGeoRates.s:$(n)/estimate=true'/>
-         <connect srcID='geoclockrate.c:$(n)'                     targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and geoclockrate.c:$(n)/estimate=true'/>
+         <connect srcID='rateIndicator.s:$(n)'                    targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.s:$(n)) and rateIndicator.s:$(n)/estimate=true'/>
+         <connect srcID='relativeGeoRates.s:$(n)'                 targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'/>
+         <connect srcID='traitClockRate.c:$(n)'                     targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
 
-         <connect srcID='georateScaler.s:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and relativeGeoRates.s:$(n)/estimate=true'>Scales subst model rates of traits on partition $(n)</connect>
-         <connect srcID='indicatorFlip.s:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and rateIndicator.s:$(n)/estimate=true'>Flips indicator bits of traits on partition $(n)</connect>
-         <connect srcID='geoMuScaler.c:$(n)'                      targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and geoclockrate.c:$(n)/estimate=true'>Scales migration rate of traits on partition $(n)</connect>
-         <connect srcID='BSSVSoperator.c:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and rateIndicator.s:$(n)/estimate=true'>Flips indicator bits of traits on partition $(n)</connect>
+         <connect srcID='georateScaler.s:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'>Scales subst model rates of traits on partition $(n)</connect>
+         <connect srcID='indicatorFlip.s:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.s:$(n)) and rateIndicator.s:$(n)/estimate=true'>Flips indicator bits of traits on partition $(n)</connect>
+         <connect srcID='geoMuScaler.c:$(n)'                      targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'>Scales migration rate of traits on partition $(n)</connect>
+         <connect srcID='BSSVSoperator.c:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.s:$(n)) and rateIndicator.s:$(n)/estimate=true'>Flips indicator bits of traits on partition $(n)</connect>
 
          <!--connect srcID='traitedtreeLikelihood.$(n)'              targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n))'/-->
-         <connect srcID='rateIndicator.s:$(n)'                    targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and rateIndicator.s:$(n)/estimate=true'/>
-         <connect srcID='relativeGeoRates.s:$(n)'                 targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and relativeGeoRates.s:$(n)/estimate=true'/>
-         <connect srcID='geoclockrate.c:$(n)'                     targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null and geoclockrate.c:$(n)/estimate=true'/>
+         <connect srcID='rateIndicator.s:$(n)'                    targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.s:$(n)) and rateIndicator.s:$(n)/estimate=true'/>
+         <connect srcID='relativeGeoRates.s:$(n)'                 targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'/>
+         <connect srcID='traitClockRate.c:$(n)'                     targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
 
-         <connect srcID='treeWithTraitLogger.$(n)'                targetID='mcmc' inputName='logger' if='inposterior(traitedtreeLikelihood.$(n)) and AlignmentFromTrait.$(n)/traitSet!=null'/>
+         <connect srcID='treeWithTraitLogger.$(n)'                targetID='mcmc' inputName='logger' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null'/>
+	</subtemplate>
 </mergewith>
 
-
+<!--
 <mergewith point='aux-priors'>
 				<distribution spec="CompoundDistribution" id="discrete-trait">
 				</distribution>
 </mergewith>
+-->
 
 </beast>
 

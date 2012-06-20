@@ -1,241 +1,84 @@
 package beast.app.beauti;
 
-
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.regex.PatternSyntaxException;
-
-import javax.swing.Box;
-import javax.swing.ButtonGroup;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
+
+import java.awt.GridBagLayout;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.awt.GridBagConstraints;
+import javax.swing.JComboBox;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-public class TraitDialog  extends JDialog {
-        private static final long serialVersionUID = 1L;
+import beast.evolution.tree.Tree;
 
-        Component m_parent;
-        Box guessPanel;
-        ButtonGroup group;
-        JRadioButton b1 = new JRadioButton("use everything");
-        JRadioButton b2 = new JRadioButton("split on character, and take group(s):");
-        JRadioButton b3 = new JRadioButton("use regular expression");
+import java.awt.Insets;
+import java.util.List;
 
-        int m_location = 0;
-        int m_splitlocation = 0;
-        String m_sDelimiter = ".";
-        JTextField regexpEntry;
+public class TraitDialog extends JPanel {
+	private static final long serialVersionUID = 1L;
+	
+	private JTextField txtTraitname;
+	JComboBox comboBox;
+	String tree;
+	String name;
+	
+	public TraitDialog(BeautiDoc doc, List<String> trees) {
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0};
+		setLayout(gridBagLayout);
+		
+		JLabel lblTraitName = new JLabel("Trait name");
+		GridBagConstraints gbc_lblTraitName = new GridBagConstraints();
+		gbc_lblTraitName.anchor = GridBagConstraints.EAST;
+		gbc_lblTraitName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTraitName.gridx = 0;
+		gbc_lblTraitName.gridy = 0;
+		add(lblTraitName, gbc_lblTraitName);
+		
+		txtTraitname = new JTextField();
+		txtTraitname.setText("newTrait");
+		GridBagConstraints gbc_txtTraitname = new GridBagConstraints();
+		gbc_txtTraitname.insets = new Insets(0, 0, 5, 0);
+		gbc_txtTraitname.gridx = 1;
+		gbc_txtTraitname.gridy = 0;
+		add(txtTraitname, gbc_txtTraitname);
+		txtTraitname.setColumns(10);
+		
+		JLabel lblTree = new JLabel("Tree");
+		GridBagConstraints gbc_lblTree = new GridBagConstraints();
+		gbc_lblTree.insets = new Insets(0, 0, 0, 5);
+		gbc_lblTree.anchor = GridBagConstraints.EAST;
+		gbc_lblTree.gridx = 0;
+		gbc_lblTree.gridy = 1;
+		add(lblTree, gbc_lblTree);
+		
+		comboBox = new JComboBox(trees.toArray());
+		GridBagConstraints gbc_comboBox = new GridBagConstraints();
+		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
+		gbc_comboBox.gridx = 1;
+		gbc_comboBox.gridy = 1;
+		add(comboBox, gbc_comboBox);
+	}
 
-        String m_sPattern;
+	public boolean showDialog(String title) {
+        JOptionPane optionPane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE,
+                JOptionPane.OK_CANCEL_OPTION, null, new String[]{"Cancel", "OK"}, "OK");
+        optionPane.setBorder(new EmptyBorder(12, 12, 12, 12));
 
-        TraitDialog(Component parent, String sPattern) {
-            m_parent = parent;
-            m_sPattern = sPattern;
-            guessPanel = Box.createVerticalBox();
+        final JDialog dialog = optionPane.createDialog(null, title);
+    	dialog.setName("TraitDialog");
+        // dialog.setResizable(true);
+        dialog.pack();
 
-            group = new ButtonGroup();
-            group.add(b1);
-            group.add(b2);
-            group.add(b3);
-            group.setSelected(b1.getModel(), true);
-            b1.setName(b1.getText());
-            b2.setName(b2.getText());
-            b3.setName(b3.getText());
-
-            guessPanel.add(createDelimiterBox(b1));
-            guessPanel.add(Box.createVerticalStrut(20));
-            guessPanel.add(createSplitBox(b2));
-            guessPanel.add(Box.createVerticalStrut(20));            
-            guessPanel.add(createRegExtpBox(b3));
-            guessPanel.add(Box.createVerticalStrut(20));
+        dialog.setVisible(true);
+        if (!optionPane.getValue().equals("OK")) {
+            return false;
         }
-
-        private Component createDelimiterBox(JRadioButton b) {
-            Box box = Box.createHorizontalBox();
-            box.add(b);
-
-            JComboBox combo = new JComboBox(new String[]{"after first", "after last", "before first", "before last"});
-            combo.setName("delimiterCombo");
-            box.add(Box.createHorizontalGlue());
-            box.add(combo);
-            combo.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JComboBox combo = (JComboBox) e.getSource();
-                    m_location = combo.getSelectedIndex();
-                    b1.setSelected(true);
-                }
-            });
-
-            JComboBox combo2 = new JComboBox(new String[]{".", ",", "_", "-", " ", "/", ":", ";"});
-            combo2.setName("delimiterCombo2");
-            box.add(Box.createHorizontalGlue());
-            box.add(combo2);
-            combo2.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JComboBox combo = (JComboBox) e.getSource();
-                    m_sDelimiter = (String) combo.getSelectedItem();
-                    b1.setSelected(true);
-                }
-            });
-            box.add(Box.createHorizontalGlue());
-            return box;
-        }
-
-        private Component createSplitBox(JRadioButton b) {
-            Box box = Box.createHorizontalBox();
-            box.add(b);
-
-            JComboBox combo = new JComboBox(new String[]{"1","2","3","4","1-2","2-3","3-4","1-3","2-4"});
-            combo.setName("splitCombo");
-            box.add(Box.createHorizontalGlue());
-            box.add(combo);
-            combo.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JComboBox combo = (JComboBox) e.getSource();
-                    m_splitlocation = combo.getSelectedIndex();
-                    b2.setSelected(true);
-                }
-            });
-
-            JComboBox combo2 = new JComboBox(new String[]{".", ",", "_", "-", " ", "/", ":", ";"});
-            combo2.setName("splitCombo2");
-            box.add(Box.createHorizontalGlue());
-            box.add(combo2);
-            combo2.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JComboBox combo = (JComboBox) e.getSource();
-                    m_sDelimiter = (String) combo.getSelectedItem();
-                    b2.setSelected(true);
-                }
-            });
-            box.add(Box.createHorizontalGlue());
-            return box;
-        }
-
-        public Component createRegExtpBox(JRadioButton b) {
-            Box box = Box.createHorizontalBox();
-            box.add(b);
-            regexpEntry = new JTextField();
-            regexpEntry.setText(m_sPattern);
-            regexpEntry.setColumns(30);
-            regexpEntry.setToolTipText("Enter regular expression to match taxa");
-            regexpEntry.setMaximumSize(new Dimension(1024, 20));
-            box.add(Box.createHorizontalGlue());
-            box.add(regexpEntry);
-            box.add(Box.createHorizontalGlue());
-            regexpEntry.getDocument().addDocumentListener(new DocumentListener() {
-                @Override
-                public void removeUpdate(DocumentEvent e) {
-                    b3.setSelected(true);
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent e) {
-                    b3.setSelected(true);
-                }
-
-                @Override
-                public void changedUpdate(DocumentEvent e) {
-                    b3.setSelected(true);
-                }
-            });
-            return box;
-        }
-
-        public String showDialog(String title) {
-
-            JOptionPane optionPane = new JOptionPane(guessPanel, JOptionPane.PLAIN_MESSAGE,
-                    JOptionPane.OK_CANCEL_OPTION, null, new String[]{"Cancel", "OK"}, "OK");
-            optionPane.setBorder(new EmptyBorder(12, 12, 12, 12));
-
-            final JDialog dialog = optionPane.createDialog(m_parent, title);
-        	dialog.setName("GuessTaxonSets");
-            // dialog.setResizable(true);
-            dialog.pack();
-
-            dialog.setVisible(true);
-
-            // if (optionPane.getValue() == null) {
-            // System.exit(0);
-            // }
-            String sDelimiter = m_sDelimiter;
-            if (sDelimiter.equals(".") || sDelimiter.equals("/")) {
-                sDelimiter = "\\" + sDelimiter;
-            }
-            if (b1.getModel() == group.getSelection()) {
-                switch (m_location) {
-                    case 0: // "after first", 
-                        m_sPattern = "^[^" + sDelimiter + "]+" + sDelimiter + "(.*)$";
-                        break;
-                    case 1: // "after last", 
-                        m_sPattern = "^.*" + sDelimiter + "(.*)$";
-                        break;
-                    case 2: // "before first", 
-                        m_sPattern = "^([^" + sDelimiter + "]+)" + sDelimiter + ".*$";
-                        break;
-                    case 3: // "before last"
-                        m_sPattern = "^(.*)" + sDelimiter + ".*$";
-                        break;
-                }
-            }
-            if (b2.getModel() == group.getSelection()) {
-            	switch (m_splitlocation) {
-            	case 0: // "1"
-                    m_sPattern = "^([^" + sDelimiter + "]+)" + ".*$";
-                    break;
-            	case 1: // "2"
-                    m_sPattern = "^[^" + sDelimiter + "]+" + sDelimiter + "([^" + sDelimiter + "]+)" + ".*$";
-                    break;
-            	case 2: // "3"
-                    m_sPattern = "^[^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+" + sDelimiter + "([^" + sDelimiter + "]+)" + ".*$";
-                    break;
-            	case 3: // "4"
-                    m_sPattern = "^[^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+" + sDelimiter + "([^" + sDelimiter + "]+)" + ".*$";
-                    break;
-            	case 4: // "1-2"
-                    m_sPattern = "^([^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+)" + ".*$";
-                    break;
-            	case 5: // "2-3"
-                    m_sPattern = "^[^" + sDelimiter + "]+" + sDelimiter + "([^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+)" + ".*$";
-                    break;
-            	case 6: // "3-4"
-                    m_sPattern = "^[^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+" + sDelimiter + "([^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+)" + ".*$";
-                    break;
-            	case 7: // "1-3"
-                    m_sPattern = "^([^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+)" + ".*$";
-                    break;
-            	case 8: // "2-4"
-                    m_sPattern = "^[^" + sDelimiter + "]+" + sDelimiter + "([^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+" + sDelimiter + "[^" + sDelimiter + "]+)" + ".*$";
-            	}
-            }
-            if (b3.getModel() == group.getSelection()) {
-                m_sPattern = regexpEntry.getText();
-            }
-
-            // sanity check
-            try {
-                m_sPattern.matches(m_sPattern);
-            } catch (PatternSyntaxException e) {
-                JOptionPane.showMessageDialog(this, "This is not a valid regular expression");
-                return null;
-            }
-
-            if (optionPane.getValue().equals("OK")) {
-                System.err.println("Pattern = " + m_sPattern);
-                return m_sPattern;
-            } else {
-                return null;
-            }
-        }
-    }
+        
+        tree = (String) comboBox.getSelectedItem();
+        name = txtTraitname.getText().trim();
+        return true;
+	}
+}
