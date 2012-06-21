@@ -170,12 +170,20 @@ public class TraitInputEditor extends ListInputEditor {
             }
             add(box);
             validateInput();
+            // synchronise with table, useful when taxa have been deleted
+            convertTableDataToDataType();
+            convertTableDataToTrait();
         }
     } // init
 
 
 
     private Component createListBox() {
+    	try {
+    		traitSet.m_taxa.get().initAndValidate();
+    	} catch (Exception e) {
+			// TODO: handle exception
+		}
         sTaxa = traitSet.m_taxa.get().asStringList();
         String[] columnData = new String[]{"Name", "Trait"};
         tableData = new Object[sTaxa.size()][2];
@@ -295,9 +303,10 @@ public class TraitInputEditor extends ListInputEditor {
             if (iTaxon < 0) {
             	System.err.println(sTaxonID);
 //                throw new Exception("Trait (" + sTaxonID + ") is not a known taxon. Spelling error perhaps?");
+            } else {
+	            tableData[iTaxon][0] = sTaxonID;
+	            tableData[iTaxon][1] = value;
             }
-            tableData[iTaxon][0] = sTaxonID;
-            tableData[iTaxon][1] = value;
         }
 
         if (table != null) {

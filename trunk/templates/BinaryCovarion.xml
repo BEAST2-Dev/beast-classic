@@ -138,8 +138,9 @@
         />
 		<mergepoint id='aux-panels'/>
 
+		<alignmentProvider id="Add Alignment" spec='BeautiAlignmentProvider' template='@PartitionTemplate'/>
 
-        <partitiontemplate id='xxx' spec='BeautiSubTemplate' class='beast.evolution.likelihood.TreeLikelihood' mainid='mcmc'>
+        <partitiontemplate id='PartitionTemplate' spec='BeautiSubTemplate' class='beast.evolution.likelihood.TreeLikelihood' mainid='mcmc'>
 <![CDATA[
 			<alignment spec='beast.evolution.alignment.FilteredAlignment' filter='-' id='orgdata.$(n)'>
 				<userDataType spec='beast.evolution.datatype.TwoStateCovarion'/>

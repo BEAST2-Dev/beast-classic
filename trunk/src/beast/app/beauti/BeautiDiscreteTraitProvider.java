@@ -10,8 +10,13 @@ import javax.swing.border.EmptyBorder;
 import beast.core.Plugin;
 import beast.core.State;
 import beast.core.StateNode;
+import beast.core.parameter.Parameter;
+import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
+import beast.evolution.alignment.AlignmentFromTrait;
+import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.AncestralStateTreeLikelihood;
+import beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel;
 import beast.evolution.tree.Tree;
 
 public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
@@ -65,7 +70,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 				likelihood = (AncestralStateTreeLikelihood) output;
 				editor.initPanel(likelihood);
 		        JOptionPane optionPane = new JOptionPane(editor, JOptionPane.PLAIN_MESSAGE,
-		                JOptionPane.OK_CANCEL_OPTION, null, new String[]{"Cancel", "OK"}, "OK");
+		                JOptionPane.CLOSED_OPTION, null, new String[]{"Close"}, "Close");
 		        optionPane.setBorder(new EmptyBorder(12, 12, 12, 12));
 
 		        final JDialog dialog = optionPane.createDialog(null, "Discrete trait editor");
@@ -74,6 +79,18 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 		        dialog.pack();
 
 		        dialog.setVisible(true);
+		        try {
+			        AlignmentFromTrait traitData = (AlignmentFromTrait) likelihood.m_data.get();
+			        int stateCount = ((UserDataType) traitData.m_userDataType.get()).m_nStateCountInput.get();
+			        SVSGeneralSubstitutionModel substModel = (SVSGeneralSubstitutionModel) likelihood.m_pSiteModel.get().m_pSubstModel.get();
+		        	substModel.indicator.get().m_nDimension.setValue(stateCount * (stateCount - 1) / 2, null);
+		        	((Parameter<?>) substModel.m_rates.get()).m_nDimension.setValue(stateCount* (stateCount - 1) / 2, null);
+		        	RealParameter freqs = substModel.frequenciesInput.get().frequencies.get();
+			        freqs.m_nDimension.setValue(stateCount, freqs);
+			        freqs.m_pValues.setValue(1.0/stateCount + "", freqs);
+		        } catch (Exception e) {
+					e.printStackTrace();
+				}
 
 				return;
 			}
