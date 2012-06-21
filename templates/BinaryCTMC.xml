@@ -141,8 +141,9 @@
         />
 		<mergepoint id='aux-panels'/>
 
+		<alignmentProvider id="Add Alignment" spec='BeautiAlignmentProvider' template='@PartitionTemplate'/>
 
-        <partitiontemplate id='xxx' spec='BeautiSubTemplate' class='beast.evolution.likelihood.TreeLikelihood' mainid='mcmc'>
+        <partitiontemplate id='PartitionTemplate' spec='BeautiSubTemplate' class='beast.evolution.likelihood.TreeLikelihood' mainid='mcmc'>
 <![CDATA[
 
 			<distribution spec='TreeLikelihood' id="treeLikelihood.$(n)">
