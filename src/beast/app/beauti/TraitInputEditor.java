@@ -321,7 +321,7 @@ public class TraitInputEditor extends ListInputEditor {
      */
     private void convertTableDataToTrait() {
         String sTrait = "";
-        Set<String> values = new HashSet<String>(); 
+        //Set<String> values = new HashSet<String>(); 
         for (int i = 0; i < tableData.length; i++) {
             sTrait += sTaxa.get(i) + "=" + tableData[i][1];
             if (i < tableData.length - 1) {
@@ -431,11 +431,15 @@ public class TraitInputEditor extends ListInputEditor {
     
     private void guess() {
         GuessPatternDialog dlg = new GuessPatternDialog(this, m_sPattern);
-        String sPattern = dlg.showDialog("Guess traits from taxon names");
-        if (sPattern != null) {
+        String sTrait = "";
+        switch (dlg.showDialog("Guess traits from taxon names")) {
+        case canceled : return;
+        case trait: sTrait = dlg.getTrait();
+        	break;
+        case pattern:
+            String sPattern = dlg.getPattern(); 
             try {
                 Pattern pattern = Pattern.compile(sPattern);
-                String sTrait = "";
                 for (String sTaxon : sTaxa) {
                     Matcher matcher = pattern.matcher(sTaxon);
                     if (matcher.find()) {
@@ -445,21 +449,21 @@ public class TraitInputEditor extends ListInputEditor {
                         }
                         sTrait += sTaxon + "=" + sMatch;
                     }
+                    m_sPattern = sPattern;
                 }
-                try {
-                    traitSet.m_traits.setValue(sTrait, traitSet);
-                    convertTraitToTableData();
-                    convertTableDataToDataType();
-                } catch (Exception ex) {
-                    // TODO: handle exception
-                }
-                //refreshPanel();
-                m_sPattern = sPattern;
-                repaint();
             } catch (Exception e) {
-                e.printStackTrace();
+                return;
             }
+            break;
         }
+        try {
+        	traitSet.m_traits.setValue(sTrait, traitSet);
+        } catch (Exception e) {
+			// TODO: handle exception
+		}
+        convertTraitToTableData();
+        convertTableDataToDataType();
+        repaint();
     }
 	
 	@Override
