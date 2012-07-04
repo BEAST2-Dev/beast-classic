@@ -462,6 +462,7 @@ public class TraitInputEditor extends ListInputEditor {
 			// TODO: handle exception
 		}
         convertTraitToTableData();
+        convertTableDataToTrait();
         convertTableDataToDataType();
         repaint();
     }
