@@ -60,11 +60,17 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 			</log>
 		</logger>
 
+		<ParameterCumSum spec="beast.core.util.Sum" id="nonZeroRates.s:$(n)" arg="@rateIndicator.s:$(n)"/> 
+
+
 		<distribution  id='geoclockPrior.c:$(n)' x="@traitClockRate.c:$(n)" spec='beast.math.distributions.Prior'>
 			<distr spec='beast.math.distributions.Gamma' alpha="0.001" beta="1000." offset="0.0"/>
 		</distribution>
 		<distribution  id='relativeGeoRatesPrior.s:$(n)' x="@relativeGeoRates.s:$(n)" spec='beast.math.distributions.Prior'>
 			<distr spec='beast.math.distributions.Gamma' alpha="1." beta="1." offset="0.0"/>
+		</distribution>
+		<distribution  id="nonZeroRatePrior.s:$(n)" x="@nonZeroRates.s:$(n)"  spec='beast.math.distributions.Prior'>
+			<distr spec='beast.math.distributions.Poisson' lambda="0.693" offset="6.0"/>
 		</distribution>
 
 
@@ -77,12 +83,13 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 
          <connect srcID='traitedtreeLikelihood.$(n)'              targetID='likelihood' inputName='distribution' if="isInitializing"/>
 
-         <connect srcID='geoclockPrior.c:$(n)'                      targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
-         <connect srcID='relativeGeoRatesPrior.s:$(n)'              targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'/>
+         <connect srcID='geoclockPrior.c:$(n)'                    targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
+         <connect srcID='relativeGeoRatesPrior.s:$(n)'            targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'/>
+         <connect srcID='nonZeroRatePrior.s:$(n)'                 targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.c:$(n)) and rateIndicator.c:$(n)/estimate=true'/>
 
          <connect srcID='rateIndicator.s:$(n)'                    targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.s:$(n)) and rateIndicator.s:$(n)/estimate=true'/>
          <connect srcID='relativeGeoRates.s:$(n)'                 targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'/>
-         <connect srcID='traitClockRate.c:$(n)'                     targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
+         <connect srcID='traitClockRate.c:$(n)'                   targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
 
          <connect srcID='georateScaler.s:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'>Scales subst model rates of traits on partition $(n)</connect>
          <connect srcID='indicatorFlip.s:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.s:$(n)) and rateIndicator.s:$(n)/estimate=true'>Flips indicator bits of traits on partition $(n)</connect>
@@ -92,7 +99,7 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
          <!--connect srcID='traitedtreeLikelihood.$(n)'              targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n))'/-->
          <connect srcID='rateIndicator.s:$(n)'                    targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.s:$(n)) and rateIndicator.s:$(n)/estimate=true'/>
          <connect srcID='relativeGeoRates.s:$(n)'                 targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'/>
-         <connect srcID='traitClockRate.c:$(n)'                     targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
+         <connect srcID='traitClockRate.c:$(n)'                   targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
 
          <connect srcID='treeWithTraitLogger.$(n)'                targetID='mcmc' inputName='logger' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null'/>
 	</subtemplate>

@@ -7,6 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 
+import beast.core.Distribution;
 import beast.core.Plugin;
 import beast.core.State;
 import beast.core.StateNode;
@@ -18,6 +19,9 @@ import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.AncestralStateTreeLikelihood;
 import beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel;
 import beast.evolution.tree.Tree;
+import beast.math.distributions.ParametricDistribution;
+import beast.math.distributions.Poisson;
+import beast.math.distributions.Prior;
 
 public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 
@@ -88,6 +92,12 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 		        	RealParameter freqs = substModel.frequenciesInput.get().frequencies.get();
 			        freqs.m_nDimension.setValue(stateCount, freqs);
 			        freqs.m_pValues.setValue(1.0/stateCount + "", freqs);
+			        // set offset on non-zero rate prior
+			        PartitionContext context = new PartitionContext(likelihood);
+			        Prior prior = (Prior) doc.pluginmap.get("nonZeroRatePrior.s:" + context.clockModel);
+			        ParametricDistribution distr = prior.m_distInput.get();
+			        Poisson poisson = (Poisson) distr;
+			        poisson.m_offset.setValue(stateCount - 1.0, poisson);
 		        } catch (Exception e) {
 					e.printStackTrace();
 				}
