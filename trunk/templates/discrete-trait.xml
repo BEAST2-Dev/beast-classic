@@ -85,7 +85,7 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 
          <connect srcID='geoclockPrior.c:$(n)'                    targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
          <connect srcID='relativeGeoRatesPrior.s:$(n)'            targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'/>
-         <connect srcID='nonZeroRatePrior.s:$(n)'                 targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.c:$(n)) and rateIndicator.c:$(n)/estimate=true'/>
+         <connect srcID='nonZeroRatePrior.s:$(n)'                 targetID='prior' inputName='distribution' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.s:$(n)) and rateIndicator.s:$(n)/estimate=true'/>
 
          <connect srcID='rateIndicator.s:$(n)'                    targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(rateIndicator.s:$(n)) and rateIndicator.s:$(n)/estimate=true'/>
          <connect srcID='relativeGeoRates.s:$(n)'                 targetID='state' inputName='stateNode' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(relativeGeoRates.s:$(n)) and relativeGeoRates.s:$(n)/estimate=true'/>
