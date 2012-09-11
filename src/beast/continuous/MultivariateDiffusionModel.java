@@ -66,16 +66,6 @@ public class MultivariateDiffusionModel extends CalculationNode { //implements T
                 return 0.0;
             return Double.NEGATIVE_INFINITY;                  
         }
-
-//        boolean tooclose = true;
-//        for(int i=0; i<start.length; i++) {
-//            if( Math.abs(start[i]-stop[i]) > 1e-4 ) {
-//                tooclose = false;
-//            }
-//        }
-//        if (tooclose) {
-//        	return -1e5;
-//        }
         
         return calculateLogDensity(start, stop, time);
     }

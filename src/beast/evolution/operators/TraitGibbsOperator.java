@@ -57,7 +57,7 @@ import beast.util.Randomizer;
  */
 public class TraitGibbsOperator extends Operator {
 	public Input<Tree> treeInput = new Input<Tree>("tree", "", Validate.REQUIRED);
-	public Input<RealParameter> precisionParamInput = new Input<RealParameter>("parameter",
+	public Input<RealParameter> precisionParamInput = new Input<RealParameter>("precisionMatrix",
 			"parameter representing precision matrix", Validate.REQUIRED);
     public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
 	public Input<SampledMultivariateTraitLikelihood> traitModelInput = new Input<SampledMultivariateTraitLikelihood>("likelihood","", Validate.REQUIRED);
