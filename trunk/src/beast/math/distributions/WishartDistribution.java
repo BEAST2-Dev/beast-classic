@@ -19,9 +19,11 @@ public class WishartDistribution extends Distribution {
     
     @Override
     public void initAndValidate() throws Exception {
-        wishartdistribution = new dr.math.distributions.WishartDistribution(
-                             df.get(),
-                             scaleMatrix.get().getValues());
+    	if (scaleMatrix.get() != null) {
+    		wishartdistribution = new dr.math.distributions.WishartDistribution(df.get(), scaleMatrix.get().getValues());
+    	} else {
+    		wishartdistribution = new dr.math.distributions.WishartDistribution((int)(double) df.get());
+    	}
         arg = argInput.get();
     }
 

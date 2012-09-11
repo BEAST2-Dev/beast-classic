@@ -26,7 +26,9 @@ public class WishartDisitrbutionTest {
         assertEquals(-6.915086640662835, gd.logDensity(x[0]), 1e-10);
 
 
-        wd.initByName("arg", new RealParameter(new Double[]{5.0}));
+        wd.initByName("df", 4.0, 
+    			"scaleMatrix", new RealParameter(new Double[]{5.0}), 
+    			"arg", new RealParameter(new Double[]{1.0}));
         gd = new GammaDistributionImpl(2.0, 10.0);
         x = new double[]{1.0};
         assertEquals(-4.7051701859880914, wd.calculateLogP(), 1e-10);
