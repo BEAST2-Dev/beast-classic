@@ -1,12 +1,13 @@
 package dr.math.distributions;
 
+
 import org.apache.commons.math.distribution.GammaDistribution;
 import org.apache.commons.math.distribution.GammaDistributionImpl;
 
 import beast.core.Description;
+import beast.util.Randomizer;
 
 import dr.math.GammaFunction;
-import dr.math.MathUtils;
 import dr.math.matrixAlgebra.CholeskyDecomposition;
 import dr.math.matrixAlgebra.IllegalDimension;
 import dr.math.matrixAlgebra.Matrix;
@@ -163,12 +164,12 @@ public class WishartDistribution implements MultivariateDistribution {
 
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < i; j++) {
-                z[i][j] = MathUtils.nextGaussian();
+                z[i][j] = Randomizer.nextGaussian();
             }
         }
 
         for (int i = 0; i < dim; i++)
-            z[i][i] = Math.sqrt(MathUtils.nextGamma((df - i) * 0.5, 0.5));   // sqrt of chisq with df-i dfs
+            z[i][i] = Math.sqrt(Randomizer.nextGamma((df - i) * 0.5, 0.5));   // sqrt of chisq with df-i dfs
 
         double[][] cholesky = new double[dim][dim];
         for (int i = 0; i < dim; i++) {

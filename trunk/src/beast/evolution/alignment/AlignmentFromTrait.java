@@ -1,6 +1,7 @@
 package beast.evolution.alignment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import beast.core.Description;
@@ -34,7 +35,7 @@ public class AlignmentFromTrait extends Alignment {
 	        } else {
 	            if (m_sTypes.indexOf(m_sDataType.get()) < 0) {
 	                throw new Exception("data type + '" + m_sDataType.get() + "' cannot be found. " +
-	                        "Choose one of " + m_sTypes.toArray(new String[0]));
+	                        "Choose one of " + Arrays.toString(m_sTypes.toArray(new String[0])));
 	            }
 	            List<String> sDataTypes = AddOnManager.find(beast.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
 	            for (String sDataType : sDataTypes) {

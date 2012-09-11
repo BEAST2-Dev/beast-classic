@@ -1,7 +1,8 @@
 package dr.math.distributions;
 
+
 import beast.core.Description;
-import dr.math.MathUtils;
+import beast.util.Randomizer;
 import dr.math.matrixAlgebra.*;
 
 /**
@@ -184,7 +185,7 @@ public class MultivariateNormalDistribution implements MultivariateDistribution 
 
         double[] epsilon = new double[dim];
         for (int i = 0; i < dim; i++)
-            epsilon[i] = MathUtils.nextGaussian() * sqrtScale;
+            epsilon[i] = Randomizer.nextGaussian() * sqrtScale;
 
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j <= i; j++) {

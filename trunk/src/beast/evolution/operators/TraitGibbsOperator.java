@@ -31,28 +31,26 @@ package beast.evolution.operators;
 //import dr.geo.GeoSpatialDistribution;
 //import dr.geo.GeoSpatialCollectionModel;
 //import dr.inference.distribution.MultivariateDistributionLikelihood;
+
 import dr.geo.GeoSpatialCollectionModel;
 import dr.geo.GeoSpatialDistribution;
-import dr.math.MathUtils;
 import dr.math.matrixAlgebra.SymmetricMatrix;
 import dr.math.distributions.MultivariateDistribution;
 //import dr.math.distributions.MultivariateNormalDistribution;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
-import beast.continuous.AbstractMultivariateTraitLikelihood;
 import beast.continuous.SampledMultivariateTraitLikelihood;
 import beast.core.Input;
 import beast.core.Operator;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
-import beast.evolution.alignment.Taxon;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTraitMap;
 import beast.math.distributions.MultivariateNormalDistribution;
+import beast.util.Randomizer;
 
 /**
  * @author Marc Suchard
@@ -158,9 +156,9 @@ public class TraitGibbsOperator extends Operator {
 
 			while (node == null) {
 				if (onlyInternalNodes)
-					node = treeModel.getNode(treeModel.getLeafNodeCount() + MathUtils.nextInt(treeModel.getInternalNodeCount()));
+					node = treeModel.getNode(treeModel.getLeafNodeCount() + Randomizer.nextInt(treeModel.getInternalNodeCount()));
 				else {
-					node = treeModel.getNode(MathUtils.nextInt(treeModel.getNodeCount()));
+					node = treeModel.getNode(Randomizer.nextInt(treeModel.getNodeCount()));
 					if (onlyTipsWithPriors && (node.getChildCount() == 0) && // Is
 																						// a
 																						// tip

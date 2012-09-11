@@ -109,11 +109,11 @@
 				<include name="beast/**/*.xsl" />
 			</fileset>
         </jar>
-		<jar jarfile="${dist}/BEAST_CLASSIC.addon.jar">
+		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.addon.jar">
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
-			<fileset dir="${build}">
+			<fileset dir="${buildBEAST_CLASSIC}">
 				<include name="beast/**/*.class" />
 				<include name="dr/**/*.class" />
 				<include name="util/**/*.class" />
