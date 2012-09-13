@@ -132,7 +132,7 @@
         <parameter spec='IntegerParameter' name='rateCategories' id='rateCategories' dimension="92" value="1"/>
     </branchRateModel>
 
-    <log id='rateStat' spec='RateStatistic' tree='@Tree.t:RacRABV' branchRateModel='@branchRatesDiffusion'/>
+    <log id='rateStat' spec='RateStatistic' tree='@Tree.t:RacRABV' branchratemodel='@branchRatesDiffusion'/>
 
 	<traitmap id='traitmap' spec='beast.evolution.tree.TreeTraitMap' tree='@Tree.t:RacRABV' parameter='@location' traitName='location' 
 		randomizeupper="45 -70" randomizelower="28 -122">
