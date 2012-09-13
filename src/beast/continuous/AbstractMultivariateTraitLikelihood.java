@@ -19,6 +19,7 @@ import beast.core.Input.Validate;
 import beast.core.Loggable;
 import beast.core.parameter.RealParameter;
 import beast.evolution.branchratemodel.BranchRateModel;
+import beast.evolution.likelihood.TreeLikelihood;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTrait;
@@ -31,10 +32,10 @@ import java.util.List;
  * @author Marc Suchard
  */
 @Description("AbstractMultivariateTraitLikelihood ported from BEAST1")
-public abstract class AbstractMultivariateTraitLikelihood extends Distribution implements Loggable
+public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood implements Loggable
 //        implements TreeTraitProvider, Citable 
 {
-    public Input<Tree> treeModelInput = new Input<Tree>("tree","", Validate.REQUIRED);
+    //public Input<Tree> treeModelInput = new Input<Tree>("tree","", Validate.REQUIRED);
     public Input<MultivariateDiffusionModel> diffusionModelInput = new Input<MultivariateDiffusionModel>("diffusionmodel", "", Validate.REQUIRED);
     public Input<RealParameter> traitParameterInput = new Input<RealParameter>("traitParameter", "", Validate.REQUIRED);
     public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
@@ -45,12 +46,17 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution i
     public Input<Boolean> scaleByTimeInput = new Input<Boolean>("scaleByTime", "", false);
     public Input<Boolean> integrateInput = new Input<Boolean>("integrate", "", false);
     public Input<Boolean> useTreeLengthInput = new Input<Boolean>("useTreeLength", "", false);
-    public Input<BranchRateModel.Base> rateModelInput = new Input<BranchRateModel.Base>("branchratemodel","");
+    //public Input<BranchRateModel.Base> rateModelInput = new Input<BranchRateModel.Base>("branchratemodel","");
     //public Input<Model> samplingDensityInput = new Input
     public Input<Boolean> reportAsMultivariateInput = new Input<Boolean>("reportAsMultivariate", "", true);
     public Input<Boolean> reciprocalRatesInput = new Input<Boolean>("reciprocalRates", "" , false);
 
 	
+    public AbstractMultivariateTraitLikelihood() {
+    	m_pSiteModel.setRule(Validate.OPTIONAL);
+    	m_data.setRule(Validate.OPTIONAL);
+    }
+    
     public static final String TRAIT_LIKELIHOOD = "multivariateTraitLikelihood";
     public static final String CONJUGATE_ROOT_PRIOR = "conjugateRootPrior";
     public static final String MODEL = "diffusionModel";
@@ -74,11 +80,13 @@ public abstract class AbstractMultivariateTraitLikelihood extends Distribution i
     
     @Override
     public void initAndValidate() throws Exception {
-        super.initAndValidate();
+        //super.initAndValidate();
+        m_branchLengths = new double[0];
+        m_StoredBranchLengths = new double[0];
 
         this.traitName = traitName;
-        this.treeModel = treeModelInput.get();
-        this.rateModel = rateModelInput.get();
+        this.treeModel = m_tree.get();
+        this.rateModel = m_pBranchRateModel.get();
         this.diffusionModel = diffusionModelInput.get();
         this.traitParameter = traitParameterInput.get();        this.useTreeLength = useTreeLengthInput.get();
 

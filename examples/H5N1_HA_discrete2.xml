@@ -626,7 +626,7 @@
 					<distr spec='beast.math.distributions.Gamma' alpha="1." beta="1." offset="0.0"/>
 				</distribution>
 				<distribution  x="@geoMutationRate" id="geoMuPrior" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.Exponential' id='geoMuPrior_Exp' lambda="1." offset="0.0"/>
+					<distr spec='beast.math.distributions.Exponential' id='geoMuPrior_Exp' mean="1." offset="0.0"/>
 				</distribution>
 
 				<distribution  x="@nonZeroRates" id="nonZeroRatePrior" spec='beast.math.distributions.Prior'>
