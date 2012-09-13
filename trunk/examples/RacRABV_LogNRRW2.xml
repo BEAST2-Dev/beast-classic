@@ -132,9 +132,9 @@
         <parameter spec='IntegerParameter' name='rateCategories' id='rateCategories' dimension="92" value="1"/>
     </branchRateModel>
 
-    <log id='rateStat' spec='RateStatistic' tree='@Tree.t:RacRABV' branchratemodel='@branchRatesDiffusion'/>
+    <log id='rateStat' spec='RateStatistic' tree='@Tree.t:RacRABV' branchRateModel='@branchRatesDiffusion'/>
 
-	<traitmap id='traitmap' spec='beast.evolution.tree.TreeTraitMap' tree='@Tree.t:RacRABV' parameter='@traitParameter' traitName='location' 
+	<traitmap id='traitmap' spec='beast.evolution.tree.TreeTraitMap' tree='@Tree.t:RacRABV' parameter='@location' traitName='location' 
 		randomizeupper="45 -70" randomizelower="28 -122">
 				hOH10_97.2_41.053_80.706=41.053 -80.706,
 				hWVa01_93.2_40.505_80.575=40.505 -80.575,
@@ -187,10 +187,10 @@
 
 	<multivariateTraitLikelihood id="traitLikelihood" spec='beast.continuous.SampledMultivariateTraitLikelihood'
 		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@Tree.t:RacRABV'>
-		<traitParameter id='traitParameter' spec='RealParameter' value='0 0' minordimension='2'/>
+		<traitParameter id='location' spec='RealParameter' value='0 0' minordimension='2'/>
 		<traitmap idref='traitmap'/>
 		<diffusionmodel idref='diffusionModel'/>
-		<branchratemodel idref="branchRatesDiffusion"/>
+		<branchRateModel idref="branchRatesDiffusion"/>
     </multivariateTraitLikelihood>
 
 	<correlation id="locationCorrelation" dimension1="1" dimension2="2">
@@ -300,7 +300,7 @@
 
 		<stateNode idref='ucldDiffusion.stdev'/>
 		<stateNode idref='rateCategories'/>
-		<stateNode idref='traitParameter'/>
+		<stateNode idref='location'/>
 		<stateNode idref='precisionMatrix'/>
     </state>
 
@@ -354,14 +354,13 @@
 
     <operator id="UniformOperator.t:RacRABV" spec="Uniform" tree="@Tree.t:RacRABV" weight="30.0"/>
 
-    <operator id="SubtreeSlide.t:RacRABV" spec="SubtreeSlide" tree="@Tree.t:RacRABV" weight="30.0"/>
-
 <!--
+    <operator id="SubtreeSlide.t:RacRABV" spec="SubtreeSlide" tree="@Tree.t:RacRABV" weight="30.0"/>
+-->
     <operator id="SubtreeSlide.t:RacRABV" spec="SubtreeSlide" tree="@Tree.t:RacRABV" weight="15.0"/>
     <operator id="narrow.t:RacRABV" spec="Exchange" tree="@Tree.t:RacRABV" weight="15.0"/>
     <operator id="wide.t:RacRABV" isNarrow="false" spec="Exchange" tree="@Tree.t:RacRABV" weight="3.0"/>
     <operator id="WilsonBalding.t:RacRABV" spec="WilsonBalding" tree="@Tree.t:RacRABV" weight="3.0"/>
--->
 
     <operator id="strictClockUpDownOperator.c:RacRABV" scaleFactor="0.75" spec="UpDownOperator" weight="3.0">
         <parameter idref="clockRate.c:RacRABV" name="up"/>
@@ -391,7 +390,7 @@
 		<!--rootprior idref="rootPrior"/-->
 	</operator>
 
-	<operator spec='RootTraitRandowWalkOperator' windowSize="10.0" weight="5" parameter='@traitParameter' traitmap='@traitmap' />
+	<operator spec='RootTraitRandowWalkOperator' windowSize="10.0" weight="5" parameter='@location' traitmap='@traitmap' />
 
 
     <logger fileName="RacRABV.lnRRW.$(seed).log" id="tracelog" logEvery="1000" model="@posterior" sanitiseHeaders="true" sort="smart">
@@ -416,8 +415,8 @@
 			<log idref="rootTrait"/>
 			<log idref="ucldDiffusion.stdev"/>
 			<log idref='rateStat'/>
-		<log idref='traitParameter'/>
-<log idref='rateCategories'/>
+		<log idref='location'/>
+		<!--log idref='rateCategories'/-->
     </logger>
 
     <logger id="screenlog" logEvery="100000">
@@ -429,7 +428,10 @@
     </logger>
 
     <logger fileName="$(tree)R.$(seed).trees" id="treelog.t:RacRABV1.lnRRW" logEvery="1000" mode="tree">
-        <log id="TreeWithMetaDataLogger.t:RacRABV" spec="beast.evolution.tree.TreeWithMetaDataLogger" tree="@Tree.t:RacRABV"/>
+        <log id="TreeWithMetaDataLogger.t:RacRABV" spec="beast.evolution.tree.TreeWithMetaDataLogger" tree="@Tree.t:RacRABV">
+			<metadata idref='location'/>
+			<branchratemodel idref='branchRatesDiffusion'/>
+		</log>
     </logger>
 
 
