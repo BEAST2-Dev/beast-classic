@@ -1,17 +1,17 @@
 package beast.continuous;
 
 import beast.evolution.tree.Tree;
+import beast.evolution.substitutionmodel.*;
 import dr.math.distributions.MultivariateNormalDistribution;
 
 
-import beast.core.CalculationNode;
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 
 @Description("something to do with multi variate diffusion...")
-public class MultivariateDiffusionModel extends CalculationNode { //implements TreeAttributeProvider {
+public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
 	public Input<RealParameter> diffusionPrecisionMatrixInput = new Input<RealParameter>("precisionMatrix","precision matrix for diffusion process", Validate.REQUIRED);
  
 	public static final String DIFFUSION_PROCESS = "multivariateDiffusionModel";

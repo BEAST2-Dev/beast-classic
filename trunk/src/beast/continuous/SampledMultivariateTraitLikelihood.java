@@ -7,7 +7,6 @@ package beast.continuous;
 //import dr.inference.model.CompoundParameter;
 //import dr.inference.model.CompoundSymmetricMatrix;
 //import dr.inference.model.Model;
-import dr.math.matrixAlgebra.Matrix;
 import dr.math.matrixAlgebra.Vector;
 
 import java.util.List;
@@ -154,15 +153,15 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
                 System.err.println("parent trait value = " + new Vector(parentTrait));
                 System.err.println("child trait value = " + new Vector(childTrait));
 
-                double[][] precisionMatrix = diffusionModel.getPrecisionmatrix();
-                if (precisionMatrix != null) {
-                    System.err.println("precision matrix = " + new Matrix(diffusionModel.getPrecisionmatrix()));
+//                double[][] precisionMatrix = diffusionModel.getPrecisionmatrix();
+//                if (precisionMatrix != null) {
+//                    System.err.println("precision matrix = " + new Matrix(diffusionModel.getPrecisionmatrix()));
 //                    if (diffusionModel.getPrecisionParameter() instanceof CompoundSymmetricMatrix) {
 //                        CompoundSymmetricMatrix csMatrix = (CompoundSymmetricMatrix) diffusionModel.getPrecisionParameter();
 //                        System.err.println("diagonals = " + new Vector(csMatrix.getDiagonals()));
 //                        System.err.println("off diagonal = " + csMatrix.getOffDiagonal());
 //                    }
-                }
+//                }
             }
         }
         int childCount = node.getChildCount();

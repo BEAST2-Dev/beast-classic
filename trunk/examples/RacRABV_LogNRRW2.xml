@@ -188,8 +188,14 @@
 	<multivariateTraitLikelihood id="traitLikelihood" spec='beast.continuous.SampledMultivariateTraitLikelihood'
 		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@Tree.t:RacRABV'>
 		<traitParameter id='location' spec='RealParameter' value='0 0' minordimension='2'/>
+	    <data spec='AlignmentFromTraitMap' traitMap='@traitmap'>
+			<userDataType spec='beast.evolution.datatype.LocationDataType'/>
+		</data>
+		<siteModel spec='SiteModel' substModel='@diffusionModel'/>
+<!--
 		<traitmap idref='traitmap'/>
 		<diffusionmodel idref='diffusionModel'/>
+-->
 		<branchRateModel idref="branchRatesDiffusion"/>
     </multivariateTraitLikelihood>
 
