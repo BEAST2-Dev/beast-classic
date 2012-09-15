@@ -1,25 +1,16 @@
 package beast.continuous;
 
 
-//import dr.evolution.tree.NodeRef;
-//import dr.evolution.tree.Tree;
-//import dr.evolution.util.Taxon;
-//import dr.evomodel.branchratemodel.BranchRateModel;
-//import dr.evomodel.tree.TreeModel;
-//import dr.evomodelxml.treelikelihood.TreeTraitParserUtilities;
-//import dr.inference.distribution.MultivariateDistributionLikelihood;
-//import dr.inference.loggers.LogColumn;
-//import dr.inference.loggers.NumberColumn;
-//import dr.inference.model.*;
-
 import beast.core.Description;
-import beast.core.Distribution;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.Loggable;
 import beast.core.parameter.RealParameter;
+import beast.evolution.alignment.AlignmentFromTraitMap;
 import beast.evolution.branchratemodel.BranchRateModel;
+import beast.evolution.datatype.ContinuousDataType;
 import beast.evolution.likelihood.TreeLikelihood;
+import beast.evolution.substitutionmodel.ContinuousSubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTrait;
@@ -36,9 +27,9 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
 //        implements TreeTraitProvider, Citable 
 {
     //public Input<Tree> treeModelInput = new Input<Tree>("tree","", Validate.REQUIRED);
-    public Input<MultivariateDiffusionModel> diffusionModelInput = new Input<MultivariateDiffusionModel>("diffusionmodel", "", Validate.REQUIRED);
+    //public Input<MultivariateDiffusionModel> diffusionModelInput = new Input<MultivariateDiffusionModel>("diffusionmodel", "", Validate.REQUIRED);
     public Input<RealParameter> traitParameterInput = new Input<RealParameter>("traitParameter", "", Validate.REQUIRED);
-    public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
+    //public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
     
     public Input<RealParameter> deltaParameterInput = new Input<RealParameter>("deltaParameter", "");
     public Input<List<Integer>> missingIndicesInput = new Input<List<Integer>>("missingIndices", "");
@@ -51,12 +42,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
     public Input<Boolean> reportAsMultivariateInput = new Input<Boolean>("reportAsMultivariate", "", true);
     public Input<Boolean> reciprocalRatesInput = new Input<Boolean>("reciprocalRates", "" , false);
 
-	
-    public AbstractMultivariateTraitLikelihood() {
-    	m_pSiteModel.setRule(Validate.OPTIONAL);
-    	m_data.setRule(Validate.OPTIONAL);
-    }
-    
+	    
     public static final String TRAIT_LIKELIHOOD = "multivariateTraitLikelihood";
     public static final String CONJUGATE_ROOT_PRIOR = "conjugateRootPrior";
     public static final String MODEL = "diffusionModel";
@@ -87,8 +73,10 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
         this.traitName = traitName;
         this.treeModel = m_tree.get();
         this.rateModel = m_pBranchRateModel.get();
-        this.diffusionModel = diffusionModelInput.get();
-        this.traitParameter = traitParameterInput.get();        this.useTreeLength = useTreeLengthInput.get();
+        this.diffusionModel = (ContinuousSubstitutionModel) m_pSiteModel.get().getSubstitutionModel(); 
+        		//diffusionModelInput.get();
+        this.traitParameter = traitParameterInput.get();        
+        this.useTreeLength = useTreeLengthInput.get();
 
         this.missingIndices = missingIndicesInput.get();
 
@@ -113,14 +101,20 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
         this.useTreeLength = useTreeLengthInput.get();;
         this.reciprocalRates = reciprocalRatesInput.get();;
 
-        dimTrait = diffusionModel.getPrecisionmatrix().length;
+        //dimTrait = diffusionModel.getPrecisionmatrix().length;
+        dimTrait = ((ContinuousDataType) m_data.get().getDataType()).getDimension();
         dim = traitParameter != null ? traitParameter.getMinorDimension1() : 0;
         numData = dim / dimTrait;
 
         if (dim % dimTrait != 0)
             throw new RuntimeException("dim is not divisible by dimTrait");
 
-        traitMap = mapInput.get();
+        //traitMap = mapInput.get();
+        if (m_data.get() instanceof AlignmentFromTraitMap) {
+        	traitMap = ((AlignmentFromTraitMap) m_data.get()).getTraitMap();
+        } else {
+        	throw new Exception ("Expected that data input is AlignmentFromTraitMap");
+        }
         recalculateTreeLength();                           
 //        printInformtion();
 
@@ -427,9 +421,9 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
         return traitName;
     }
 
-    public MultivariateDiffusionModel getDiffusionModel() {
-        return diffusionModel;
-    }
+//    public MultivariateDiffusionModel getDiffusionModel() {
+//        return diffusionModel;
+//    }
 
 //	public boolean getInSubstitutionTime() {
 //		return inSubstitutionTime;
@@ -776,7 +770,8 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
 //    };
 
     Tree treeModel = null;
-    MultivariateDiffusionModel diffusionModel = null;
+    //MultivariateDiffusionModel 
+    ContinuousSubstitutionModel diffusionModel = null;
     String traitName = null;
     RealParameter traitParameter;
     List<Integer> missingIndices;

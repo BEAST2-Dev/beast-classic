@@ -1,13 +1,14 @@
 package beast.evolution.likelihood;
 
-import java.util.logging.Logger;
 
+import java.util.logging.Logger;
 
 import beagle.Beagle;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.evolution.datatype.DataType;
 import beast.evolution.datatype.UserDataType;
+import beast.evolution.substitutionmodel.SubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTrait;
@@ -105,7 +106,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         }
         if (m_beagle != null) {
         	m_siteModel = m_pSiteModel.get();
-        	m_substitutionModel = m_siteModel.m_pSubstModel.get();
+        	m_substitutionModel = (SubstitutionModel.Base) m_siteModel.m_pSubstModel.get();
             int nStateCount = m_data.get().getMaxStateCount();
             m_fProbabilities = new double[(nStateCount + 1) * (nStateCount + 1)];
             
