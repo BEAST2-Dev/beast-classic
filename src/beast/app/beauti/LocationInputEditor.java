@@ -1,5 +1,6 @@
 package beast.app.beauti;
 
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -28,28 +29,28 @@ import javax.swing.table.TableCellRenderer;
 
 import beast.app.draw.ListInputEditor;
 import beast.app.draw.SmallLabel;
+import beast.continuous.SampledMultivariateTraitLikelihood;
 import beast.core.Input;
 import beast.core.Plugin;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AlignmentFromTrait;
 import beast.evolution.datatype.UserDataType;
-import beast.evolution.likelihood.AncestralStateTreeLikelihood;
 import beast.evolution.tree.TraitSet;
 import beast.evolution.tree.Tree;
 
-public class TraitInputEditor extends ListInputEditor {
+public class LocationInputEditor extends ListInputEditor {
 	private static final long serialVersionUID = 1L;
 
-	public TraitInputEditor(BeautiDoc doc) {
+	public LocationInputEditor(BeautiDoc doc) {
 		super(doc);
 	}
 
 	@Override
 	public Class<?> baseType() {
-		return AncestralStateTreeLikelihood.class;
+		return SampledMultivariateTraitLikelihood.class;
 	}
 
-	AncestralStateTreeLikelihood likelihood;
+	SampledMultivariateTraitLikelihood likelihood;
 	Tree tree;
     TraitSet traitSet;
     JTextField traitEntry;
@@ -71,9 +72,9 @@ public class TraitInputEditor extends ListInputEditor {
         m_bAddButtons = bAddButtons;
 		this.itemNr = itemNr;
 		if (itemNr >= 0) {
-			likelihood = (AncestralStateTreeLikelihood) ((ArrayList<?>)input.get()).get(itemNr);
+			likelihood = (SampledMultivariateTraitLikelihood) ((ArrayList<?>)input.get()).get(itemNr);
 		} else {
-			likelihood = (AncestralStateTreeLikelihood) ((ArrayList<?>)input.get()).get(0);
+			likelihood = (SampledMultivariateTraitLikelihood) ((ArrayList<?>)input.get()).get(0);
 		}
 	}
 //        if (((CompoundDistribution) plugin.outputs.toArray()[0]).ignoreInput.get()) {
@@ -87,7 +88,7 @@ public class TraitInputEditor extends ListInputEditor {
 //
 ////    @Override
 //    public void init2(Input<?> input, Plugin plugin, int itemNr, ExpandOption bExpandOption, boolean bAddButtons) {
-	public void initPanel(AncestralStateTreeLikelihood likelihood_) {
+	public void initPanel(SampledMultivariateTraitLikelihood likelihood_) {
 		likelihood = likelihood_;
 		m_plugin = likelihood.m_data.get();
 		try {
@@ -169,7 +170,6 @@ public class TraitInputEditor extends ListInputEditor {
             add(box);
             validateInput();
             // synchronise with table, useful when taxa have been deleted
-            convertTableDataToDataType();
             convertTableDataToTrait();
         }
     } // init
@@ -183,8 +183,8 @@ public class TraitInputEditor extends ListInputEditor {
 			// TODO: handle exception
 		}
         sTaxa = traitSet.m_taxa.get().asStringList();
-        String[] columnData = new String[]{"Name", "Trait"};
-        tableData = new Object[sTaxa.size()][2];
+        String[] columnData = new String[]{"Name", "Latitude", "Longitude"};
+        tableData = new Object[sTaxa.size()][3];
         convertTraitToTableData();
         // set up table.
         // special features: background shading of rows
@@ -280,6 +280,7 @@ public class TraitInputEditor extends ListInputEditor {
         for (int i = 0; i < tableData.length; i++) {
             tableData[i][0] = sTaxa.get(i);
             tableData[i][1] = "";
+            tableData[i][2] = "";
         }
         String trait = traitSet.m_traits.get();
         if (trait.trim().length() == 0) {
@@ -287,7 +288,7 @@ public class TraitInputEditor extends ListInputEditor {
         }
         String[] sTraits = trait.split(",");
         for (String sTrait : sTraits) {
-            sTrait = sTrait.replaceAll("\\s+", " ");
+            //sTrait = sTrait.replaceAll("\\s+", " ");
             String[] sStrs = sTrait.split("=");
             String value = null;
             if (sStrs.length != 2) {
@@ -303,13 +304,20 @@ public class TraitInputEditor extends ListInputEditor {
 //                throw new Exception("Trait (" + sTaxonID + ") is not a known taxon. Spelling error perhaps?");
             } else {
 	            tableData[iTaxon][0] = sTaxonID;
-	            tableData[iTaxon][1] = value;
+	            sStrs = value.trim().split("\\s+");
+	            tableData[iTaxon][1] = sStrs[0];
+	            if (sStrs.length > 1) {
+	            	tableData[iTaxon][1] = sStrs[1];
+	            } else {
+	            	tableData[iTaxon][1] = "";
+	            }
             }
         }
 
         if (table != null) {
             for (int i = 0; i < tableData.length; i++) {
                 table.setValueAt(tableData[i][1], i, 1);
+                table.setValueAt(tableData[i][2], i, 2);
             }
         }
     } // convertTraitToTableData
@@ -321,7 +329,7 @@ public class TraitInputEditor extends ListInputEditor {
         String sTrait = "";
         //Set<String> values = new HashSet<String>(); 
         for (int i = 0; i < tableData.length; i++) {
-            sTrait += sTaxa.get(i) + "=" + tableData[i][1];
+            sTrait += sTaxa.get(i) + "=" + tableData[i][1] + " " + tableData[i][2];
             if (i < tableData.length - 1) {
                 sTrait += ",\n";
             }
@@ -331,37 +339,8 @@ public class TraitInputEditor extends ListInputEditor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        convertTableDataToDataType();
     }
 
-    private void convertTableDataToDataType() {
-        List<String> values = new ArrayList<String>(); 
-        for (int i = 0; i < tableData.length; i++) {
-        	if (tableData[i][1].toString().trim().length() > 0 && !values.contains(tableData[i][1].toString())) {
-        		values.add(tableData[i][1].toString());
-        	}
-        }
-        Collections.sort(values);
-        String codeMap = "";
-        int k = 0;
-        for (String value : values) {
-        	codeMap += value + "=" + k + ",";
-        	k++;
-        }
-        // add unknown/missing character
-        codeMap += "? = ";
-        for (int i = 0; i < values.size(); i++) {
-        	codeMap += i + " ";
-        }
-        // System.err.println(codeMap);
-        try {
-            dataType.m_sCodeMapInput.setValue(codeMap, dataType);
-            dataType.m_nStateCountInput.setValue(values.size(), dataType);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        validateInput();
-    }
 
     /**
      * create box with comboboxes for selection units and trait name *
@@ -394,14 +373,23 @@ public class TraitInputEditor extends ListInputEditor {
         buttonBox.add(traitEntry);
         buttonBox.add(Box.createHorizontalGlue());
 
-        JButton guessButton = new JButton("Guess");
+        JButton guessButton = new JButton("Guess latitude");
         guessButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	guess();
+            	guess(1);
             }
         });
         buttonBox.add(guessButton);
+        
+        JButton guessButton2 = new JButton("Guess longitude");
+        guessButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	guess(2);
+            }
+        });
+        buttonBox.add(guessButton2);
 
 
         JButton clearButton = new JButton("Clear");
@@ -410,7 +398,6 @@ public class TraitInputEditor extends ListInputEditor {
             public void actionPerformed(ActionEvent e) {
                 try {
                     traitSet.m_traits.setValue("", traitSet);
-                    convertTableDataToDataType();
                 } catch (Exception ex) {
                     // TODO: handle exception
                 }
@@ -427,7 +414,7 @@ public class TraitInputEditor extends ListInputEditor {
     } // createButtonBox
     
     
-    private void guess() {
+    private void guess(int column) {
         GuessPatternDialog dlg = new GuessPatternDialog(this, m_sPattern);
         String sTrait = "";
         switch (dlg.showDialog("Guess traits from taxon names")) {
@@ -454,14 +441,20 @@ public class TraitInputEditor extends ListInputEditor {
             }
             break;
         }
-        try {
-        	traitSet.m_traits.setValue(sTrait, traitSet);
-        } catch (Exception e) {
-			// TODO: handle exception
-		}
-        convertTraitToTableData();
+    	String [] strs = sTrait.trim().split(",");
+    	for (String str : strs) {
+    		String [] strs2 = str.trim().split("=");
+    		String taxon = strs2[0].trim();
+    		String value = strs2[1].trim();
+    		for (int i = 0; i < tableData.length; i++) {
+    			if (tableData[i][0].equals(taxon)) {
+    				tableData[i][column] = value;
+    				break;
+    			}
+    		}
+    	}
         convertTableDataToTrait();
-        convertTableDataToDataType();
+        //convertTraitToTableData();
         repaint();
     }
 	
@@ -472,7 +465,7 @@ public class TraitInputEditor extends ListInputEditor {
 			return;
 		}
         for (int i = 0; i < tableData.length; i++) {
-        	if (tableData[i][1].toString().trim().length() == 0) {
+        	if (tableData[i][1].toString().trim().length() == 0 || tableData[i][2].toString().trim().length() == 0) {
         		m_validateLabel.setVisible(true);
         		m_validateLabel.setToolTipText("trait for " + tableData[i][0] + " needs to be specified");
         		m_validateLabel.repaint();

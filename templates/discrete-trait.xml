@@ -102,8 +102,6 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
          <connect srcID='traitClockRate.c:$(n)'                   targetID='tracelog' inputName='log' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null and inlikelihood(traitClockRate.c:$(n)) and traitClockRate.c:$(n)/estimate=true'/>
 
          <connect srcID='treeWithTraitLogger.$(n)'                targetID='mcmc' inputName='logger' if='inposterior(traitedtreeLikelihood.$(n)) and $(n)/traitSet!=null'/>
-	</subtemplate>
-</mergewith>
 
 <!--
 <mergewith point='aux-priors'>
@@ -111,6 +109,95 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 				</distribution>
 </mergewith>
 -->
+
+		<alignmentProvider id="Add Continuous Geography" spec='BeautiLocationTraitProvider' template='@LocationTrait'/>
+
+        <subtemplate id='LocationTrait' class='beast.evolution.alignment.AlignmentFromTraitMap' mainid='$(n)'
+suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.frequencies'>
+<![CDATA[
+	<multivariateTraitLikelihood id="locationtreeLikelihood.$(n)" spec='beast.continuous.SampledMultivariateTraitLikelihood'
+		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@Tree.t:$(n)'>
+		<traitParameter id='location.$(n)' spec='RealParameter' value='0 0' minordimension='2'/>
+	    <data spec='AlignmentFromTraitMap' id='$(n)'>
+			<userDataType spec='beast.evolution.datatype.LocationDataType'/>
+			<traitmap id='traitmap.s:$(n)' spec='beast.evolution.tree.TreeTraitMap' tree='@Tree.t:$(n)' parameter='@location.$(n)' traitName='location' 
+				randomizeupper="45 -70" randomizelower="28 -122">
+			</traitmap>
+		</data>
+		<siteModel spec='SiteModel'>
+			<diffusionModel id="diffusionModel.s:$(n)" spec='beast.continuous.MultivariateDiffusionModel'>
+				<precisionMatrix spec='RealParameter' id='precisionMatrix.s:$(n)' minordimension='2'>
+0.365 -1.78E-4
+-1.78E-4 5.16E-2
+				</precisionMatrix>
+			</diffusionModel>
+		</siteModel>
+        <branchRateModel spec='StrictClockModel' id='StrictClock.c:$(n)'>
+            <clock.rate id='clockRate.c:$(n)' spec='parameter.RealParameter' value='1.0' estimate='false'/>
+        </branchRateModel>
+    </multivariateTraitLikelihood>
+
+	<distribution  id="precisionPrior.$(n)" spec='beast.math.distributions.WishartDistribution' df='2' arg='@precisionMatrix'>
+		<scaleMatrix spec='RealParameter' minordimension='2'>
+				1.0 0.0
+				0.0 1.0
+		</scaleMatrix>
+	</distribution>
+
+	<distribution id="rootPrior.$(n)" spec='beast.math.distributions.MultivariateNormalDistribution'>
+		<arg id='rootTrait.$(n)' spec='beast.evolution.tree.RootTrait' traitmap='@traitmap'/>
+		<mean spec='RealParameter' value='0.0 0.0'/>
+		<precision spec='RealParameter' minordimension='2'>
+				0.001 0.0
+				0.0   0.001
+		</precision>
+	</distribution>
+
+    <log id='rateStat.$(n)' spec='RateStatistic' tree='@Tree.t:RacRABV' branchratemodel='@branchRatesDiffusion'/>
+
+
+
+
+    <plugin id='ClockPrior.c:$(n)' spec='Prior' x='@clockRate.c:$(n)'><distr spec="beast.math.distributions.Uniform" upper='Infinity'/></plugin>
+	<operator id='StrictClockRateScaler.c:$(n)' spec='ScaleOperator' scaleFactor="0.75" weight="3" parameter='@clockRate.c:$(n)'/>
+
+	<operator id='precisionGibbsOperator.s:$(n)' spec='PrecisionMatrixGibbsOperator' tree='@Tree.t:$(n)' parameter='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)'  weight="15">
+		<likelihood idref='locationtreeLikelihood.$(n)'/>
+		<prior idref='precisionPrior.$(n)'/>
+	</operator>
+    <operator id='traitGibbsOperator.$(n)' spec='TraitGibbsOperator' tree='@Tree.t:$(n)' precisionMatrix='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)' weight="50">
+		<likelihood idref='locationtreeLikelihood.$(n)'/>
+	</operator>
+
+	<operator spec='RootTraitRandowWalkOperator.$(n)' windowSize="10.0" weight="5" parameter='@location.$(n)' traitmap='@traitmap.s:$(n)' />
+
+
+]]>
+
+         <connect srcID='locationtreeLikelihood.$(n)'      targetID='likelihood' inputName='distribution' if="isInitializing"/>
+
+
+         <connect srcID='location.s:$(n)'                  targetID='state' inputName='stateNode' if='inlikelihood(location.s:$(n)) and location.s:$(n)/estimate=true'/>
+         <connect srcID='precisionMatrix.s:$(n)'           targetID='state' inputName='stateNode' if='inlikelihood(precisionMatrix.s:$(n)) and precisionMatrix.s:$(n)/estimate=true'/>
+         <connect srcID='clockRate.c:$(n)'                 targetID='state' inputName='stateNode' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'/>
+
+         <connect srcID='precisionPrior.c:$(n)'            targetID='prior' inputName='distribution' if='inposterior(precisionMatrix.$(n)) and precisionMatrix.s:$(n)/estimate=true'/>
+         <connect srcID='rootPrior.c:$(n)'                 targetID='prior' inputName='distribution' if='inposterior(location.$(n)) and location.s:$(n)/estimate=true'/>
+         <connect srcID='ClockPrior.c:$(n)'                targetID='prior' inputName='distribution' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'/>
+
+
+         <connect srcID='precisionGibbsOperator.s:$(n)'    targetID='mcmc' inputName='operator' if='inlikelihood(precisionMatrix.s:$(n)) and precisionMatrix.c:$(n)/estimate=true'>Move precision matrix of partition c:$(n)</connect>
+         <connect srcID='traitGibbsOperator.$(n)'          targetID='mcmc' inputName='operator' if='inlikelihood(locationtreeLikelihood:$(n)) and location.s:$(n)/estimate=true'>Move location of partition c:$(n)</connect>
+         <connect srcID='RootTraitRandowWalkOperator.$(n)' targetID='mcmc' inputName='operator' if='inlikelihood(locationtreeLikelihood:$(n)) and location.s:$(n)/estimate=true'>Move root location of partition c:$(n)</connect>
+         <connect srcID='StrictClockRateScaler.c:$(n)'     targetID='mcmc' inputName='operator' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'>Scale clock rate of partition c:$(n)</connect>
+
+         <connect srcID='locationtreeLikelihood:$(n)'      targetID='tracelog' inputName='log' if='inlikelihood(locationtreeLikelihood:$(n))'/>
+         <connect srcID='precisionMatrix.s:$(n)'           targetID='tracelog' inputName='log' if='inlikelihood(precisionMatrix.s:$(n)) and precisionMatrix.s:$(n)/estimate=true'/>
+         <connect srcID='rateState:$(n)'                   targetID='tracelog' inputName='log' if='inlikelihood(locationtreeLikelihood:$(n))'/>
+         <connect srcID='clockRate.c:$(n)'                 targetID='tracelog' inputName='log' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'/>
+
+	</subtemplate>
+</mergewith>
 
 </beast>
 

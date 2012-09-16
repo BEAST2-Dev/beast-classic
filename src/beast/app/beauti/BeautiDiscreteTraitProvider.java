@@ -7,7 +7,6 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 
-import beast.core.Distribution;
 import beast.core.Plugin;
 import beast.core.State;
 import beast.core.StateNode;

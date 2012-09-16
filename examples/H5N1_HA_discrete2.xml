@@ -540,7 +540,7 @@
 
 
 
-    <distribution spec='ThreadedTreeLikelihood' id="treeLikelihood" useAmbiguities="true">
+    <distribution spec='TreeLikelihood' id="treeLikelihood" useAmbiguities="true">
         <data idref="alignment"/>
         <tree idref="tree"/>
 		<siteModel id="SiteModel" spec="SiteModel" gammaCategoryCount="4">

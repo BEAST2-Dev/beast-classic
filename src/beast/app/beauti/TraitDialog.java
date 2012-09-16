@@ -11,8 +11,6 @@ import java.awt.GridBagConstraints;
 import javax.swing.JComboBox;
 import javax.swing.border.EmptyBorder;
 
-import beast.evolution.tree.Tree;
-
 import java.awt.Insets;
 import java.util.List;
 
