@@ -36,6 +36,7 @@ public class TraitDialog extends JPanel {
 		add(lblTraitName, gbc_lblTraitName);
 		
 		txtTraitname = new JTextField();
+		txtTraitname.setName("traitname");
 		txtTraitname.setText("newTrait");
 		GridBagConstraints gbc_txtTraitname = new GridBagConstraints();
 		gbc_txtTraitname.insets = new Insets(0, 0, 5, 0);

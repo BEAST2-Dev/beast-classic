@@ -74,6 +74,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 		        dialog.pack();
 
 		        dialog.setVisible(true);
+		        editor.convertTableDataToTrait();
 		        try {
 			        // TODO: any post-processing...
 			        // AlignmentFromTraitMap traitData = (AlignmentFromTraitMap) likelihood.m_data.get();

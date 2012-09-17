@@ -3,27 +3,21 @@ package beast.app.beauti;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EventObject;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.Box;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.CellEditorListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
@@ -33,10 +27,9 @@ import beast.continuous.SampledMultivariateTraitLikelihood;
 import beast.core.Input;
 import beast.core.Plugin;
 import beast.evolution.alignment.Alignment;
-import beast.evolution.alignment.AlignmentFromTrait;
-import beast.evolution.datatype.UserDataType;
-import beast.evolution.tree.TraitSet;
+import beast.evolution.alignment.AlignmentFromTraitMap;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeTraitMap;
 
 public class LocationInputEditor extends ListInputEditor {
 	private static final long serialVersionUID = 1L;
@@ -52,13 +45,13 @@ public class LocationInputEditor extends ListInputEditor {
 
 	SampledMultivariateTraitLikelihood likelihood;
 	Tree tree;
-    TraitSet traitSet;
-    JTextField traitEntry;
+    TreeTraitMap traitSet;
+    //JTextField traitEntry;
     JComboBox relativeToComboBox;
-    List<String> sTaxa;
+    String [] sTaxa;
     Object[][] tableData;
     JTable table;
-    UserDataType dataType;
+    //UserDataType dataType;
 
     //String m_sPattern = ".*(\\d\\d\\d\\d).*";
     String m_sPattern = ".*_(..).*";
@@ -77,17 +70,7 @@ public class LocationInputEditor extends ListInputEditor {
 			likelihood = (SampledMultivariateTraitLikelihood) ((ArrayList<?>)input.get()).get(0);
 		}
 	}
-//        if (((CompoundDistribution) plugin.outputs.toArray()[0]).ignoreInput.get()) {
-//        	add(new Label("not in use"));
-//        } else {
-//        	add(new Label("Got one!"));
-//        }
-//	}
-//
-//
-//
-////    @Override
-//    public void init2(Input<?> input, Plugin plugin, int itemNr, ExpandOption bExpandOption, boolean bAddButtons) {
+
 	public void initPanel(SampledMultivariateTraitLikelihood likelihood_) {
 		likelihood = likelihood_;
 		m_plugin = likelihood.m_data.get();
@@ -100,68 +83,15 @@ public class LocationInputEditor extends ListInputEditor {
         tree = likelihood.m_tree.get();
         if (tree != null) {
         	Alignment data = likelihood.m_data.get();
-        	if (!(data instanceof AlignmentFromTrait)) {
+        	if (!(data instanceof AlignmentFromTraitMap)) {
         		return;
         	}
-    		AlignmentFromTrait traitData = (AlignmentFromTrait) data;
+    		AlignmentFromTraitMap traitData = (AlignmentFromTraitMap) data;
             m_input = traitData.traitInput;
             m_plugin = traitData;
             traitSet = traitData.traitInput.get();
             
-            if (traitSet == null) {
-                traitSet = new TraitSet();
-                String context = BeautiDoc.parsePartition(likelihood.getID());
-                traitSet.setID("traitSet." + context);
-                try {
-                traitSet.initByName("traitname", "discrete",
-                        "taxa", tree.m_taxonset.get(),
-                        "value", "");
-                m_input.setValue(traitSet, m_plugin);
-                data.initAndValidate();
-                } catch (Exception e) {
-					// TODO: handle exception
-				}
-            }
-            
-            
-            dataType = (UserDataType)traitData.m_userDataType.get();
-
             Box box = Box.createVerticalBox();
-
-            JCheckBox useTipDates = new JCheckBox("Use traits", traitSet != null);
-            useTipDates.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JCheckBox checkBox = (JCheckBox) e.getSource();
-                    try {
-                        Container comp = checkBox.getParent();
-                        comp.removeAll();
-                        if (checkBox.isSelected()) {
-                            if (traitSet == null) {
-                                traitSet = new TraitSet();
-                                String context = BeautiDoc.parsePartition(likelihood.getID());
-                                traitSet.setID("traitSet." + context);
-                                traitSet.initByName("traitname", "discrete",
-                                        "taxa", tree.m_taxonset.get(),
-                                        "value", "");
-                            }
-                            comp.add(checkBox);
-                            comp.add(createButtonBox());
-                            comp.add(createListBox());
-                            validateInput();
-                            m_input.setValue(traitSet, m_plugin);
-                        } else {
-                            m_input.setValue(null, m_plugin);
-                            comp.add(checkBox);
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-
-                }
-            });
-            //box.add(useTipDates);
 
             if (traitSet != null) {
                 box.add(createButtonBox());
@@ -178,13 +108,13 @@ public class LocationInputEditor extends ListInputEditor {
 
     private Component createListBox() {
     	try {
-    		traitSet.m_taxa.get().initAndValidate();
+    		traitSet.treeInput.get().getTaxaNames();
     	} catch (Exception e) {
 			// TODO: handle exception
 		}
-        sTaxa = traitSet.m_taxa.get().asStringList();
+        sTaxa = traitSet.treeInput.get().getTaxaNames();
         String[] columnData = new String[]{"Name", "Latitude", "Longitude"};
-        tableData = new Object[sTaxa.size()][3];
+        tableData = new Object[sTaxa.length][3];
         convertTraitToTableData();
         // set up table.
         // special features: background shading of rows
@@ -212,9 +142,7 @@ public class LocationInputEditor extends ListInputEditor {
         // and only the Date column is editable.
         table.setDefaultEditor(Object.class, new TableCellEditor() {
             JTextField m_textField = new JTextField();
-            int m_iRow
-                    ,
-                    m_iCol;
+            int m_iRow, m_iCol;
 
             @Override
             public boolean stopCellEditing() {
@@ -232,7 +160,7 @@ public class LocationInputEditor extends ListInputEditor {
 
             @Override
             public boolean isCellEditable(EventObject anEvent) {
-                return table.getSelectedColumn() == 1;
+                return table.getSelectedColumn() >= 1;
             }
 
 
@@ -270,7 +198,11 @@ public class LocationInputEditor extends ListInputEditor {
             }
 
         });
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(24);
+        table.getColumnModel().getColumn(0).setPreferredWidth(300);
+        table.getColumnModel().getColumn(1).setPreferredWidth(75);
+        table.getColumnModel().getColumn(2).setPreferredWidth(75);
         JScrollPane scrollPane = new JScrollPane(table);
         return scrollPane;
     } // createListBox
@@ -278,12 +210,12 @@ public class LocationInputEditor extends ListInputEditor {
     /* synchronise table with data from traitSet Plugin */
     private void convertTraitToTableData() {
         for (int i = 0; i < tableData.length; i++) {
-            tableData[i][0] = sTaxa.get(i);
+            tableData[i][0] = sTaxa[i];
             tableData[i][1] = "";
             tableData[i][2] = "";
         }
-        String trait = traitSet.m_traits.get();
-        if (trait.trim().length() == 0) {
+        String trait = traitSet.value.get();
+        if (trait == null || trait.trim().length() == 0) {
         	return;
         }
         String[] sTraits = trait.split(",");
@@ -298,18 +230,24 @@ public class LocationInputEditor extends ListInputEditor {
             	value = sStrs[1].trim();
             }
             String sTaxonID = sStrs[0].trim();
-            int iTaxon = sTaxa.indexOf(sTaxonID);
+            int iTaxon = indexOf(sTaxonID);
             if (iTaxon < 0) {
             	System.err.println(sTaxonID);
 //                throw new Exception("Trait (" + sTaxonID + ") is not a known taxon. Spelling error perhaps?");
             } else {
 	            tableData[iTaxon][0] = sTaxonID;
-	            sStrs = value.trim().split("\\s+");
-	            tableData[iTaxon][1] = sStrs[0];
-	            if (sStrs.length > 1) {
-	            	tableData[iTaxon][1] = sStrs[1];
+	            String [] sStrs2 = value.trim().split("\\s+");
+	            if (sStrs2.length == 2) {
+	            	tableData[iTaxon][1] = sStrs2[0];
+	            	tableData[iTaxon][2] = sStrs2[1];
 	            } else {
-	            	tableData[iTaxon][1] = "";
+	            	if (Character.isSpace(sStrs[1].charAt(0))) {
+	            		tableData[iTaxon][1] = "";
+		            	tableData[iTaxon][2] = sStrs2[0];
+	            	} else {
+		            	tableData[iTaxon][1] = sStrs2[0];
+		            	tableData[iTaxon][2] = "";
+	            	}
 	            }
             }
         }
@@ -322,20 +260,29 @@ public class LocationInputEditor extends ListInputEditor {
         }
     } // convertTraitToTableData
 
-    /**
+    private int indexOf(String sTaxonID) {
+		for (int i = 0; i < sTaxa.length; i++) {
+			if (sTaxa[i].equals(sTaxonID)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
      * synchronise traitSet Plugin with table data
      */
-    private void convertTableDataToTrait() {
+    void convertTableDataToTrait() {
         String sTrait = "";
         //Set<String> values = new HashSet<String>(); 
         for (int i = 0; i < tableData.length; i++) {
-            sTrait += sTaxa.get(i) + "=" + tableData[i][1] + " " + tableData[i][2];
+            sTrait += sTaxa[i] + "=" + tableData[i][1] + " " + tableData[i][2];
             if (i < tableData.length - 1) {
                 sTrait += ",\n";
             }
         }
         try {
-            traitSet.m_traits.setValue(sTrait, traitSet);
+            traitSet.value.setValue(sTrait, traitSet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -352,28 +299,29 @@ public class LocationInputEditor extends ListInputEditor {
         //label.setMaximumSize(new Dimension(1024, 20));
         buttonBox.add(label);
 
-        traitEntry = new JTextField(traitSet.m_sTraitName.get());
-        traitEntry.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {update();}
-			@Override
-			public void insertUpdate(DocumentEvent e) {update();}
-			@Override
-			public void changedUpdate(DocumentEvent e) {update();}
-			void update() {
-				try {
-					traitSet.m_sTraitName.setValue(traitEntry.getText(), traitSet);
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}
-		});
-        traitEntry.setColumns(12);
-        buttonBox.add(traitEntry);
+//        traitEntry = new JTextField(traitSet.m_sTraitName.get());
+//        traitEntry.getDocument().addDocumentListener(new DocumentListener() {
+//			
+//			@Override
+//			public void removeUpdate(DocumentEvent e) {update();}
+//			@Override
+//			public void insertUpdate(DocumentEvent e) {update();}
+//			@Override
+//			public void changedUpdate(DocumentEvent e) {update();}
+//			void update() {
+//				try {
+//					traitSet.m_sTraitName.setValue(traitEntry.getText(), traitSet);
+//				} catch (Exception e) {
+//					// TODO: handle exception
+//				}
+//			}
+//		});
+//        traitEntry.setColumns(12);
+//        buttonBox.add(traitEntry);
         buttonBox.add(Box.createHorizontalGlue());
 
         JButton guessButton = new JButton("Guess latitude");
+        guessButton.setName("Guess latitude");
         guessButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -383,6 +331,7 @@ public class LocationInputEditor extends ListInputEditor {
         buttonBox.add(guessButton);
         
         JButton guessButton2 = new JButton("Guess longitude");
+        guessButton2.setName("Guess longitude");        
         guessButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -397,7 +346,7 @@ public class LocationInputEditor extends ListInputEditor {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    traitSet.m_traits.setValue("", traitSet);
+                    traitSet.value.setValue("", traitSet);
                 } catch (Exception ex) {
                     // TODO: handle exception
                 }
@@ -416,6 +365,7 @@ public class LocationInputEditor extends ListInputEditor {
     
     private void guess(int column) {
         GuessPatternDialog dlg = new GuessPatternDialog(this, m_sPattern);
+        //dlg.setName("GuessPatternDialog");
         String sTrait = "";
         switch (dlg.showDialog("Guess traits from taxon names")) {
         case canceled : return;
@@ -454,6 +404,7 @@ public class LocationInputEditor extends ListInputEditor {
     		}
     	}
         convertTableDataToTrait();
+        validateInput();
         //convertTraitToTableData();
         repaint();
     }

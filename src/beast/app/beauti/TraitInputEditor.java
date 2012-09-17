@@ -395,6 +395,7 @@ public class TraitInputEditor extends ListInputEditor {
         buttonBox.add(Box.createHorizontalGlue());
 
         JButton guessButton = new JButton("Guess");
+        guessButton.setName("guess");
         guessButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -429,6 +430,7 @@ public class TraitInputEditor extends ListInputEditor {
     
     private void guess() {
         GuessPatternDialog dlg = new GuessPatternDialog(this, m_sPattern);
+        //dlg.setName("GuessPatternDialog");
         String sTrait = "";
         switch (dlg.showDialog("Guess traits from taxon names")) {
         case canceled : return;

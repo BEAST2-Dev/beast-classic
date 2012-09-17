@@ -3,6 +3,7 @@
 
 
 <mergewith point='aux-partitions-panels'>
+		<alignmentProvider id="Add Continuous Geography" spec='BeautiLocationTraitProvider' template='@LocationTrait'/>
 		<alignmentProvider id="Add Discrete Trait" spec='BeautiDiscreteTraitProvider' template='@DiscreteTrait'/>
 <!--
 		<panel spec='BeautiPanelConfig' panelname="Discrete Trait" tiptext="Discrete Trait details"
@@ -109,67 +110,71 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 				</distribution>
 </mergewith>
 -->
+	</subtemplate>
 
-		<alignmentProvider id="Add Continuous Geography" spec='BeautiLocationTraitProvider' template='@LocationTrait'/>
 
         <subtemplate id='LocationTrait' class='beast.evolution.alignment.AlignmentFromTraitMap' mainid='$(n)'
 suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.frequencies'>
 <![CDATA[
 	<multivariateTraitLikelihood id="locationtreeLikelihood.$(n)" spec='beast.continuous.SampledMultivariateTraitLikelihood'
 		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@Tree.t:$(n)'>
-		<traitParameter id='location.$(n)' spec='RealParameter' value='0 0' minordimension='2'/>
-	    <data spec='AlignmentFromTraitMap' id='$(n)'>
+		<traitParameter id='location.$(n)' spec='parameter.RealParameter' value='0 0' minordimension='2'/>
+	    <data spec='beast.evolution.alignment.AlignmentFromTraitMap' id='$(n)'>
 			<userDataType spec='beast.evolution.datatype.LocationDataType'/>
-			<traitmap id='traitmap.s:$(n)' spec='beast.evolution.tree.TreeTraitMap' tree='@Tree.t:$(n)' parameter='@location.$(n)' traitName='location' 
+			<traitMap id='traitmap.s:$(n)' spec='beast.evolution.tree.TreeTraitMap' tree='@Tree.t:$(n)' parameter='@location.$(n)' traitName='location' 
 				randomizeupper="45 -70" randomizelower="28 -122">
-			</traitmap>
+			</traitMap>
 		</data>
-		<siteModel spec='SiteModel'>
-			<diffusionModel id="diffusionModel.s:$(n)" spec='beast.continuous.MultivariateDiffusionModel'>
-				<precisionMatrix spec='RealParameter' id='precisionMatrix.s:$(n)' minordimension='2'>
+		<siteModel spec='SiteModel' id="geoContSiteModel.s:$(n)">
+			<substModel id="diffusionModel.s:$(n)" spec='beast.continuous.MultivariateDiffusionModel'>
+				<precisionMatrix spec='parameter.RealParameter' id='precisionMatrix.s:$(n)' minordimension='2'>
 0.365 -1.78E-4
 -1.78E-4 5.16E-2
 				</precisionMatrix>
-			</diffusionModel>
+			</substModel>
 		</siteModel>
-        <branchRateModel spec='StrictClockModel' id='StrictClock.c:$(n)'>
+        <branchRateModel spec='beast.evolution.branchratemodel.StrictClockModel' id='StrictClock.c:$(n)'>
             <clock.rate id='clockRate.c:$(n)' spec='parameter.RealParameter' value='1.0' estimate='false'/>
         </branchRateModel>
     </multivariateTraitLikelihood>
 
-	<distribution  id="precisionPrior.$(n)" spec='beast.math.distributions.WishartDistribution' df='2' arg='@precisionMatrix'>
-		<scaleMatrix spec='RealParameter' minordimension='2'>
+	<distribution  id="precisionPrior.$(n)" spec='beast.math.distributions.WishartDistribution' df='2' arg='@precisionMatrix.s:$(n)'>
+		<scaleMatrix spec='parameter.RealParameter' minordimension='2'>
 				1.0 0.0
 				0.0 1.0
 		</scaleMatrix>
 	</distribution>
 
 	<distribution id="rootPrior.$(n)" spec='beast.math.distributions.MultivariateNormalDistribution'>
-		<arg id='rootTrait.$(n)' spec='beast.evolution.tree.RootTrait' traitmap='@traitmap'/>
-		<mean spec='RealParameter' value='0.0 0.0'/>
-		<precision spec='RealParameter' minordimension='2'>
+		<arg id='rootTrait.$(n)' spec='beast.evolution.tree.RootTrait' traitmap='@traitmap.s:$(n)'/>
+		<mean spec='parameter.RealParameter' value='0.0 0.0'/>
+		<precision spec='parameter.RealParameter' minordimension='2'>
 				0.001 0.0
 				0.0   0.001
 		</precision>
 	</distribution>
 
-    <log id='rateStat.$(n)' spec='RateStatistic' tree='@Tree.t:RacRABV' branchratemodel='@branchRatesDiffusion'/>
+    <log id='rateStat.$(n)' spec='beast.evolution.branchratemodel.RateStatistic' tree='@Tree.t:$(n)' treeLikelihood='@locationtreeLikelihood.$(n)'/>
 
 
 
 
-    <plugin id='ClockPrior.c:$(n)' spec='Prior' x='@clockRate.c:$(n)'><distr spec="beast.math.distributions.Uniform" upper='Infinity'/></plugin>
-	<operator id='StrictClockRateScaler.c:$(n)' spec='ScaleOperator' scaleFactor="0.75" weight="3" parameter='@clockRate.c:$(n)'/>
+    <plugin id='ClockPrior.c:$(n)' spec='beast.math.distributions.Prior' x='@clockRate.c:$(n)'>
+        <distr spec="beast.math.distributions.Uniform" upper='Infinity'/>
+    </plugin>
 
-	<operator id='precisionGibbsOperator.s:$(n)' spec='PrecisionMatrixGibbsOperator' tree='@Tree.t:$(n)' parameter='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)'  weight="15">
-		<likelihood idref='locationtreeLikelihood.$(n)'/>
-		<prior idref='precisionPrior.$(n)'/>
-	</operator>
+    <operator id='StrictClockRateScaler.c:$(n)' spec='ScaleOperator' scaleFactor="0.75" weight="3" parameter='@clockRate.c:$(n)'/>
+
+    <operator id='precisionGibbsOperator.s:$(n)' spec='PrecisionMatrixGibbsOperator' tree='@Tree.t:$(n)' parameter='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)'  weight="15">
+	<likelihood idref='locationtreeLikelihood.$(n)'/>
+	<prior idref='precisionPrior.$(n)'/>
+    </operator>
+
     <operator id='traitGibbsOperator.$(n)' spec='TraitGibbsOperator' tree='@Tree.t:$(n)' precisionMatrix='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)' weight="50">
 		<likelihood idref='locationtreeLikelihood.$(n)'/>
-	</operator>
+    </operator>
 
-	<operator spec='RootTraitRandowWalkOperator.$(n)' windowSize="10.0" weight="5" parameter='@location.$(n)' traitmap='@traitmap.s:$(n)' />
+    <operator id='RootTraitRandowWalkOperator.$(n)' spec='RootTraitRandowWalkOperator' windowSize="10.0" weight="5" parameter='@location.$(n)' traitmap='@traitmap.s:$(n)' />
 
 
 ]]>
