@@ -120,7 +120,7 @@ Click OK and the dates are populated by the correct value. Always double check t
 Select the Site model tab, and change the site model to HKY, and frequency model to `empirical'.
 The screen should look like this:
 
-\includegraphics[scale=0.4]{figures/BEAUti_sitemodel.png}
+\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_sitemodel.png}
 
 \subsubsection*{Setting the clock model}
 
@@ -130,7 +130,53 @@ We use a strict clock, so leave the clock tab.
 
 Change the tree prior from Yule to Coalescent with Constant Population. The other priors are fine. The screen should look like this:
 
-\includegraphics[scale=0.4]{figures/BEAUti_priors.png}
+\includegraphics[scale=0.4,clip=true,trim=0 400 0 0]{figures/BEAUti_priors.png}
+
+
+\subsubsection*{Setting up the geographic model}
+
+Go to the data partitions tab, and click the '+' button at the bottom of the screen.
+A dialog pops up where you can select what you want to add. Choose `Add Continuous Geography'
+and click `OK'.
+
+\includegraphics[scale=0.4]{figures/BEAUti_geography1.png}
+
+A new window pops up where you can choose the tree where you want to add geography.
+Also, you can change the trait name to `location';
+
+\includegraphics[scale=0.4,clip=true,trim=300 200 300 200]{figures/BEAUti_geography2.png}
+
+When you click OK, a dialog is shown where you can enter latitude and longitude for each taxon.
+In this tutorial, this information is encoded in the taxon name, so we can guess it from the name. 
+
+\includegraphics[scale=0.4]{figures/BEAUti_geography3.png}
+
+Click `Guess latitude', and a dialog is shown. Choose `split on character' and take group 3 for the latitude.
+When you click OK, the latitude field of the table is populated.
+
+\includegraphics[scale=0.4]{figures/BEAUti_geography4.png}
+
+Click `Guess longitude', and again a dialog is shown. Choose `split on character' and take group 4 for the longitude.
+
+\includegraphics[scale=0.4]{figures/BEAUti_geography5.png}
+
+When you click OK, the table is completely populated, like so:
+
+\includegraphics[scale=0.4]{figures/BEAUti_geography6.png}
+
+Click close, and a second data partition is created.
+
+\includegraphics[scale=0.4]{figures/BEAUti_DataPartitions2.png}
+
+The clock model now looks like this:
+
+\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_clockmodel2.png}
+
+The priors now look like this:
+
+\includegraphics[scale=0.4]{figures/BEAUti_priors2.png}
+
+To get the location edit dialog back, double click the location partition.
 
 
 \subsubsection*{Setting the MCMC options }

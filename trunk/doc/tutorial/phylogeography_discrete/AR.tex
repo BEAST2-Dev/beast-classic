@@ -130,7 +130,7 @@ Select the Site model tab, and change the site model to HKY, and frequency model
 Also, set the gamma category count to 4, and check the estimate box on the 'Shape' parameter that now pops up.
 The screen should look like this:
 
-\includegraphics[scale=0.4]{figures/BEAUti_sitemodel.png}
+\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_sitemodel.png}
 
 \subsubsection*{Setting the clock model}
 
@@ -138,14 +138,14 @@ We use a strict clock, but to make the analysis converge a bit quicker, we fix t
 First, click the menu Mode, and unset 'Automatically set clock rate'. Then, uncheck the estimate flag on the clock rate, and change the rate to 0.004.
 The screen should look like this:
 
-\includegraphics[scale=0.4]{figures/BEAUti_clockmodel.png}
+\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_clockmodel.png}
 
 
 \subsubsection*{Priors}
 
 Change the tree prior from Yule to Coalescent with Constant Population. The other priors are fine. The screen should look like this:
 
-\includegraphics[scale=0.4]{figures/BEAUti_priors.png}
+\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_priors.png}
 
 
 \subsubsection*{Setting up a discrete trait}
@@ -158,31 +158,35 @@ If the installation of the beast-classic add-on went OK, a dialog pops up, where
 Select 'discrete trait' and click OK. Now you can give a name to the trait, and select a tree to associate the trait with. 
 Here we will use 'location'.
 
-\includegraphics[scale=0.4]{figures/BEAUti_trait2.png}
+\includegraphics[scale=0.4,clip=true,trim=240 200 240 200]{figures/BEAUti_trait2.png}
 
 Change the name and click OK. Now, a dialog pops up where you can manually add the locations. However, the location is already encoded in the name, so we can `guess' it. Click the Guess button and a dialog pops up where we can choose to define the names by splitting on underscore and select the third group. Before you click OK, the screen should look like this:
 
-\includegraphics[scale=0.4]{figures/BEAUti_trait3.png}
+\includegraphics[scale=0.4,clip=true,trim=260 60 260 60]{figures/BEAUti_trait3.png}
 
 After clicking OK, the list is populated by locations, like so:
 
-\includegraphics[scale=0.4]{figures/BEAUti_trait4.png}
+\includegraphics[scale=0.4,clip=true,trim=260 60 260 60]{figures/BEAUti_trait4.png}
 
 You want to double check that all locations are indeed the ones you want, because it is easy for an irregularity to creep into taxon names, and the guess-work may not be correct.
+Click close, and the data partitions panel has a new partition added for location.
 
+\includegraphics[scale=0.4]{figures/BEAUti_DataPartitions2.png}
+
+To get the trait edit dialog back, double click the location partition.
 
 \subsubsection*{Setting the clock model}
 
 Click the clock model tab, and select the 'location' on the left.
 This shows the strict clock for the trait.
 
-\includegraphics[scale=0.4]{figures/BEAUti_clockmodel2.png}
+\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_clockmodel2.png}
 
 \subsubsection*{Priors}
 
 Click the priors tab, to show the extra priors added for the discrete analysis.
 
-\includegraphics[scale=0.4]{figures/BEAUti_priors2.png}
+\includegraphics[scale=0.4,clip=true,trim=0 200 0 0]{figures/BEAUti_priors2.png}
 
 \subsubsection*{Setting the MCMC options }
 
@@ -218,7 +222,7 @@ imported NEXUS file.
 \begin{figure}
 \begin{center}
 
-\includegraphics[scale=0.4]{figures/BEAUti_MCMC}
+\includegraphics[scale=0.4,clip=true,trim=0 200 0 0]{figures/BEAUti_MCMC}
 
 \end{center}
 \caption{\label{fig.MCMC} Setting up the MCMC paremeters.}
