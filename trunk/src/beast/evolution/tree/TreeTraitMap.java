@@ -57,7 +57,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		System.arraycopy(nodeToParameterIndexMap, 0, storedNodeToParameterIndexMap, 0, nNodes);
 		
 		
-		if (value.get() != null || randomizelower.get() != null || randomizeupper.get() != null) {
+		if ((value.get() != null && value.get().trim().length() > 0) || randomizelower.get() != null || randomizeupper.get() != null) {
 	        String [] sTaxa = tree.getTaxaNames();
 	        boolean [] bDone = new boolean[sTaxa.length];
 	        
@@ -91,30 +91,31 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 					}
 				}
 			}
-			
-			String [] sValues = value.get().split(",");
-	        for (String sTrait : sValues) {
-	            sTrait = sTrait.replaceAll("\\s+", " ");
-	            String[] sStrs = sTrait.split("=");
-	            if (sStrs.length != 2) {
-	                throw new Exception("could not parse trait: " + sTrait);
-	            }
-	            String sTaxonID = normalize(sStrs[0]);
-	            int iTaxon = indexOf(sTaxa, sTaxonID);
-	            if (iTaxon < 0) {
-	                throw new Exception("Trait (" + sTaxonID + ") is not a known taxon. Spelling error perhaps?");
-	            }
-	            String sTraitValue = normalize(sStrs[1]);
-	            String [] sTraitValues = sTraitValue.split("\\s");
-	            for (int i = 0; i < sTraitValues.length; i++) {
-	            	values[iTaxon * dim + i] = Double.parseDouble(sTraitValues[i]);
-	            }
-	            if (bDone[iTaxon]) {
-	            	throw new Exception("Trait for taxon " + sTaxa[iTaxon]+ " defined twice");
-	            }
-	            bDone[iTaxon] = true;
-	        }
-
+		
+			if (value.get() != null && value.get().trim().length() > 0) {
+				String [] sValues = value.get().split(",");
+		        for (String sTrait : sValues) {
+		            sTrait = sTrait.replaceAll("\\s+", " ");
+		            String[] sStrs = sTrait.split("=");
+		            if (sStrs.length != 2) {
+		                throw new Exception("could not parse trait: " + sTrait);
+		            }
+		            String sTaxonID = normalize(sStrs[0]);
+		            int iTaxon = indexOf(sTaxa, sTaxonID);
+		            if (iTaxon < 0) {
+		                throw new Exception("Trait (" + sTaxonID + ") is not a known taxon. Spelling error perhaps?");
+		            }
+		            String sTraitValue = normalize(sStrs[1]);
+		            String [] sTraitValues = sTraitValue.split("\\s");
+		            for (int i = 0; i < sTraitValues.length; i++) {
+		            	values[iTaxon * dim + i] = Double.parseDouble(sTraitValues[i]);
+		            }
+		            if (bDone[iTaxon]) {
+		            	throw new Exception("Trait for taxon " + sTaxa[iTaxon]+ " defined twice");
+		            }
+		            bDone[iTaxon] = true;
+		        }
+			}
 	        // sanity check: did we cover all taxa?
 	        for (int i = 0; i < sTaxa.length; i++) {
 	            if (!bDone[i]) {
