@@ -1,5 +1,6 @@
 package beast.app.beauti;
 
+import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 		                JOptionPane.CLOSED_OPTION, null, new String[]{"Close"}, "Close");
 		        optionPane.setBorder(new EmptyBorder(12, 12, 12, 12));
 
-		        final JDialog dialog = optionPane.createDialog(null, "Location trait editor");
+		        final JDialog dialog = optionPane.createDialog(Frame.getFrames()[0], "Location trait editor");
 		    	dialog.setName("LocationTraitEditor");
 		        // dialog.setResizable(true);
 		        dialog.pack();

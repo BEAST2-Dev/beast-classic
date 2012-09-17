@@ -1,5 +1,7 @@
 package beast.app.beauti;
 
+import java.awt.Frame;
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +78,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 		                JOptionPane.CLOSED_OPTION, null, new String[]{"Close"}, "Close");
 		        optionPane.setBorder(new EmptyBorder(12, 12, 12, 12));
 
-		        final JDialog dialog = optionPane.createDialog(null, "Discrete trait editor");
+		        final JDialog dialog = optionPane.createDialog(Frame.getFrames()[0], "Discrete trait editor");
 		    	dialog.setName("DiscreteTraitEditor");
 		        // dialog.setResizable(true);
 		        dialog.pack();

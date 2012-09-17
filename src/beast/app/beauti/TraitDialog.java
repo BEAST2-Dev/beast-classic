@@ -2,6 +2,7 @@ package beast.app.beauti;
 
 import javax.swing.JDialog;
 
+import java.awt.Frame;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -66,7 +67,7 @@ public class TraitDialog extends JPanel {
                 JOptionPane.OK_CANCEL_OPTION, null, new String[]{"Cancel", "OK"}, "OK");
         optionPane.setBorder(new EmptyBorder(12, 12, 12, 12));
 
-        final JDialog dialog = optionPane.createDialog(null, title);
+        final JDialog dialog = optionPane.createDialog(Frame.getFrames()[0], title);
     	dialog.setName("TraitDialog");
         // dialog.setResizable(true);
         dialog.pack();

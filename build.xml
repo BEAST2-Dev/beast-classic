@@ -27,6 +27,7 @@
 	<path id="classpath">
         <pathelement path="${buildBEAST_CLASSIC}"/>
 		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
+		<fileset dir="${libBeast2}" includes="fest.jar"/>
 		<fileset dir="${libBEAST_CLASSIC}" includes="colt.jar"/>
         <pathelement path="${beast2classpath}"/>
 	</path>
@@ -142,6 +143,7 @@
 			<batchtest fork="yes" todir="${report}">
 				<fileset dir="${srcBEAST_CLASSIC}">
                     <include name="test/**/*Test.java"/>                                         
+                    <exclude name="test/**/beauti/*Test.java"/>                                         
 				</fileset>
 <!--
 				<fileset dir="${srcBeast2}">

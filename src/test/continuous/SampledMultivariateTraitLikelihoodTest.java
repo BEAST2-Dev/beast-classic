@@ -21,7 +21,7 @@ public class SampledMultivariateTraitLikelihoodTest {
 		MCMC mcmc = (MCMC) parser.parseFile(new File("examples/RacRABV_LogNRRW2.xml"));
 		Distribution posterior = mcmc.posteriorInput.get();
 		double logP = mcmc.robustlyCalcPosterior(posterior);
-        assertEquals(-3042252.6578551414, logP, 1e-10);
+        assertEquals(-3042252.6578551414, logP, 1e-5);
 	}
 
 	@Test
@@ -32,7 +32,7 @@ public class SampledMultivariateTraitLikelihoodTest {
 		MCMC mcmc = (MCMC) parser.parseFile(new File("examples/H5N1_HA_discrete2.xml"));
 		Distribution posterior = mcmc.posteriorInput.get();
 		double logP = mcmc.robustlyCalcPosterior(posterior);
-        assertEquals(-17376.726764175364, logP, 1e-10);
+        assertEquals(-17376.726764175364, logP, 1e-5);
 	}
 
 }
