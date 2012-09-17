@@ -202,4 +202,59 @@
 		<echo message="Add-on version release is finished." />
 	</target>
 
+	<target name="tutorial">
+		<!-- generate images -->
+		<junit printsummary="yes"> 
+			<classpath>
+				<path refid="classpath" />
+				<path location="${buildBEAST_CLASSIC}" />
+			</classpath>
+
+			<formatter type="xml" />
+
+			<batchtest fork="yes" todir="${report}">
+				<fileset dir="${srcBEAST_CLASSIC}">
+                    <include name="test/**/beauti/*Test.java"/>                                         
+				</fileset>
+			</batchtest>
+		</junit>
+
+		<!-- generate discrete phylogeography AR.pdf -->
+		<exec executable="sh" dir="doc/tutorial/phylogeography_discrete">
+			<arg value='-c'/>
+			<arg value='pdflatex AR.tex'/>
+		</exec>
+		<exec executable="sh" dir="doc/tutorial/phylogeography_discrete">
+			<arg value='-c'/>
+			<arg value='bibtex AR.aux'/>
+		</exec>
+		<exec executable="sh" dir="doc/tutorial/phylogeography_discrete">
+			<arg value='-c'/>
+			<arg value='pdflatex AR.tex'/>
+		</exec>
+		<exec executable="sh" dir="doc/tutorial/phylogeography_discrete">
+			<arg value='-c'/>
+			<arg value='pdflatex AR.tex'/>
+		</exec>
+
+		<!-- generate continuous phylogeography phylogeography_s.pdf -->
+		<exec executable="sh" dir="doc/tutorial/phylogeography_continuous">
+			<arg value='-c'/>
+			<arg value='pdflatex phylogeography_c.tex'/>
+		</exec>
+		<exec executable="sh" dir="doc/tutorial/phylogeography_continuous">
+			<arg value='-c'/>
+			<arg value='bibtex phylogeography_c.aux'/>
+		</exec>
+		<exec executable="sh" dir="doc/tutorial/phylogeography_continuous">
+			<arg value='-c'/>
+			<arg value='pdflatex phylogeography_c.tex'/>
+		</exec>
+		<exec executable="sh" dir="doc/tutorial/phylogeography_continuous">
+			<arg value='-c'/>
+			<arg value='pdflatex phylogeography_c.tex'/>
+		</exec>
+	</target>
+
+
 </project>
