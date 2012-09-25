@@ -1,16 +1,13 @@
 package beast.evolution.alignment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.evolution.datatype.ContinuousDataType;
-import beast.evolution.datatype.DataType;
 import beast.evolution.tree.TreeTraitMap;
-import beast.util.AddOnManager;
 
 @Description("Creates and alignment of continuous data, such as a geographic location, from a trait set")
 public class AlignmentFromTraitMap extends Alignment {

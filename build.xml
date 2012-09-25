@@ -28,6 +28,7 @@
         <pathelement path="${buildBEAST_CLASSIC}"/>
 		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
 		<fileset dir="${libBeast2}" includes="fest.jar"/>
+		<fileset dir="${libBeast2}" includes="jam.jar"/>
 		<fileset dir="${libBEAST_CLASSIC}" includes="colt.jar"/>
         <pathelement path="${beast2classpath}"/>
 	</path>
@@ -218,7 +219,9 @@
 				</fileset>
 			</batchtest>
 		</junit>
+	</target>
 
+	<target name="tutorial2">
 		<!-- generate discrete phylogeography AR.pdf -->
 		<exec executable="sh" dir="doc/tutorial/phylogeography_discrete">
 			<arg value='-c'/>

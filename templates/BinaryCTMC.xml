@@ -3,6 +3,7 @@
 
 <map name='connect'>beast.app.beauti.BeautiConnector</map>
 <map name='subtemplate'>beast.app.beauti.BeautiSubTemplate</map>
+<map name='prior'>beast.math.distributions.Prior</map>
 
     <beauticonfig spec='BeautiConfig'
         inputLabelMap='beast.core.MCMC.operator=Operators,
