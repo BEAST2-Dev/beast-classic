@@ -4,6 +4,7 @@ import java.util.Set;
 
 import beast.core.Description;
 import beast.core.parameter.RealParameter;
+import beast.evolution.MSSD.PartialsProvider;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AscertainedAlignment;
 import beast.evolution.branchratemodel.BranchRateModel;
@@ -160,7 +161,7 @@ abstract public class AbstractObservationProcess { // extends AbstractModel {
         return logL;
     }
 
-    public final double nodePatternLikelihood(double[] freqs, LikelihoodCore likelihoodCore) {
+    public final double nodePatternLikelihood(double[] freqs, PartialsProvider likelihoodCore) {
         int i, j;
         double logL = gammaNorm;
 
