@@ -33,6 +33,7 @@
 		<fileset dir="${libBeast2}" includes="jam.jar"/>
 		<fileset dir="${libBEAST_CLASSIC}" includes="colt.jar"/>
         <pathelement path="${beast2classpath}"/>
+        <pathelement path="${beastiiclasspath}"/>
 	</path>
 
 	<!-- start -->
