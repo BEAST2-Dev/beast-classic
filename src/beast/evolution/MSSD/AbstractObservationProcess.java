@@ -78,7 +78,7 @@ public class AbstractObservationProcess extends CalculationNode {
 //        return abstractobservationprocess.accumulateCorrectedLikelihoods(arg0, arg1, arg2);
 
     //     }
-    double nodePatternLikelihood(double[] arg0, LikelihoodCore arg1) {
+    double nodePatternLikelihood(double[] arg0, PartialsProvider arg1) {
         return abstractobservationprocess.nodePatternLikelihood(arg0, arg1);
     }
 

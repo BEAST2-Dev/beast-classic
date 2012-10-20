@@ -28,11 +28,11 @@ package beast.evolution.MSSD;
 
 import beast.core.Description;
 import beast.core.Input;
-import beast.evolution.likelihood.TreeLikelihood;
+import beast.evolution.likelihood.ThreadedTreeLikelihood;
 
 
-@Description("Treelikelihood for running the Multi-State Stochastic Dollo process")
-public class ALSTreeLikelihood extends TreeLikelihood implements PartialsProvider {
+@Description("Threaded Treelikelihood for running the Multi-State Stochastic Dollo process")
+public class ThreadedALSTreeLikelihood extends ThreadedTreeLikelihood implements PartialsProvider {
     public Input<AbstractObservationProcess> op = new Input<AbstractObservationProcess>("observationprocess", "description here");
 
     protected AbstractObservationProcess observationProcess;
