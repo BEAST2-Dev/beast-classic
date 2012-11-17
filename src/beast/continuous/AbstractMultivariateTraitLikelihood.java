@@ -10,6 +10,7 @@ import beast.evolution.alignment.AlignmentFromTraitMap;
 import beast.evolution.branchratemodel.BranchRateModel;
 import beast.evolution.datatype.ContinuousDataType;
 import beast.evolution.likelihood.TreeLikelihood;
+import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.substitutionmodel.ContinuousSubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -73,7 +74,8 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
         this.traitName = traitName;
         this.treeModel = m_tree.get();
         this.rateModel = m_pBranchRateModel.get();
-        this.diffusionModel = (ContinuousSubstitutionModel) m_pSiteModel.get().getSubstitutionModel(); 
+        this.diffusionModel = (ContinuousSubstitutionModel) 
+        			((SiteModel.Base) m_pSiteModel.get()).getSubstitutionModel(); 
         		//diffusionModelInput.get();
         this.traitParameter = traitParameterInput.get();        
         this.useTreeLength = useTreeLengthInput.get();
@@ -438,7 +440,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
 //    }
 
     public String toString() {
-        return getClass().getName() + "(" + getLogLikelihood() + ")";
+        return getClass().getName();// + "(" + getLogLikelihood() + ")";
 
     }
 

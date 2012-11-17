@@ -165,9 +165,9 @@ suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.freq
 
     <operator id='StrictClockRateScaler.c:$(n)' spec='ScaleOperator' scaleFactor="0.75" weight="3" parameter='@clockRate.c:$(n)'/>
 
-    <operator id='precisionGibbsOperator.s:$(n)' spec='PrecisionMatrixGibbsOperator' tree='@Tree.t:$(n)' parameter='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)'  weight="15">
-	<likelihood idref='locationtreeLikelihood.$(n)'/>
-	<prior idref='precisionPrior.$(n)'/>
+    <operator id='precisionGibbsOperator.s:$(n)' spec='PrecisionMatrixGibbsOperator' tree='@Tree.t:$(n)' parameter='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)'  weight="15"
+		prior='@precisionPrior.$(n)'>
+	    <likelihood idref='locationtreeLikelihood.$(n)'/>
     </operator>
 
     <operator id='traitGibbsOperator.$(n)' spec='TraitGibbsOperator' tree='@Tree.t:$(n)' precisionMatrix='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)' weight="50">

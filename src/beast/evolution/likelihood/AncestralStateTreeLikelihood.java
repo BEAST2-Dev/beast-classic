@@ -8,6 +8,7 @@ import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.evolution.datatype.DataType;
 import beast.evolution.datatype.UserDataType;
+import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.substitutionmodel.SubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -105,7 +106,10 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
             System.exit(-1);
         }
         if (m_beagle != null) {
-        	m_siteModel = m_pSiteModel.get();
+            if (!(m_pSiteModel.get() instanceof SiteModel.Base)) {
+            	throw new Exception ("siteModel input should be of type SiteModel.Base");
+            }
+            m_siteModel = (SiteModel.Base) m_pSiteModel.get();
         	m_substitutionModel = (SubstitutionModel.Base) m_siteModel.m_pSubstModel.get();
             int nStateCount = m_data.get().getMaxStateCount();
             m_fProbabilities = new double[(nStateCount + 1) * (nStateCount + 1)];

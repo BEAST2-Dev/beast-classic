@@ -150,7 +150,7 @@
 			<batchtest fork="yes" todir="${report}">
 				<fileset dir="${srcBEAST_CLASSIC}">
                     <include name="test/**/*Test.java"/>                                         
-                    <exclude name="test/**/beauti/*Test.java"/>                                         
+                    <!--exclude name="test/**/beauti/*Test.java"/-->
 				</fileset>
 <!--
 				<fileset dir="${srcBeast2}">

@@ -18,6 +18,7 @@ import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AlignmentFromTrait;
 import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.AncestralStateTreeLikelihood;
+import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel;
 import beast.evolution.tree.Tree;
 import beast.math.distributions.ParametricDistribution;
@@ -87,7 +88,8 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 		        try {
 			        AlignmentFromTrait traitData = (AlignmentFromTrait) likelihood.m_data.get();
 			        int stateCount = ((UserDataType) traitData.m_userDataType.get()).m_nStateCountInput.get();
-			        SVSGeneralSubstitutionModel substModel = (SVSGeneralSubstitutionModel) likelihood.m_pSiteModel.get().m_pSubstModel.get();
+			        SVSGeneralSubstitutionModel substModel = (SVSGeneralSubstitutionModel) 
+			        		((SiteModel.Base) likelihood.m_pSiteModel.get()).m_pSubstModel.get();
 		        	substModel.indicator.get().m_nDimension.setValue(stateCount * (stateCount - 1) / 2, null);
 		        	((Parameter<?>) substModel.m_rates.get()).m_nDimension.setValue(stateCount* (stateCount - 1) / 2, null);
 		        	RealParameter freqs = substModel.frequenciesInput.get().frequencies.get();

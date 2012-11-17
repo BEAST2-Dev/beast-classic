@@ -29,6 +29,7 @@ package beast.evolution.MSSD;
 import beast.core.Description;
 import beast.core.Input;
 import beast.evolution.likelihood.TreeLikelihood;
+import beast.evolution.sitemodel.SiteModel;
 
 
 @Description("Treelikelihood for running the Multi-State Stochastic Dollo process")
@@ -50,7 +51,7 @@ public class ALSTreeLikelihood extends TreeLikelihood implements PartialsProvide
         // Calculate the partial likelihoods
         super.calculateLogP();
         // get the frequency model
-        double[] freqs = m_pSiteModel.get().m_pSubstModel.get().getFrequencies();
+        double[] freqs = ((SiteModel.Base) m_pSiteModel.get()).m_pSubstModel.get().getFrequencies();
         // let the observationProcess handle the rest
         logP = observationProcess.nodePatternLikelihood(freqs, this);
         return logP;
