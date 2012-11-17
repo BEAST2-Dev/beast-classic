@@ -58,6 +58,11 @@ public class AlignmentFromTraitMap extends Alignment {
 	public TreeTraitMap getTraitMap() {
 		return traitMap;
 	}
+	
+	@Override
+	public int getSiteCount() {
+		return 1;
+	}
 
 
 }
