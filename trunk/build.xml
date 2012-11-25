@@ -200,11 +200,9 @@
 		<copy todir="${Add_on_dir}">
 			<fileset dir="${distBEAST_CLASSIC}" includes="BEAST_CLASSIC.src.jar" />
 		</copy>
-<!--
 		<copy todir="${Add_on_dir}/templates">
-			<fileset file="templates/BEAST_CLASSIC.xml" />
+			<fileset file="templates/discrete-trait.xml" />
 		</copy>
--->
 		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.addon.zip">
 			<fileset dir="${Add_on_dir}">
 				<include name="**/*" />

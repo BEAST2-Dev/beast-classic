@@ -56,11 +56,14 @@ Select the File/Manage Add-ons menu. A dialog pops up showing the add-ons alread
 \includegraphics[scale=0.4]{figures/addonmgr.png}
 \end{center}
 
+
 Select the BEAST-CLASSIC entry in the list, and click the Install button. After a little while the dialog is updated and it shows that the add-on is now installed.
+BEAST-CLASSIC requires BEASTii, so if you have not already installed BEASTii, an error message may be shown warning that BEASTii should be installed as well.
 
 \begin{center}
 \includegraphics[scale=0.4]{figures/addonmgr2.png}
 \end{center}
+
 
 
 \subsection*{BEAUti}
@@ -303,15 +306,10 @@ Source code distributed under the GNU Lesser General Public License:
                          Thanks to:
     	Roald Forsberg, Beth Shapiro and Korbinian Strimmer
 
-File: RacRABC.xml seed: 1347411445277 threads: 1
+File: H5N1.xml seed: 1347411445277 threads: 1
 
 Random number seed: 1347411445277
 
-Skip loading file:/home/remco/workspace/beast2/lib/fest-swing-1.2.jar: contains classs org.fest.swing.annotation.GUITest that is already loaded
-Loaded URL file:/home/remco/workspace/beast2/lib/fest-util-1.1.2-sources.jar
-Skip loading file:/home/remco/workspace/beast2/lib/junit-4.8.2.jar: contains classs junit.extensions.ActiveTestSuite$1 that is already loaded
-Loaded URL file:/home/remco/workspace/beast2/lib/fest-assert-1.2-sources.jar
-Skip loading file:/home/remco/workspace/beast2/lib/fest-swing-junit-4.
 ... ...
 
 \end{verbatim}}
@@ -320,7 +318,7 @@ Skip loading file:/home/remco/workspace/beast2/lib/fest-swing-junit-4.
 
 Run the program called {\bf Tracer} to analyze the output of BEAST. When the main
 window has opened, choose {\bf Import Trace File...} from the {\bf File} menu and select the file that
-BEAST has created called \texttt{RacRABV.123123.log} where 123123 is the seed you used.
+BEAST has created called \texttt{H5N1.123123.log} where 123123 is the seed you used.
 You should now see a window like in Figure \ref{fig.tracer}.
 
 \begin{figure}
@@ -375,11 +373,11 @@ Now press \texttt{Run} and wait for the program to finish.
 \subsection*{Distribution of root location}
 
 When you open the summary tree in a text editor, and look at the end of the tree definition, grab the last entry for location.set and location.set.prob. They might look something like this:
-
-\begin{verbatim}
-location.set=\{"Hunan","Guangxi","Fujian","HongKong","Guangdong"\}
-location.set.prob=\{0.024983344437041973,0.16822118587608262,0.05463024650233178,0.6085942704863424,0.1435709526982012\}
-\end{verbatim}
+\\
+{\tt
+location.set = \{"Hunan","Guangxi","Fujian","HongKong","Guangdong"\}
+location.set.prob = \{0.024983344437041973, 0.16822118587608262, 0.05463024650233178, 0.6085942704863424, 0.1435709526982012\}
+}
 
 This means that we have the following distribution for the root location:
 
