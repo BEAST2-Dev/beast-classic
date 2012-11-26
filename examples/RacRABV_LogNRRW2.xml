@@ -242,7 +242,7 @@
 <map name="Normal">beast.math.distributions.Normal</map>
 
 
-<run chainLength="10000000" id="mcmc" spec="MCMC">
+<run chainLength="8000000" id="mcmc" spec="MCMC">
     <state id="state" storeEvery="1000">
         <tree id="Tree.t:RacRABV" name="stateNode">
             <trait id="dateTrait.t:RacRABV" spec="beast.evolution.tree.TraitSet" traitname="date">
