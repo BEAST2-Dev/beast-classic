@@ -31,7 +31,7 @@ BEAST. At the time of writing, the current version is v{\FigTreeVersion}. It is 
 
 
 This tutorial guides you through a continuous phylogegraphy analysis of a rabies epidemic spread though a raccoon population from the north-east of the united states. The original data comes from
-\cite{biek:2007hi} and was used in a phylogeographic analysis before in \cite{Lemey:2010hc}. It consists of 33 sequences of 2811 characters.
+\cite{biek:2007hi} and was used in a phylogeographic analysis before in \cite{Lemey:2010hc}. It consists of 47 sequences of 2811 characters.
 
 We go through the following steps:
 \begin{itemize}
@@ -173,6 +173,10 @@ The clock model now looks like this:
 
 \includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_clockmodel2.png}
 
+For the location, we select a relaxed clock with log-normal distribution.
+
+\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_clockmodel3.png}
+
 The priors now look like this:
 
 \includegraphics[scale=0.4]{figures/BEAUti_priors2.png}
@@ -190,7 +194,7 @@ steps the MCMC will make in the chain before finishing. The appropriate length o
 model and the accuracy of the answer required. The default value of 10,000,000
 is entirely arbitrary and should be adjusted according to the size
 of your data set. For this data set let's initially set the chain
-length to 5,000,000 as this will run reasonably quickly on most modern
+length to 20,000,000 as this will run reasonably quickly on most modern
 computers (less than 20 minutes).
 
 The next options specify how often the parameter values in the Markov
@@ -206,7 +210,7 @@ contain much information about the distributions of the parameters.
 You probably want to aim to store no more than 10,000 samples so this should be
 set to no less than chain length / 10,000.
 
-For this exercise we will set the screen log to 10000 and the file log to 2500. The final two
+For this exercise we will set the screen log to 100000 and the file log to 20000. The final two
 options give the file names of the log files for the sampled parameters and
 the trees. These will be set to a default based on the name of the
 imported NEXUS file. 
@@ -324,6 +328,19 @@ on the left brings up analyses for this trace on the right hand side depending o
 In the top right of the window is a table of calculated statistics for the selected trace. 
 
 Tracer will plot a (marginal posterior) distribution for the selected parameter and also give you statistics such as the mean and median. The \texttt{95\% HPD lower} or \texttt {upper} stands for {\it highest posterior density interval} and represents the most compact interval on the selected parameter that contains 95\% of the posterior probability. It can be thought of as a Bayesian analog to a confidence interval. 
+
+
+\section*{Questions}
+
+To determine whether a relaxed clock is supported by the data over a strict clock,
+examine the coefficient of variation. What is the mean, and the shape of the distribution
+of the coefficient of variation? Is a relaxed clock is appropriate for this data?
+
+\vspace{5 mm}
+\framebox(420,60){}
+\vspace{5 mm}
+
+
 
 \subsection*{Obtaining an estimate of the phylogenetic tree}
 

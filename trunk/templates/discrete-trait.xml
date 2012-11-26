@@ -114,7 +114,8 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 
 
         <subtemplate id='LocationTrait' class='beast.evolution.alignment.AlignmentFromTraitMap' mainid='$(n)'
-suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.frequencies'>
+suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.frequencies,
+				beast.math.distributions.MultivariateNormalDistribution.arg'>
 <![CDATA[
 	<multivariateTraitLikelihood id="locationtreeLikelihood.$(n)" spec='beast.continuous.SampledMultivariateTraitLikelihood'
 		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@Tree.t:$(n)'>
@@ -192,16 +193,17 @@ suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.freq
 
 
          <connect srcID='precisionGibbsOperator.s:$(n)'    targetID='mcmc' inputName='operator' if='inlikelihood(precisionMatrix.s:$(n)) and precisionMatrix.s:$(n)/estimate=true'>Move precision matrix of partition c:$(n)</connect>
-         <connect srcID='traitGibbsOperator.$(n)'          targetID='mcmc' inputName='operator' if='inlikelihood(locationtreeLikelihood.$(n)) and location.s:$(n)/estimate=true'>Move location of partition c:$(n)</connect>
-         <connect srcID='RootTraitRandowWalkOperator.$(n)' targetID='mcmc' inputName='operator' if='inlikelihood(locationtreeLikelihood.$(n)) and location.s:$(n)/estimate=true'>Move root location of partition c:$(n)</connect>
+         <connect srcID='traitGibbsOperator.$(n)'          targetID='mcmc' inputName='operator' if='inlikelihood(locationtreeLikelihood.$(n)) and location.$(n)/estimate=true'>Move location of partition c:$(n)</connect>
+         <connect srcID='RootTraitRandowWalkOperator.$(n)' targetID='mcmc' inputName='operator' if='inlikelihood(locationtreeLikelihood.$(n)) and location.$(n)/estimate=true'>Move root location of partition c:$(n)</connect>
          <connect srcID='StrictClockRateScaler.c:$(n)'     targetID='mcmc' inputName='operator' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'>Scale clock rate of partition c:$(n)</connect>
 
          <connect srcID='locationtreeLikelihood.$(n)'      targetID='tracelog' inputName='log' if='inlikelihood(locationtreeLikelihood.$(n))'/>
          <connect srcID='precisionMatrix.s:$(n)'           targetID='tracelog' inputName='log' if='inlikelihood(precisionMatrix.s:$(n)) and precisionMatrix.s:$(n)/estimate=true'/>
          <connect srcID='rateStat.$(n)'                    targetID='tracelog' inputName='log' if='inlikelihood(locationtreeLikelihood.$(n))'/>
          <connect srcID='clockRate.c:$(n)'                 targetID='tracelog' inputName='log' if='inlikelihood(clockRate.c:$(n)) and clockRate.c:$(n)/estimate=true'/>
+         <connect srcID='rootTrait.$(n)'                   targetID='tracelog' inputName='log' if='inlikelihood(locationtreeLikelihood.$(n))'/>
 
-         <connect srcID='location.$(n)'		   targetID='TreeWithMetaDataLogger.t:$(n)' inputName='metadata' if='inposterior(locationtreeLikelihood.$(n))'/>
+         <connect srcID='location.$(n)'		               targetID='TreeWithMetaDataLogger.t:$(n)' inputName='metadata' if='inposterior(location.$(n))'/>
 	</subtemplate>
 </mergewith>
 
