@@ -45,7 +45,8 @@ We go through the following steps:
 \subsubsection*{Set up BEAUti for phylogeography}
 
 Phylogeography as described in this tutorial is part of the {\tt beast-classic} add-on.
-To install the add-on, run BEAUti by double clicking on its icon. 
+If you not already have it installed, you can
+install the add-on through BEAUti. Start BEAUti by double clicking on its icon. 
 Select the File/Manage Add-ons menu. A dialog pops up showing the add-ons already installed. 
 
 \begin{center}
@@ -68,7 +69,14 @@ BEAST-CLASSIC requires BEASTii, so if you have not already installed BEASTii, an
 To load a NEXUS format alignment, simply select the \texttt{Import
 Alignment} option from the File menu: 
 
-Select the file called \texttt{RacRABV.nex}. The file contains an alignment of sequences. The \texttt{RacRABV.nex} looks like this (content has been truncated):
+Select the file called \texttt{RacRABV.nex}, which is located in the place where the beast-classic add-on is installed 
+under the {\tt examples/nexus} directory. Typically, add-ons are installed in different places, depending on your operating system:
+\begin{itemize}
+\item for Windows, in your home directory (e.g. {\tt c:$\backslash$Users$\backslash$joe}) under the {\tt BEAST} directory,
+\item for Mac, in the {\tt Library/Application Support/BEAST} directory in your home directory (e.g. {\tt /Users/joe}),
+\item for Linux, in the {\tt .beast} directory in your home directory (e.g {\tt /home/joe}).
+\end{itemize}
+The file contains an alignment of sequences. The \texttt{RacRABV.nex} looks like this (content has been truncated):
 
 \begin{verbatim}
 #NEXUS
