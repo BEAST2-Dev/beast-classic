@@ -54,7 +54,7 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 			</distribution>
         <!--/distribution-->
 
-		<logger id='treeWithTraitLogger.$(n)' logEvery="10000" fileName="$(n)_tree_with_trait.$(seed).trees" mode="tree">
+		<logger id='treeWithTraitLogger.$(n)' logEvery="10000" fileName="$(n)_tree_with_trait.trees" mode="tree">
 			<log spec='beast.evolution.tree.TreeWithTraitLogger' tree='@Tree.t:$(n)'>
 				<metadata idref="posterior"/>
 				<metadata idref="traitedtreeLikelihood.$(n)"/>
