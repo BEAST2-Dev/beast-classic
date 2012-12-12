@@ -10,10 +10,13 @@ import java.util.EventObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -96,6 +99,7 @@ public class LocationInputEditor extends ListInputEditor {
             if (traitSet != null) {
                 box.add(createButtonBox());
                 box.add(createListBox());
+                box.add(createButtonBox2());
             }
             add(box);
             validateInput();
@@ -409,6 +413,84 @@ public class LocationInputEditor extends ListInputEditor {
         repaint();
     }
 	
+
+    private Box createButtonBox2() {
+        Box buttonBox = Box.createHorizontalBox();
+
+        buttonBox.add(Box.createHorizontalGlue());
+
+        JButton manipulateButton = new JButton("Manipulate latitude");
+        manipulateButton.setName("Manipulate latitude");
+        manipulateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	manipulate(1);
+            }
+        });
+        buttonBox.add(manipulateButton);
+        
+        JButton manipulateButton2 = new JButton("Manipulate longitude");
+        manipulateButton2.setName("Manipulate longitude");        
+        manipulateButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	manipulate(2);
+            }
+        });
+        buttonBox.add(manipulateButton2);
+        return buttonBox;
+    } // createButtonBox2
+    
+    
+    // a JavaScript engine
+    static ScriptEngine m_engine;
+    {
+		// create a script engine manager
+	    ScriptEngineManager factory = new ScriptEngineManager();
+	    // create a JavaScript engine
+	    m_engine = factory.getEngineByName("JavaScript");
+    }
+
+    private void manipulate(int column) {
+		String operatee = (column == 1 ? "latitude" : "longitude");
+		String formula = JOptionPane.showInputDialog(this, "<html>Give a formula with $x as the " + operatee + 
+				" e.g., -$x to make values negative<br>" +
+				"180+$x to add 180 to " + operatee + "<br>" +
+				"$x*2+10 to multiply by 2 and add 10<br>" +
+				"max($x,100) to get the maximum of " + operatee + " and 100", "Manipulate " + operatee, JOptionPane.OK_CANCEL_OPTION);
+		if (formula == null || formula.trim().length() == 0) {
+			return;
+		}
+		
+		for (int i = 0; i < tableData.length; i++) {
+			String value = tableData[i][column].toString();
+			try {
+				value = Double.parseDouble(value) + "";
+			} catch (Exception e) {
+				value = "0";
+			}
+			String newValue = value(formula, value);
+			tableData[i][column] = newValue;
+		}
+		convertTableDataToTrait();
+		validateInput();
+		repaint();
+	}
+
+	String value(String formula, String value) {
+		String sFormula = "with (Math) {" + formula + "}";
+		sFormula = sFormula.replaceAll("\\$x", "("+value+")");
+		System.err.println("parsing " + sFormula);
+		try {
+			Object o = m_engine.eval(sFormula);
+			String sValue = o.toString();
+			return sValue;
+		} catch (javax.script.ScriptException es) {
+			return es.getMessage();
+		}
+	}
+
+    
 	@Override
 	public void validateInput() {
 		// check all values are specified

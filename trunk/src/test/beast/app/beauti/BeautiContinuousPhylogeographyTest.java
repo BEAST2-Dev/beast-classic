@@ -6,10 +6,12 @@ import java.awt.Component;
 import java.io.File;
 import java.util.Arrays;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.fest.swing.core.GenericTypeMatcher;
 import org.fest.swing.data.Index;
+import org.fest.swing.finder.JOptionPaneFinder;
 import org.fest.swing.fixture.JComboBoxFixture;
 import org.fest.swing.fixture.JOptionPaneFixture;
 import org.fest.swing.fixture.JTabbedPaneFixture;
@@ -413,9 +415,35 @@ public class BeautiContinuousPhylogeographyTest extends BeautiBase {
 			optionPane.radioButton("split on character").click();
 			optionPane.comboBox("splitCombo").selectItem("4");
 			screenshotTaker.saveComponentAsPng(beauti.frame, PREFIX + "geography5.png");
+			optionPane.okButton().click();
 			// okButton =
 			// dialog.robot.finder().find(JButtonMatcher.withText("OK").andShowing());
 			// new JButtonFixture(dialog.robot, okButton).click();
+			
+			System.err.println("\n\n\n\nTESTING NOW");
+
+			dialog.button("Manipulate longitude").click();
+			GenericTypeMatcher<JOptionPane> matcher2 = new GenericTypeMatcher<JOptionPane>(JOptionPane.class) {
+			protected boolean isMatching(JOptionPane optionPane) {
+				Component o = optionPane;
+				while (o != null) {
+					System.err.print(">" + o.getName() + "< ");
+					if (o instanceof JDialog && ((JDialog)o).getTitle().equals("Manipulate longitude")) {
+						System.err.println("true");
+						return o.isShowing();
+					}
+					o = o.getParent();
+				}
+				System.err.println();
+				return false;
+			}
+			};
+			c = robot().finder().find(matcher2);
+			optionPane = new JOptionPaneFixture(robot(), (JOptionPane) c);//JOptionPaneFinder.findOptionPane(matcher).using(robot());
+			//optionPane = JOptionPaneFinder.findOptionPane(matcher2).using(robot());
+			
+			optionPane.textBox().setText("-$x");
+			screenshotTaker.saveComponentAsPng(beauti.frame, PREFIX + "geography5a.png");
 			optionPane.okButton().click();
 
 			screenshotTaker.saveComponentAsPng(beauti.frame, PREFIX + "geography6.png");
@@ -475,7 +503,7 @@ public class BeautiContinuousPhylogeographyTest extends BeautiBase {
 			System.err.println("total time: " + (t1 - t0) / 1000 + " seconds");
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw e;
 		}
 	}

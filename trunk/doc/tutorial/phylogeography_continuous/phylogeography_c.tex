@@ -169,7 +169,14 @@ Click `Guess longitude', and again a dialog is shown. Choose `split on character
 
 \includegraphics[scale=0.4]{figures/BEAUti_geography5.png}
 
-When you click OK, the table is completely populated, like so:
+When you click OK, the table is completely populated. However, longitudes are taken to be 
+east instead of west, so we have to make all longitudes negative. The easiest way to do this
+is to press the 'Manipulate longitude' button. An optionpane pops up where you can enter
+a formula that is applied to all longitude values, like so:
+
+\includegraphics[scale=0.4]{figures/BEAUti_geography5a.png}
+
+Key in, '-\$x', and press OK. Now, the longitudes and latitudes are properly populated, like so:
 
 \includegraphics[scale=0.4]{figures/BEAUti_geography6.png}
 
