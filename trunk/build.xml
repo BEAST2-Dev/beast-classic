@@ -20,6 +20,7 @@
 	<property name="beastiipath" location="../beastii" />
 	<property name="beastiiclasspath" location="${beastiipath}/build" />
 	<property name="Add_on_dir" value="${release_dir}/add-on" />
+	<property name="version" value="1.0.1" />
 
     <import file="${beast2path}/build.xml" />
 
@@ -203,12 +204,12 @@
 		<copy todir="${Add_on_dir}/templates">
 			<fileset file="templates/discrete-trait.xml" />
 		</copy>
-		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.addon.zip">
+		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.addon.v${version}.zip">
 			<fileset dir="${Add_on_dir}">
 				<include name="**/*" />
 			</fileset>
         </jar>
-		<echo message="Add-on version release is finished." />
+		<echo message="Add-on version v${version} release is finished." />
 	</target>
 
 	<target name="tutorial">
