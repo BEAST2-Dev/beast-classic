@@ -5,7 +5,7 @@ import java.util.Random;
 
 import beast.core.*;
 import beast.core.parameter.RealParameter;
-import dr.math.matrixAlgebra.Matrix;
+import beast.math.matrixalgebra.Matrix;
 
 
 @Description("WishartDistribution ported from BEAST1")

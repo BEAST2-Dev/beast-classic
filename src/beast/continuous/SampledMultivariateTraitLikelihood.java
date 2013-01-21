@@ -7,7 +7,7 @@ package beast.continuous;
 //import dr.inference.model.CompoundParameter;
 //import dr.inference.model.CompoundSymmetricMatrix;
 //import dr.inference.model.Model;
-import dr.math.matrixAlgebra.Vector;
+import beast.math.matrixalgebra.Vector;
 
 import java.util.List;
 import java.util.Random;
