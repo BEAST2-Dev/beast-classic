@@ -3,7 +3,7 @@ package dr.math.distributions;
 
 import beast.core.Description;
 import beast.util.Randomizer;
-import dr.math.matrixAlgebra.*;
+import beast.math.matrixalgebra.*;
 
 /**
  * @author Marc Suchard

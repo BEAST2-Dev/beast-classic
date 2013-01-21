@@ -8,9 +8,9 @@ import beast.core.Description;
 import beast.util.Randomizer;
 
 import dr.math.GammaFunction;
-import dr.math.matrixAlgebra.CholeskyDecomposition;
-import dr.math.matrixAlgebra.IllegalDimension;
-import dr.math.matrixAlgebra.Matrix;
+import beast.math.matrixalgebra.CholeskyDecomposition;
+import beast.math.matrixalgebra.IllegalDimension;
+import beast.math.matrixalgebra.Matrix;
 
 /**
  * @author Marc Suchard

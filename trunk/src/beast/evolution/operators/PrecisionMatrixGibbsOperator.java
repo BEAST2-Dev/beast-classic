@@ -42,8 +42,8 @@ import beast.math.distributions.WishartDistribution;
 //import dr.math.distributions.WishartDistribution;
 //import dr.math.distributions.WishartSufficientStatistics;
 //import dr.math.interfaces.ConjugateWishartStatisticsProvider;
-import dr.math.matrixAlgebra.IllegalDimension;
-import dr.math.matrixAlgebra.SymmetricMatrix;
+import beast.math.matrixalgebra.IllegalDimension;
+import beast.math.matrixalgebra.SymmetricMatrix;
 
 /**
  * @author Marc Suchard

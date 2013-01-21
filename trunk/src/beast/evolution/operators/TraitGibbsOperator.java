@@ -34,7 +34,7 @@ package beast.evolution.operators;
 
 import dr.geo.GeoSpatialCollectionModel;
 import dr.geo.GeoSpatialDistribution;
-import dr.math.matrixAlgebra.SymmetricMatrix;
+import beast.math.matrixalgebra.SymmetricMatrix;
 import dr.math.distributions.MultivariateDistribution;
 //import dr.math.distributions.MultivariateNormalDistribution;
 
