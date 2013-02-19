@@ -302,7 +302,7 @@ public class BeautiContinuousPhylogeographyTest extends BeautiBase {
 			// check table
 			JTableFixture t = beautiFrame.table();
 			printTableContents(t);
-			checkTableContents(t, "[RacRABV, RacRABV, 47, 2811, nucleotide, RacRABV, RacRABV, RacRABV]");
+			checkTableContents(t, "[RacRABV, RacRABV, 47, 2811, nucleotide, RacRABV, RacRABV, RacRABV, false]");
 
 			assertThat(f).isNotNull();
 			printBeautiState(f);

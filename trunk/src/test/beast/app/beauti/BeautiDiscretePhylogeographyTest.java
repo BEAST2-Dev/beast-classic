@@ -58,7 +58,7 @@ public class BeautiDiscretePhylogeographyTest extends BeautiBase {
 			// check table
 			JTableFixture t = beautiFrame.table();
 			printTableContents(t);
-			checkTableContents(t, "[H5N1, H5N1, 43, 1698, nucleotide, H5N1, H5N1, H5N1]");
+			checkTableContents(t, "[H5N1, H5N1, 43, 1698, nucleotide, H5N1, H5N1, H5N1, false]");
 
 			assertThat(f).isNotNull();
 			printBeautiState(f);
