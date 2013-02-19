@@ -9,6 +9,7 @@ import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.AlignmentFromTraitMap;
 import beast.evolution.branchratemodel.BranchRateModel;
 import beast.evolution.datatype.ContinuousDataType;
+import beast.evolution.likelihood.GenericTreeLikelihood;
 import beast.evolution.likelihood.TreeLikelihood;
 import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.substitutionmodel.ContinuousSubstitutionModel;
@@ -24,7 +25,7 @@ import java.util.List;
  * @author Marc Suchard
  */
 @Description("AbstractMultivariateTraitLikelihood ported from BEAST1")
-public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood implements Loggable
+public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLikelihood implements Loggable
 //        implements TreeTraitProvider, Citable 
 {
     //public Input<Tree> treeModelInput = new Input<Tree>("tree","", Validate.REQUIRED);
@@ -64,6 +65,8 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
     public static final String EXCHANGEABLE_TIPS = "exchangeableTips";
 
     TreeTraitMap traitMap;
+    protected double[] m_branchLengths;
+    protected double[] m_StoredBranchLengths;
     
     @Override
     public void initAndValidate() throws Exception {
@@ -390,6 +393,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
             System.arraycopy(validLogLikelihoods, 0, storedValidLogLikelihoods, 0, treeModel.getNodeCount());
         }
         super.store();
+        System.arraycopy(m_branchLengths, 0, m_StoredBranchLengths, 0, m_branchLengths.length);
     }
 
     /**
@@ -410,6 +414,9 @@ public abstract class AbstractMultivariateTraitLikelihood extends TreeLikelihood
             validLogLikelihoods = tmp2;
         }
         super.restore();
+        double[] tmp = m_branchLengths;
+        m_branchLengths = m_StoredBranchLengths;
+        m_StoredBranchLengths = tmp;
     }
 
     protected void acceptState() {
