@@ -31,6 +31,7 @@ import beast.core.Input;
 import beast.core.Plugin;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AlignmentFromTraitMap;
+import beast.evolution.alignment.TaxonSet;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTraitMap;
 
@@ -113,10 +114,13 @@ public class LocationInputEditor extends ListInputEditor {
     private Component createListBox() {
     	try {
     		traitSet.treeInput.get().getTaxaNames();
+        	Tree tree = traitSet.treeInput.get();
+        	TaxonSet taxa = tree.m_taxonset.get();
+        	taxa.initAndValidate();
     	} catch (Exception e) {
 			// TODO: handle exception
 		}
-        sTaxa = traitSet.treeInput.get().getTaxaNames();
+        sTaxa = traitSet.treeInput.get().m_taxonset.get().asStringList().toArray(new String[0]);
         String[] columnData = new String[]{"Name", "Latitude", "Longitude"};
         tableData = new Object[sTaxa.length][3];
         convertTraitToTableData();
