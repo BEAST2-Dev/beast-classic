@@ -32,6 +32,7 @@ import beast.core.Input;
 import beast.core.Plugin;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AlignmentFromTrait;
+import beast.evolution.alignment.TaxonSet;
 import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.AncestralStateTreeLikelihood;
 import beast.evolution.tree.TraitSet;
@@ -179,10 +180,14 @@ public class TraitInputEditor extends ListInputEditor {
     private Component createListBox() {
     	try {
     		traitSet.m_taxa.get().initAndValidate();
+    		
+        	TaxonSet taxa = tree.m_taxonset.get();
+        	taxa.initAndValidate();
+        	sTaxa = taxa.asStringList();
     	} catch (Exception e) {
 			// TODO: handle exception
+            sTaxa = traitSet.m_taxa.get().asStringList();
 		}
-        sTaxa = traitSet.m_taxa.get().asStringList();
         String[] columnData = new String[]{"Name", "Trait"};
         tableData = new Object[sTaxa.size()][2];
         convertTraitToTableData();
