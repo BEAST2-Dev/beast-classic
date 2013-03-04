@@ -69,6 +69,7 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
      *
      * @return the log likelihood.
      */
+    @Override
     public double calculateLogLikelihood() {
 
         if (!cacheBranches)
