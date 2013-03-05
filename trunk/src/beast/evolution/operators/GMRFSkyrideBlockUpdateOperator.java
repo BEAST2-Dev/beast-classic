@@ -224,7 +224,9 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
         double proposedLambda = this.getNewLambda(currentLambda, lambdaScaleFactor);
 
         precisionParameter.setValue(0, proposedPrecision);
-        lambdaParameter.setValue(0, proposedLambda);
+        if (lambdaParameter.m_bIsEstimated.get()) {
+        	lambdaParameter.setValue(0, proposedLambda);
+        }
 
         DenseVector currentGamma = GMRFSkyrideLikelihood.newDenseVector(gmrfField.getPopSizeParameter());
         DenseVector proposedGamma;
@@ -305,6 +307,7 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 
         return hRatio;
     	} catch (Exception e) {
+    		System.err.print('.');
 			return Double.NEGATIVE_INFINITY;
 		}
     }
@@ -373,9 +376,9 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 
     @Override
     public void optimize(double logAlpha) {
-        double fDelta = calcDelta(logAlpha);
-        fDelta += Math.log(1.0 / scaleFactor - 1.0);
-        scaleFactor = 1.0 / (Math.exp(fDelta) + 1.0);
+//        double fDelta = calcDelta(logAlpha);
+//        fDelta += Math.log(1.0 / scaleFactor - 1.0);
+//        scaleFactor = 1.0 / (Math.exp(fDelta) + 1.0);
     }
 
 }
