@@ -105,7 +105,7 @@ W2P7D54=54.0 <!-- newest sample -->
         <parameter dimension="4" id="freqParameter.s:x" lower="0.0" name="stateNode" upper="1.0" value="0.25"/>
 
 		<stateNode idref="skyrideLogPopSize"/>
-		<stateNode idref="skyrideGroupSize"/>
+		<!--<stateNode idref="skyrideGroupSize"/>-->
 		<stateNode idref="skyridePrecision"/>
     </state>
 

@@ -4,11 +4,14 @@ package beast.evolution.operators;
 import no.uib.cipr.matrix.*;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.Operator;
+import beast.core.StateNode;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 import beast.evolution.tree.coalescent.GMRFSkyrideLikelihood;
@@ -272,8 +275,6 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
         for (int i = 0; i < fieldLength; i++)
             popSizeParameter.setValue(i, proposedGamma.get(i));
 
-
-
         double hRatio = 0;
 
         diagonal1.zero();
@@ -381,4 +382,14 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 //        scaleFactor = 1.0 / (Math.exp(fDelta) + 1.0);
     }
 
+    @Override
+    public List<StateNode> listStateNodes() throws Exception {
+    	List<StateNode> list = new ArrayList<StateNode>();
+        list.add(precisionParameter);
+        if (lambdaParameter.m_bIsEstimated.get()) {
+        	list.add(lambdaParameter);
+        }
+        list.add(popSizeParameter);
+    	return list;
+    }
 }
