@@ -148,8 +148,13 @@
         <partitiontemplate id='PartitionTemplate' spec='BeautiSubTemplate' class='beast.evolution.likelihood.TreeLikelihood' mainid='mcmc'>
 <![CDATA[
 
+
+
 			<distribution spec='TreeLikelihood' id="treeLikelihood.$(n)">
-                <data idref="data"/>
+				<data id='bin.$(n)' spec='beast.evolution.alignment.FilteredAlignment' filter='::'>
+					<data idref="data"/>
+					<userDataType spec='beast.evolution.datatype.Binary'/>
+				</data>
 				<tree idref="Tree.t:$(n)"/>
 				<siteModel spec='SiteModel' id="SiteModel.s:$(n)" gammaCategoryCount="1">
 		            <proportionInvariant spec='parameter.RealParameter' id='proportionInvariant.s:$(n)' value='0.0' lower='0' upper='1' estimate='false'/>
