@@ -1,6 +1,6 @@
 package beast.evolution.substitutionmodel;
 
-import beast.math.matrixAlgebra.RobustEigenDecomposition;
+import beast.math.matrixalgebra.RobustEigenDecomposition;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.linalg.Algebra;
