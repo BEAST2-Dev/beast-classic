@@ -1,6 +1,6 @@
 package beast.evolution.substitutionmodel;
 
-import beast.math.matrixalgebra.RobustEigenDecomposition;
+import beast.math.matrixAlgebra.RobustEigenDecomposition;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.linalg.Algebra;
@@ -32,7 +32,7 @@ public class RobustEigenSystem implements EigenSystem{
             eigenV = robustEigen.getV(); // Eigenvector matrix
             eigenVInv = algebra.inverse(eigenV);
         } catch (Exception ae) {
-            System.err.println(ae.getMessage());
+            throw new RuntimeException(ae);
 //            System.err.println("amat = \n" + new Matrix(qMatrix));
         }
 
