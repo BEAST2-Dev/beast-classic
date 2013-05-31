@@ -32,13 +32,14 @@ package beast.evolution.operators;
 //import dr.geo.GeoSpatialCollectionModel;
 //import dr.inference.distribution.MultivariateDistributionLikelihood;
 
-import dr.geo.GeoSpatialCollectionModel;
-import dr.geo.GeoSpatialDistribution;
+import beast.geo.GeoSpatialDistribution;
 import beast.math.matrixalgebra.SymmetricMatrix;
 import dr.math.distributions.MultivariateDistribution;
 //import dr.math.distributions.MultivariateNormalDistribution;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import beast.continuous.SampledMultivariateTraitLikelihood;
@@ -64,7 +65,9 @@ public class TraitGibbsOperator extends Operator {
 	public Input<MultivariateNormalDistribution> rootPrior = new Input<MultivariateNormalDistribution>("rootprior", "");
 	public Input<Boolean> onlyInternalNodesInput = new Input<Boolean>("onlyInternalNodesInput", "" ,true);
 	public Input<Boolean> onlyTipsWithPriorsInput = new Input<Boolean>("onlyTipsWithPriorsInput", "" ,true);
-	
+
+	public Input<List<GeoSpatialDistribution>> priorsInput = new Input<List<GeoSpatialDistribution>>("prior", "list of priors on nodes in the tree", new ArrayList<GeoSpatialDistribution>());
+
 	public static final String GIBBS_OPERATOR = "traitGibbsOperator";
 	public static final String INTERNAL_ONLY = "onlyInternalNodes";
 	public static final String TIP_WITH_PRIORS_ONLY = "onlyTipsWithPriors";
@@ -80,7 +83,7 @@ public class TraitGibbsOperator extends Operator {
 
 	private Map<String, GeoSpatialDistribution> nodeGeoSpatialPrior;
 	private Map<String, MultivariateNormalDistribution> nodeMVNPrior;
-	private GeoSpatialCollectionModel parameterPrior = null;
+	private GeoSpatialDistribution parameterPrior = null;
 
 	private boolean onlyInternalNodes = true;
 	private boolean onlyTipsWithPriors = true;
@@ -101,6 +104,13 @@ public class TraitGibbsOperator extends Operator {
 		this.traitName = traitModel.getTraitName();
 		if (rootPrior.get() != null) {
 			setRootPrior(rootPrior.get());
+		}
+		for (GeoSpatialDistribution prior : priorsInput.get()) {
+			if (prior.getLabel().equals(GeoSpatialDistribution.ALL_NODES)) {
+				setParameterPrior(prior);
+			} else {
+				setTaxonPrior(prior.getLabel(), prior);
+			}
 		}
 		
 		this.onlyInternalNodes = onlyInternalNodesInput.get();
@@ -132,7 +142,7 @@ public class TraitGibbsOperator extends Operator {
 		}
 	}
 
-	public void setParameterPrior(GeoSpatialCollectionModel distribution) {
+	public void setParameterPrior(GeoSpatialDistribution distribution) {
 		parameterPrior = distribution;
 	}
 
@@ -196,6 +206,7 @@ public class TraitGibbsOperator extends Operator {
 			int count = 0;
 
 			final boolean parameterPriorExists = parameterPrior != null;
+			boolean validPoint = true;
 
 			double[] draw;
 
@@ -221,8 +232,12 @@ public class TraitGibbsOperator extends Operator {
 				// work for MVN
 
 				traitMap.setTrait(node, draw);
+				
+				if (parameterPriorExists) {
+					validPoint = !Double.isInfinite(parameterPrior.logPdf(draw));
+				}
 
-			} while (parameterPriorExists && (parameterPrior.getLogLikelihood() == Double.NEGATIVE_INFINITY));
+			} while (validPoint);
 		} catch (Exception e) {
 			return Double.NEGATIVE_INFINITY;
 		}
