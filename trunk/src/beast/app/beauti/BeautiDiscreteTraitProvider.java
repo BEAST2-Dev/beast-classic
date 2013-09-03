@@ -9,9 +9,12 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 
-import beast.core.Plugin;
+import beast.app.beauti.BeautiAlignmentProvider;
+import beast.app.beauti.BeautiDoc;
+import beast.app.beauti.PartitionContext;
 import beast.core.State;
 import beast.core.StateNode;
+import beast.core.BEASTObject;
 import beast.core.parameter.Parameter;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
@@ -25,10 +28,12 @@ import beast.math.distributions.ParametricDistribution;
 import beast.math.distributions.Poisson;
 import beast.math.distributions.Prior;
 
+
+
 public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 
 	@Override
-	List<Plugin> getAlignments(BeautiDoc doc) {
+	List<BEASTObject> getAlignments(BeautiDoc doc) {
 		try {
             List<String> trees = new ArrayList<String>();
             doc.scrubAll(true, false);
@@ -45,7 +50,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
             	PartitionContext context = new PartitionContext(name, name, name, tree);
 
             	Alignment alignment = (Alignment) doc.addAlignmentWithSubnet(context, template.get());
-            	List<Plugin> list = new ArrayList<Plugin>();
+            	List<BEASTObject> list = new ArrayList<BEASTObject>();
             	list.add(alignment);
             	editAlignment(alignment, doc);
             	return list;
@@ -58,7 +63,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 	
 	@Override
 	int matches(Alignment alignment) {
-		for (Plugin output : alignment.outputs) {
+		for (BEASTObject output : alignment.outputs) {
 			if (output instanceof AncestralStateTreeLikelihood) {
 				return 10;
 			}
@@ -71,7 +76,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 	void editAlignment(Alignment alignment, BeautiDoc doc) {
 		TraitInputEditor editor = new TraitInputEditor(doc);
 		AncestralStateTreeLikelihood likelihood = null;
-		for (Plugin output : alignment.outputs) {
+		for (BEASTObject output : alignment.outputs) {
 			if (output instanceof AncestralStateTreeLikelihood) {
 				likelihood = (AncestralStateTreeLikelihood) output;
 				editor.initPanel(likelihood);
@@ -86,21 +91,21 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 
 		        dialog.setVisible(true);
 		        try {
-			        AlignmentFromTrait traitData = (AlignmentFromTrait) likelihood.m_data.get();
-			        int stateCount = ((UserDataType) traitData.m_userDataType.get()).m_nStateCountInput.get();
+			        AlignmentFromTrait traitData = (AlignmentFromTrait) likelihood.dataInput.get();
+			        int stateCount = ((UserDataType) traitData.userDataTypeInput.get()).stateCountInput.get();
 			        SVSGeneralSubstitutionModel substModel = (SVSGeneralSubstitutionModel) 
-			        		((SiteModel.Base) likelihood.m_pSiteModel.get()).m_pSubstModel.get();
+			        		((SiteModel.Base) likelihood.siteModelInput.get()).substModelInput.get();
 		        	substModel.indicator.get().m_nDimension.setValue(stateCount * (stateCount - 1) / 2, null);
-		        	((Parameter<?>) substModel.m_rates.get()).m_nDimension.setValue(stateCount* (stateCount - 1) / 2, null);
-		        	RealParameter freqs = substModel.frequenciesInput.get().frequencies.get();
+		        	((Parameter<?>) substModel.ratesInput.get()).m_nDimension.setValue(stateCount* (stateCount - 1) / 2, null);
+		        	RealParameter freqs = substModel.frequenciesInput.get().frequenciesInput.get();
 			        freqs.m_nDimension.setValue(stateCount, freqs);
-			        freqs.m_pValues.setValue(1.0/stateCount + "", freqs);
+			        freqs.valuesInput.setValue(1.0/stateCount + "", freqs);
 			        // set offset on non-zero rate prior
 			        PartitionContext context = new PartitionContext(likelihood);
 			        Prior prior = (Prior) doc.pluginmap.get("nonZeroRatePrior.s:" + context.clockModel);
-			        ParametricDistribution distr = prior.m_distInput.get();
+			        ParametricDistribution distr = prior.distInput.get();
 			        Poisson poisson = (Poisson) distr;
-			        poisson.m_offset.setValue(stateCount - 1.0, poisson);
+			        poisson.offsetInput.setValue(stateCount - 1.0, poisson);
 		        } catch (Exception e) {
 					e.printStackTrace();
 				}

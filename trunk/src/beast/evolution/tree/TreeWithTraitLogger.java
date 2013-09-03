@@ -5,46 +5,50 @@ import java.util.List;
 import java.io.PrintStream;
 
 import beast.core.Description;
+import beast.core.Function;
 import beast.core.Input;
 import beast.core.Loggable;
-import beast.core.Plugin;
+import beast.core.StateNode;
+import beast.core.BEASTObject;
 import beast.core.Input.Validate;
 import beast.core.parameter.Parameter;
-import beast.core.StateNode;
-import beast.core.Valuable;
 import beast.evolution.branchratemodel.BranchRateModel;
+import beast.evolution.tree.Node;
+import beast.evolution.tree.Tree;
+
+
 
 @Description("Logs tree annotated with metadata and/or rates")
-public class TreeWithTraitLogger extends Plugin implements Loggable {
+public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 	public Input<Tree> m_tree = new Input<Tree>("tree","tree to be logged",Validate.REQUIRED);
 //	public Input<List<Valuable>> parameters = new Input<List<Valuable>>("metadata","meta data to be logged with the tree nodes", new ArrayList<Valuable>());
 //	public Input<List<TreeTraitProvider>> traits = new Input<List<TreeTraitProvider>>("trait", "trait with branches of the tree", new ArrayList<TreeTraitProvider>());
 
-	public Input<List<Plugin>> metadataInput = new Input<List<Plugin>>("metadata", "meta data to be logged with the tree nodes." +
+	public Input<List<BEASTObject>> metadataInput = new Input<List<BEASTObject>>("metadata", "meta data to be logged with the tree nodes." +
 			"If it is a trait associated with a node, the metadata will be stored with the nodes." +
-			"Otherwise, the metadata will be listed before the Newick tree.", new ArrayList<Plugin>());
+			"Otherwise, the metadata will be listed before the Newick tree.", new ArrayList<BEASTObject>());
 
 	List<Parameter<?>> parameters;
 	List<BranchRateModel> rates;
 	List<TreeTraitProvider> traits;
-	List<Valuable> valuables;
+	List<Function> valuables;
 	
 	@Override
 	public void initAndValidate() throws Exception {
 		parameters = new ArrayList<Parameter<?>>();
 		rates = new ArrayList<BranchRateModel>();
 		traits = new ArrayList<TreeTraitProvider>();
-		valuables = new ArrayList<Valuable>();
+		valuables = new ArrayList<Function>();
 		
-		for (Plugin plugin : metadataInput.get()) {
+		for (BEASTObject plugin : metadataInput.get()) {
 			if (plugin instanceof Parameter) {
 				parameters.add((Parameter) plugin);
 			} else if (plugin instanceof TreeTraitProvider) {
 				traits.add((TreeTraitProvider) plugin);
 			} else if (plugin instanceof BranchRateModel) {
 				rates.add((BranchRateModel) plugin);
-			} else if (plugin instanceof Valuable){
-				valuables.add((Valuable) plugin);
+			} else if (plugin instanceof Function){
+				valuables.add((Function) plugin);
 			} else {
 				throw new Exception ("This entry (id=" + plugin.getID() + ") is not metadata that can be logged with a tree");
 			}
@@ -73,9 +77,9 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
         if (valuables.size() > 0) {
         	out.print("[&");
     		for (int j = 0; j < valuables.size(); j++) {
-    			Valuable valuable = valuables.get(j);
+    			Function valuable = valuables.get(j);
         		for (int i = 0; i < valuable.getDimension(); i++) {
-        			out.print(((Plugin) valuable).getID() + "=" +  valuable.getArrayValue(i));
+        			out.print(((BEASTObject) valuable).getID() + "=" +  valuable.getArrayValue(i));
         			if (i < valuable.getDimension() - 1) {
         				out.print(",");
         			}
@@ -104,13 +108,13 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
 			}
 			buf.append(")");
 		} else {
-			buf.append(node.m_iLabel + 1);
+			buf.append(node.labelNr + 1);
 		}
 		buf.append("[&");
 		if (parameters.size() > 0) {
 			for (Parameter<?> parameter : parameters) {
 				buf.append(parameter.getID()).append('=');
-				buf.append(parameter.getArrayValue(node.m_iLabel));
+				buf.append(parameter.getArrayValue(node.labelNr));
 				buf.append(',');
 			}
 		}
@@ -123,7 +127,7 @@ public class TreeWithTraitLogger extends Plugin implements Loggable {
 		}
 		if (rates.size() > 0) {
 			for (BranchRateModel rate : rates) {
-				buf.append(((Plugin)rate).getID()).append('=');
+				buf.append(((BEASTObject)rate).getID()).append('=');
 				buf.append(rate.getRateForBranch(node));
 				buf.append(',');
 			}

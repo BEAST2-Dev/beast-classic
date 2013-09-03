@@ -50,7 +50,7 @@ public class ThreadedALSTreeLikelihood extends ThreadedTreeLikelihood implements
         // Calculate the partial likelihoods
         super.calculateLogP();
         // get the frequency model
-        double[] freqs = m_pSiteModel.get().m_pSubstModel.get().getFrequencies();
+        double[] freqs = m_pSiteModel.get().substModelInput.get().getFrequencies();
         // let the observationProcess handle the rest
         logP = observationProcess.nodePatternLikelihood(freqs, this);
         return logP;

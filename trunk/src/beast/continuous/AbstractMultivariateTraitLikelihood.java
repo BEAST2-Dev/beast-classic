@@ -1,10 +1,14 @@
 package beast.continuous;
 
 
+
+import java.io.PrintStream;
+import java.util.List;
+
 import beast.core.Description;
 import beast.core.Input;
-import beast.core.Input.Validate;
 import beast.core.Loggable;
+import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.AlignmentFromTraitMap;
 import beast.evolution.branchratemodel.BranchRateModel;
@@ -18,8 +22,6 @@ import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitMap;
 
-import java.io.PrintStream;
-import java.util.List;
 
 /**
  * @author Marc Suchard
@@ -75,10 +77,10 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
         m_StoredBranchLengths = new double[0];
 
         this.traitName = traitName;
-        this.treeModel = m_tree.get();
-        this.rateModel = m_pBranchRateModel.get();
+        this.treeModel = treeInput.get();
+        this.rateModel = branchRateModelInput.get();
         this.diffusionModel = (ContinuousSubstitutionModel) 
-        			((SiteModel.Base) m_pSiteModel.get()).getSubstitutionModel(); 
+        			((SiteModel.Base) siteModelInput.get()).getSubstitutionModel(); 
         		//diffusionModelInput.get();
         this.traitParameter = traitParameterInput.get();        
         this.useTreeLength = useTreeLengthInput.get();
@@ -107,7 +109,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
         this.reciprocalRates = reciprocalRatesInput.get();;
 
         //dimTrait = diffusionModel.getPrecisionmatrix().length;
-        dimTrait = ((ContinuousDataType) m_data.get().getDataType()).getDimension();
+        dimTrait = ((ContinuousDataType) dataInput.get().getDataType()).getDimension();
         dim = traitParameter != null ? traitParameter.getMinorDimension1() : 0;
         numData = dim / dimTrait;
 
@@ -115,8 +117,8 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
             throw new RuntimeException("dim is not divisible by dimTrait");
 
         //traitMap = mapInput.get();
-        if (m_data.get() instanceof AlignmentFromTraitMap) {
-        	traitMap = ((AlignmentFromTraitMap) m_data.get()).getTraitMap();
+        if (dataInput.get() instanceof AlignmentFromTraitMap) {
+        	traitMap = ((AlignmentFromTraitMap) dataInput.get()).getTraitMap();
         } else {
         	throw new Exception ("Expected that data input is AlignmentFromTraitMap");
         }

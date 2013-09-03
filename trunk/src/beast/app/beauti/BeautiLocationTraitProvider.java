@@ -8,17 +8,22 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 
+import beast.app.beauti.BeautiAlignmentProvider;
+import beast.app.beauti.BeautiDoc;
+import beast.app.beauti.PartitionContext;
 import beast.continuous.SampledMultivariateTraitLikelihood;
-import beast.core.Plugin;
 import beast.core.State;
 import beast.core.StateNode;
+import beast.core.BEASTObject;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.tree.Tree;
+
+
 
 public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 
 	@Override
-	List<Plugin> getAlignments(BeautiDoc doc) {
+	List<BEASTObject> getAlignments(BeautiDoc doc) {
 		try {
             List<String> trees = new ArrayList<String>();
             doc.scrubAll(true, false);
@@ -35,7 +40,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
             	PartitionContext context = new PartitionContext(name, name, name, tree);
 
             	Alignment alignment = (Alignment) doc.addAlignmentWithSubnet(context, template.get());
-            	List<Plugin> list = new ArrayList<Plugin>();
+            	List<BEASTObject> list = new ArrayList<BEASTObject>();
             	list.add(alignment);
             	editAlignment(alignment, doc);
             	return list;
@@ -48,7 +53,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 	
 	@Override
 	int matches(Alignment alignment) {
-		for (Plugin output : alignment.outputs) {
+		for (BEASTObject output : alignment.outputs) {
 			if (output instanceof beast.continuous.SampledMultivariateTraitLikelihood) {
 				return 10;
 			}
@@ -61,7 +66,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 	void editAlignment(Alignment alignment, BeautiDoc doc) {
 		LocationInputEditor editor = new LocationInputEditor(doc);
 		SampledMultivariateTraitLikelihood likelihood = null;
-		for (Plugin output : alignment.outputs) {
+		for (BEASTObject output : alignment.outputs) {
 			if (output instanceof SampledMultivariateTraitLikelihood) {
 				likelihood = (SampledMultivariateTraitLikelihood) output;
 				editor.initPanel(likelihood);

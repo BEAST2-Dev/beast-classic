@@ -3,11 +3,12 @@ package beast.geo;
 
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.List;
 
 import beast.core.*;
 import beast.core.Input.Validate;
+
+
 import dr.math.distributions.MultivariateDistribution;
 
 

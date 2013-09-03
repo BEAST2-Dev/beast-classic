@@ -35,12 +35,6 @@ import beast.evolution.branchratemodel.BranchRateModel;
 import beast.evolution.likelihood.LikelihoodCore;
 import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.tree.Tree;
-//import dr.evolution.alignment.PatternList;
-//import dr.evomodel.branchratemodel.BranchRateModel;
-//import dr.evomodel.sitemodel.SiteModel;
-//import dr.evomodel.tree.TreeModel;
-//import beast.evolution.likelihood.LikelihoodCore;
-//import dr.inference.model.Parameter;
 
 
 @Description("Abstract Observation Process defines how the integration of gain events is done along the tree."+

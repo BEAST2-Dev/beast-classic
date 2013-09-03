@@ -26,10 +26,12 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import beast.app.beauti.BeautiDoc;
+import beast.app.beauti.GuessPatternDialog;
 import beast.app.draw.ListInputEditor;
 import beast.app.draw.SmallLabel;
 import beast.core.Input;
-import beast.core.Plugin;
+import beast.core.BEASTObject;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AlignmentFromTrait;
 import beast.evolution.alignment.TaxonSet;
@@ -37,6 +39,8 @@ import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.AncestralStateTreeLikelihood;
 import beast.evolution.tree.TraitSet;
 import beast.evolution.tree.Tree;
+
+
 
 public class TraitInputEditor extends ListInputEditor {
 	private static final long serialVersionUID = 1L;
@@ -64,7 +68,7 @@ public class TraitInputEditor extends ListInputEditor {
     String m_sPattern = ".*_(..).*";
 
 	@Override
-	public void init(Input<?> input, Plugin plugin, int itemNr,	ExpandOption bExpandOption, boolean bAddButtons) {
+	public void init(Input<?> input, BEASTObject plugin, int itemNr,	ExpandOption bExpandOption, boolean bAddButtons) {
         m_bAddButtons = bAddButtons;
         m_input = input;
         m_plugin = plugin;
@@ -90,16 +94,16 @@ public class TraitInputEditor extends ListInputEditor {
 //    public void init2(Input<?> input, Plugin plugin, int itemNr, ExpandOption bExpandOption, boolean bAddButtons) {
 	public void initPanel(AncestralStateTreeLikelihood likelihood_) {
 		likelihood = likelihood_;
-		m_plugin = likelihood.m_data.get();
+		m_plugin = likelihood.dataInput.get();
 		try {
 			m_input = m_plugin.getInput("traitSet");
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
 		
-        tree = likelihood.m_tree.get();
+        tree = likelihood.treeInput.get();
         if (tree != null) {
-        	Alignment data = likelihood.m_data.get();
+        	Alignment data = likelihood.dataInput.get();
         	if (!(data instanceof AlignmentFromTrait)) {
         		return;
         	}
@@ -124,7 +128,7 @@ public class TraitInputEditor extends ListInputEditor {
             }
             
             
-            dataType = (UserDataType)traitData.m_userDataType.get();
+            dataType = (UserDataType)traitData.userDataTypeInput.get();
 
             Box box = Box.createVerticalBox();
 
@@ -179,14 +183,14 @@ public class TraitInputEditor extends ListInputEditor {
 
     private Component createListBox() {
     	try {
-    		traitSet.m_taxa.get().initAndValidate();
+    		traitSet.taxaInput.get().initAndValidate();
     		
         	TaxonSet taxa = tree.m_taxonset.get();
         	taxa.initAndValidate();
         	sTaxa = taxa.asStringList();
     	} catch (Exception e) {
 			// TODO: handle exception
-            sTaxa = traitSet.m_taxa.get().asStringList();
+            sTaxa = traitSet.taxaInput.get().asStringList();
 		}
         String[] columnData = new String[]{"Name", "Trait"};
         tableData = new Object[sTaxa.size()][2];
@@ -286,7 +290,7 @@ public class TraitInputEditor extends ListInputEditor {
             tableData[i][0] = sTaxa.get(i);
             tableData[i][1] = "";
         }
-        String trait = traitSet.m_traits.get();
+        String trait = traitSet.traitsInput.get();
         if (trait.trim().length() == 0) {
         	return;
         }
@@ -332,7 +336,7 @@ public class TraitInputEditor extends ListInputEditor {
             }
         }
         try {
-            traitSet.m_traits.setValue(sTrait, traitSet);
+            traitSet.traitsInput.setValue(sTrait, traitSet);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -360,8 +364,8 @@ public class TraitInputEditor extends ListInputEditor {
         }
         // System.err.println(codeMap);
         try {
-            dataType.m_sCodeMapInput.setValue(codeMap, dataType);
-            dataType.m_nStateCountInput.setValue(values.size(), dataType);
+            dataType.codeMapInput.setValue(codeMap, dataType);
+            dataType.stateCountInput.setValue(values.size(), dataType);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -378,7 +382,7 @@ public class TraitInputEditor extends ListInputEditor {
         //label.setMaximumSize(new Dimension(1024, 20));
         buttonBox.add(label);
 
-        traitEntry = new JTextField(traitSet.m_sTraitName.get());
+        traitEntry = new JTextField(traitSet.traitNameInput.get());
         traitEntry.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
@@ -389,7 +393,7 @@ public class TraitInputEditor extends ListInputEditor {
 			public void changedUpdate(DocumentEvent e) {update();}
 			void update() {
 				try {
-					traitSet.m_sTraitName.setValue(traitEntry.getText(), traitSet);
+					traitSet.traitNameInput.setValue(traitEntry.getText(), traitSet);
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
@@ -415,7 +419,7 @@ public class TraitInputEditor extends ListInputEditor {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    traitSet.m_traits.setValue("", traitSet);
+                    traitSet.traitsInput.setValue("", traitSet);
                     convertTableDataToDataType();
                 } catch (Exception ex) {
                     // TODO: handle exception
@@ -462,7 +466,7 @@ public class TraitInputEditor extends ListInputEditor {
             break;
         }
         try {
-        	traitSet.m_traits.setValue(sTrait, traitSet);
+        	traitSet.traitsInput.setValue(sTrait, traitSet);
         } catch (Exception e) {
 			// TODO: handle exception
 		}

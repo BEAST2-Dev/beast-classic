@@ -26,8 +26,8 @@
 
 package beast.evolution.MSSD;
 
-import beast.core.parameter.RealParameter;
 import beast.core.Description;
+import beast.core.parameter.RealParameter;
 
 
 //import beast.core.*;

@@ -51,7 +51,7 @@ public class ALSTreeLikelihood extends TreeLikelihood implements PartialsProvide
         // Calculate the partial likelihoods
         super.calculateLogP();
         // get the frequency model
-        double[] freqs = ((SiteModel.Base) m_pSiteModel.get()).m_pSubstModel.get().getFrequencies();
+        double[] freqs = ((SiteModel.Base) siteModelInput.get()).substModelInput.get().getFrequencies();
         // let the observationProcess handle the rest
         logP = observationProcess.nodePatternLikelihood(freqs, this);
         return logP;
@@ -60,6 +60,6 @@ public class ALSTreeLikelihood extends TreeLikelihood implements PartialsProvide
     
 	@Override
 	public void getNodePartials(int iNode, double[] fPartials) {
-		m_likelihoodCore.getNodePartials(iNode, fPartials);
+		likelihoodCore.getNodePartials(iNode, fPartials);
 	}
 }

@@ -3,7 +3,10 @@ package beast.evolution.datatype;
 import java.util.List;
 
 import beast.core.Description;
-import beast.core.Plugin;
+import beast.core.BEASTObject;
+import beast.evolution.datatype.DataType;
+
+
 
 @Description("Datatype for capturing continuous data, such as geographic locations")
 public class ContinuousDataType extends DataType.Base {

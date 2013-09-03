@@ -7,7 +7,6 @@ package beast.continuous;
 //import dr.inference.model.CompoundParameter;
 //import dr.inference.model.CompoundSymmetricMatrix;
 //import dr.inference.model.Model;
-import beast.math.matrixalgebra.Vector;
 
 import java.util.List;
 import java.util.Random;
@@ -18,6 +17,9 @@ import beast.core.State;
 import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.math.matrixalgebra.Vector;
+
+
 
 /**
  * @author Marc A. Suchard

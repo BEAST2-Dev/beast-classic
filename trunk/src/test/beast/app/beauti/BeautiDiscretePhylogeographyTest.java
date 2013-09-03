@@ -21,6 +21,8 @@ import org.fest.swing.fixture.JTextComponentFixture;
 import org.fest.swing.image.ScreenshotTaker;
 import org.junit.Test;
 
+import test.beast.app.beauti.BeautiBase;
+
 public class BeautiDiscretePhylogeographyTest extends BeautiBase {
 
 	JOptionPaneFixture dialog;

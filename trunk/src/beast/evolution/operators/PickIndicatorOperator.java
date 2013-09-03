@@ -1,13 +1,15 @@
 package beast.evolution.operators;
 
-import beast.core.Operator;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import beast.core.Input;
+import beast.core.Operator;
 import beast.core.Input.Validate;
 import beast.core.parameter.BooleanParameter;
 import beast.util.Randomizer;
 
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author dkuh004

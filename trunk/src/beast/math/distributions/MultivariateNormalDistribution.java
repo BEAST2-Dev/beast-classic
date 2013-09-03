@@ -8,16 +8,18 @@ import beast.core.*;
 import beast.core.parameter.RealParameter;
 
 
+
+
 @Description("MultivariateNormalDistribution ported from BEAST1")
 public class MultivariateNormalDistribution extends Distribution {
     public Input<RealParameter> mean = new Input<RealParameter>("mean", "description here");
     public Input<RealParameter> precision = new Input<RealParameter>("precision", "description here");
-    public Input<Valuable> argInput = new Input<Valuable>("arg", "argument of distribution");
+    public Input<Function> argInput = new Input<Function>("arg", "argument of distribution");
 
     dr.math.distributions.MultivariateNormalDistribution multivariatenormaldistribution;
 
 
-    Valuable arg;
+    Function arg;
     @Override
     public void initAndValidate() throws Exception {
         multivariatenormaldistribution = new dr.math.distributions.MultivariateNormalDistribution(

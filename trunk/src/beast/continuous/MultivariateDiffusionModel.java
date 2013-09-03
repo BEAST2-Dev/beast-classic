@@ -1,14 +1,14 @@
 package beast.continuous;
 
-import beast.evolution.tree.Tree;
-import beast.evolution.substitutionmodel.*;
-import dr.math.distributions.MultivariateNormalDistribution;
-
-
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
+import beast.evolution.substitutionmodel.*;
+import beast.evolution.tree.Tree;
+import dr.math.distributions.MultivariateNormalDistribution;
+
+
 
 @Description("something to do with multi variate diffusion...")
 public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {

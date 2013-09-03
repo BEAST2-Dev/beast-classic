@@ -1,13 +1,13 @@
 package beast.inference;
 
-import beast.core.parameter.Parameter;
-import beast.core.parameter.RealParameter;
 import beast.core.CalculationNode;
 import beast.core.Description;
 import beast.core.Input;
-import beast.evolution.substitutionmodel.SubstitutionModel;
-import beast.evolution.substitutionmodel.GeneralSubstitutionModel;
+import beast.core.parameter.Parameter;
+import beast.core.parameter.RealParameter;
 import beast.evolution.substitutionmodel.Frequencies;
+import beast.evolution.substitutionmodel.GeneralSubstitutionModel;
+import beast.evolution.substitutionmodel.SubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.util.Randomizer;
 import cern.colt.bitvector.BitVector;
