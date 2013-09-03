@@ -24,16 +24,20 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import beast.app.beauti.BeautiDoc;
+import beast.app.beauti.GuessPatternDialog;
 import beast.app.draw.ListInputEditor;
 import beast.app.draw.SmallLabel;
 import beast.continuous.SampledMultivariateTraitLikelihood;
 import beast.core.Input;
-import beast.core.Plugin;
+import beast.core.BEASTObject;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AlignmentFromTraitMap;
 import beast.evolution.alignment.TaxonSet;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTraitMap;
+
+
 
 public class LocationInputEditor extends ListInputEditor {
 	private static final long serialVersionUID = 1L;
@@ -61,7 +65,7 @@ public class LocationInputEditor extends ListInputEditor {
     String m_sPattern = ".*_(..).*";
 
 	@Override
-	public void init(Input<?> input, Plugin plugin, int itemNr,	ExpandOption bExpandOption, boolean bAddButtons) {
+	public void init(Input<?> input, BEASTObject plugin, int itemNr,	ExpandOption bExpandOption, boolean bAddButtons) {
         m_bAddButtons = bAddButtons;
         m_input = input;
         m_plugin = plugin;
@@ -77,16 +81,16 @@ public class LocationInputEditor extends ListInputEditor {
 
 	public void initPanel(SampledMultivariateTraitLikelihood likelihood_) {
 		likelihood = likelihood_;
-		m_plugin = likelihood.m_data.get();
+		m_plugin = likelihood.dataInput.get();
 		try {
 			m_input = m_plugin.getInput("traitSet");
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
 		
-        tree = likelihood.m_tree.get();
+        tree = likelihood.treeInput.get();
         if (tree != null) {
-        	Alignment data = likelihood.m_data.get();
+        	Alignment data = likelihood.dataInput.get();
         	if (!(data instanceof AlignmentFromTraitMap)) {
         		return;
         	}

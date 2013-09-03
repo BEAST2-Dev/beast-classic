@@ -3,6 +3,7 @@ package beast.evolution.datatype;
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
+import beast.evolution.datatype.DataType;
 
 /**
  * Package: MutationDeathType
@@ -32,20 +33,20 @@ public class MutationDeathType extends DataType.Base {
     				{0,1}, // -
     				{0,1}, // ?
     				};
-    		m_nStateCount = 2;
-    		m_mapCodeToStateSet = x;
-    		m_nCodeLength = 1;
-    		m_sCodeMap = "" + extantCode + deathCode + GAP_CHAR + MISSING_CHAR;
+    		stateCount = 2;
+    		mapCodeToStateSet = x;
+    		codeLength = 1;
+    		codeMap = "" + extantCode + deathCode + GAP_CHAR + MISSING_CHAR;
     		DEATHSTATE = 1;
     	} else {
     		DataType.Base dataType = dataTypeInput.get();
-    		m_nStateCount = dataType.getStateCount() + 1;
-    		m_mapCodeToStateSet = new int[dataType.m_mapCodeToStateSet.length + 1][];
-    		System.arraycopy(dataType.m_mapCodeToStateSet, 0, m_mapCodeToStateSet, 0, dataType.m_mapCodeToStateSet.length);
-    		m_mapCodeToStateSet[m_nStateCount - 1] = new int[] {deathCode};
-    		m_nCodeLength = 1;
-    		m_sCodeMap = "" + dataType.m_sCodeMap + deathCode;
-    		DEATHSTATE = m_nStateCount - 1;
+    		stateCount = dataType.getStateCount() + 1;
+    		mapCodeToStateSet = new int[dataType.mapCodeToStateSet.length + 1][];
+    		System.arraycopy(dataType.mapCodeToStateSet, 0, mapCodeToStateSet, 0, dataType.mapCodeToStateSet.length);
+    		mapCodeToStateSet[stateCount - 1] = new int[] {deathCode};
+    		codeLength = 1;
+    		codeMap = "" + dataType.codeMap + deathCode;
+    		DEATHSTATE = stateCount - 1;
     	}
     }
 

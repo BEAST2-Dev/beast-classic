@@ -43,7 +43,12 @@ import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.coalescent.Coalescent;
+import beast.evolution.tree.coalescent.IntervalType;
+import beast.evolution.tree.coalescent.TreeIntervals;
 import beast.util.HeapSort;
+
+
 
 /**
  * A likelihood function for a Gaussian Markov random field on a log population size trajectory.
@@ -65,7 +70,7 @@ public class GMRFSkyrideLikelihood extends Coalescent /*OldAbstractCoalescentLik
     public Input<Boolean> rescaleByRootHeightInput = new Input<Boolean>("rescaleByRootHeightInput","rescale By Root Height", false);
 
     public GMRFSkyrideLikelihood() {
-		popSize.setRule(Validate.OPTIONAL);
+		popSizeInput.setRule(Validate.OPTIONAL);
 	}
 
 	// PUBLIC STUFF
@@ -136,7 +141,7 @@ public class GMRFSkyrideLikelihood extends Coalescent /*OldAbstractCoalescentLik
 //	                             boolean timeAwareSmoothing, boolean rescaleByRootHeight) throws Exception {
 
 //		super(GMRFSkyrideLikelihoodParser.SKYLINE_LIKELIHOOD);
-    	tree = treeIntervals.get().m_tree.get();
+    	tree = treeIntervalsInput.get().treeInput.get();
     	//tree = m_tree.get();
 //    	if (m_tree.get() == null) {
 //    		throw new Exception("Expected tree to be specified");
@@ -175,7 +180,7 @@ public class GMRFSkyrideLikelihood extends Coalescent /*OldAbstractCoalescentLik
 		}
 
         // Field length must be set by this point
-        super.intervals = treeIntervals.get();
+        super.intervals = treeIntervalsInput.get();
 		wrapSetupIntervals();
 		coalescentIntervals = new double[fieldLength];
 		storedCoalescentIntervals = new double[fieldLength];
@@ -731,14 +736,14 @@ public class GMRFSkyrideLikelihood extends Coalescent /*OldAbstractCoalescentLik
 	@Override
 	protected boolean requiresRecalculation() {
 		boolean isDirty = false;
-        final TreeIntervals ti = treeIntervals.get();
+        final TreeIntervals ti = treeIntervalsInput.get();
         if (ti != null) {
             //boolean d = ti.isDirtyCalculation();
             //assert d;
             assert ti.isDirtyCalculation();
             isDirty = true;
         } else {
-        	isDirty = m_tree.get().somethingIsDirty();
+        	isDirty = treeInput.get().somethingIsDirty();
         }
 
 		isDirty =  isDirty || 

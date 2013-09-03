@@ -32,8 +32,6 @@ package beast.evolution.operators;
 //import dr.geo.GeoSpatialCollectionModel;
 //import dr.inference.distribution.MultivariateDistributionLikelihood;
 
-import beast.geo.GeoSpatialDistribution;
-import beast.math.matrixalgebra.SymmetricMatrix;
 import dr.math.distributions.MultivariateDistribution;
 //import dr.math.distributions.MultivariateNormalDistribution;
 
@@ -50,8 +48,12 @@ import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTraitMap;
+import beast.geo.GeoSpatialDistribution;
 import beast.math.distributions.MultivariateNormalDistribution;
+import beast.math.matrixalgebra.SymmetricMatrix;
 import beast.util.Randomizer;
+
+
 
 /**
  * @author Marc Suchard

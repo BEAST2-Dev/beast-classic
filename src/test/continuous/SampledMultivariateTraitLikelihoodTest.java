@@ -11,6 +11,8 @@ import beast.core.MCMC;
 import beast.util.Randomizer;
 import beast.util.XMLParser;
 
+
+
 public class SampledMultivariateTraitLikelihoodTest {
 
 	@Test

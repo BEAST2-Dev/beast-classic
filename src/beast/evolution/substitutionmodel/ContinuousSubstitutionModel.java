@@ -4,6 +4,8 @@ import beast.core.Description;
 import beast.core.Input.Validate;
 import beast.evolution.datatype.ContinuousDataType;
 import beast.evolution.datatype.DataType;
+import beast.evolution.substitutionmodel.EigenDecomposition;
+import beast.evolution.substitutionmodel.SubstitutionModel;
 import beast.evolution.tree.Node;
 
 @Description("Substitution model that can deal with an alignment containing continuous data")

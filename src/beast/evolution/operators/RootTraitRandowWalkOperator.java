@@ -4,6 +4,7 @@ import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
+import beast.evolution.operators.RealRandomWalkOperator;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.TreeTraitMap;
 import beast.util.Randomizer;

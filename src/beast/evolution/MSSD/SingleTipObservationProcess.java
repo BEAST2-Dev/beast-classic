@@ -26,11 +26,11 @@
 
 package beast.evolution.MSSD;
 
-import beast.evolution.sitemodel.SiteModel;
-import beast.evolution.alignment.Taxon;
-import beast.core.Input;
 import beast.core.Description;
+import beast.core.Input;
 import beast.core.parameter.RealParameter;
+import beast.evolution.alignment.Taxon;
+import beast.evolution.sitemodel.SiteModel;
 
 /**
  * Package: SingleTimeObservationProcess

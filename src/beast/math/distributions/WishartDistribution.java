@@ -8,14 +8,16 @@ import beast.core.parameter.RealParameter;
 import beast.math.matrixalgebra.Matrix;
 
 
+
+
 @Description("WishartDistribution ported from BEAST1")
 public class WishartDistribution extends Distribution {
     public Input<Double> df = new Input<Double>("df", "description here");
     public Input<RealParameter> scaleMatrix = new Input<RealParameter>("scaleMatrix", "description here");
-    public Input<Valuable> argInput = new Input<Valuable>("arg", "argument of distribution");
+    public Input<Function> argInput = new Input<Function>("arg", "argument of distribution");
 
     dr.math.distributions.WishartDistribution wishartdistribution;
-    Valuable arg;
+    Function arg;
     
     @Override
     public void initAndValidate() throws Exception {

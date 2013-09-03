@@ -17,6 +17,8 @@ import beast.core.parameter.RealParameter;
 import beast.evolution.tree.coalescent.GMRFSkyrideLikelihood;
 import beast.util.Randomizer;
 
+
+
 /* A Metropolis-Hastings operator to update the log population sizes and precision parameter jointly under a Gaussian Markov random field prior
  *
  * @author Erik Bloomquist
@@ -227,7 +229,7 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
         double proposedLambda = this.getNewLambda(currentLambda, lambdaScaleFactor);
 
         precisionParameter.setValue(0, proposedPrecision);
-        if (lambdaParameter.m_bIsEstimated.get()) {
+        if (lambdaParameter.isEstimatedInput.get()) {
         	lambdaParameter.setValue(0, proposedLambda);
         }
 
@@ -386,7 +388,7 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
     public List<StateNode> listStateNodes() throws Exception {
     	List<StateNode> list = new ArrayList<StateNode>();
         list.add(precisionParameter);
-        if (lambdaParameter.m_bIsEstimated.get()) {
+        if (lambdaParameter.isEstimatedInput.get()) {
         	list.add(lambdaParameter);
         }
         list.add(popSizeParameter);

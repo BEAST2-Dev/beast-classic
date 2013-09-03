@@ -29,19 +29,13 @@ package beast.evolution.operators;
 
 import beast.continuous.AbstractMultivariateTraitLikelihood;
 import beast.core.Input;
-import beast.core.Input.Validate;
 import beast.core.Operator;
+import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTraitMap;
 import beast.math.distributions.WishartDistribution;
-//import dr.evomodel.continuous.AbstractMultivariateTraitLikelihood;
-//import dr.evomodel.continuous.SampledMultivariateTraitLikelihood;
-//import dr.inference.distribution.MultivariateDistributionLikelihood;
-//import dr.math.distributions.WishartDistribution;
-//import dr.math.distributions.WishartSufficientStatistics;
-//import dr.math.interfaces.ConjugateWishartStatisticsProvider;
 import beast.math.matrixalgebra.IllegalDimension;
 import beast.math.matrixalgebra.SymmetricMatrix;
 

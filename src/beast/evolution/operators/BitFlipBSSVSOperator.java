@@ -1,8 +1,8 @@
 package beast.evolution.operators;
 
 import beast.core.Description;
-import beast.core.Operator;
 import beast.core.Input;
+import beast.core.Operator;
 import beast.core.Input.Validate;
 import beast.core.parameter.BooleanParameter;
 import beast.core.parameter.RealParameter;

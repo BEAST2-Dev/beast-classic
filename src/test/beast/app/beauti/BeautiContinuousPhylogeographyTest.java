@@ -19,6 +19,8 @@ import org.fest.swing.fixture.JTableFixture;
 import org.fest.swing.image.ScreenshotTaker;
 import org.junit.Test;
 
+import test.beast.app.beauti.BeautiBase;
+
 public class BeautiContinuousPhylogeographyTest extends BeautiBase {
 
 	JOptionPaneFixture dialog;

@@ -2,8 +2,8 @@ package dr.math.distributions;
 
 
 import beast.core.Description;
-import beast.util.Randomizer;
 import beast.math.matrixalgebra.*;
+import beast.util.Randomizer;
 
 /**
  * @author Marc Suchard

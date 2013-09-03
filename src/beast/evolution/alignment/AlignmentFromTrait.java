@@ -7,9 +7,12 @@ import java.util.List;
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
+import beast.evolution.alignment.Alignment;
 import beast.evolution.datatype.DataType;
 import beast.evolution.tree.TraitSet;
 import beast.util.AddOnManager;
+
+
 
 @Description("Treats trait on taxa as single site alignment")
 public class AlignmentFromTrait extends Alignment {
@@ -19,53 +22,53 @@ public class AlignmentFromTrait extends Alignment {
 		TraitSet traitSet;
 		
 	    public AlignmentFromTrait() {
-	        m_pSequences.setRule(Validate.OPTIONAL);
+	        sequenceInput.setRule(Validate.OPTIONAL);
 	    }
 
 	    @Override
 	    public void initAndValidate() throws Exception {
 	    	traitSet = traitInput.get();
-	    	m_nPatternIndex = new int[0];
-	        m_counts = new ArrayList<List<Integer>>();
+	    	patternIndex = new int[0];
+	        counts = new ArrayList<List<Integer>>();
 	    	if (traitSet == null) { // assume we are in beauti
 	    		return;
 	    	}
-	    	if (m_userDataType.get() != null) {
-	            m_dataType = m_userDataType.get();
+	    	if (userDataTypeInput.get() != null) {
+	            m_dataType = userDataTypeInput.get();
 	        } else {
-	            if (m_sTypes.indexOf(m_sDataType.get()) < 0) {
-	                throw new Exception("data type + '" + m_sDataType.get() + "' cannot be found. " +
-	                        "Choose one of " + Arrays.toString(m_sTypes.toArray(new String[0])));
+	            if (types.indexOf(dataTypeInput.get()) < 0) {
+	                throw new Exception("data type + '" + dataTypeInput.get() + "' cannot be found. " +
+	                        "Choose one of " + Arrays.toString(types.toArray(new String[0])));
 	            }
 	            List<String> sDataTypes = AddOnManager.find(beast.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
 	            for (String sDataType : sDataTypes) {
 	                DataType dataType = (DataType) Class.forName(sDataType).newInstance();
-	                if (m_sDataType.get().equals(dataType.getDescription())) {
+	                if (dataTypeInput.get().equals(dataType.getDescription())) {
 	                    m_dataType = dataType;
 	                    break;
 	                }
 	            }
 	        }
 
-	        m_sTaxaNames = traitSet.m_taxa.get().m_taxonList;
+	        taxaNames = traitSet.taxaInput.get().taxaNames;
 	        
-	        if (traitSet.m_traits.get() == null || traitSet.m_traits.get().matches("^\\s*$")) {
+	        if (traitSet.traitsInput.get() == null || traitSet.traitsInput.get().matches("^\\s*$")) {
 	        	// prevent initialisation when in beauti
-	        	m_nPatternIndex = new int[1];
+	        	patternIndex = new int[1];
 	            return;
 	        }
 	        
-	        for (int i = 0; i < m_sTaxaNames.size(); i++) {
+	        for (int i = 0; i < taxaNames.size(); i++) {
 	        	String sValue = traitSet.getStringValue(i);
 	        	if (sValue == null) {
 	        		throw new Exception("Trait not specified for " + i);
 	        	}
 	        	List<Integer> iStates = m_dataType.string2state(sValue);
-	        	m_counts.add(iStates);
+	        	counts.add(iStates);
 	        }
-	        m_nStateCounts = new ArrayList<Integer>();
-	        for (String s : m_sTaxaNames) {
-	        	m_nStateCounts.add(m_dataType.getStateCount());
+	        stateCounts = new ArrayList<Integer>();
+	        for (String s : taxaNames) {
+	        	stateCounts.add(m_dataType.getStateCount());
 	        }
 
 	        calcPatterns();

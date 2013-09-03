@@ -5,12 +5,14 @@ import org.apache.commons.math.distribution.GammaDistribution;
 import org.apache.commons.math.distribution.GammaDistributionImpl;
 
 import beast.core.Description;
-import beast.util.Randomizer;
-
-import dr.math.GammaFunction;
 import beast.math.matrixalgebra.CholeskyDecomposition;
 import beast.math.matrixalgebra.IllegalDimension;
 import beast.math.matrixalgebra.Matrix;
+import beast.util.Randomizer;
+
+
+
+import dr.math.GammaFunction;
 
 /**
  * @author Marc Suchard
