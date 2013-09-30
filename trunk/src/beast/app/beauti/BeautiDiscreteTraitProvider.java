@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 import beast.app.beauti.BeautiAlignmentProvider;
 import beast.app.beauti.BeautiDoc;
 import beast.app.beauti.PartitionContext;
+import beast.core.Description;
 import beast.core.State;
 import beast.core.StateNode;
 import beast.core.BEASTObject;
@@ -30,6 +31,7 @@ import beast.math.distributions.Prior;
 
 
 
+@Description("")
 public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 
 	@Override
@@ -95,10 +97,10 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 			        int stateCount = ((UserDataType) traitData.userDataTypeInput.get()).stateCountInput.get();
 			        SVSGeneralSubstitutionModel substModel = (SVSGeneralSubstitutionModel) 
 			        		((SiteModel.Base) likelihood.siteModelInput.get()).substModelInput.get();
-		        	substModel.indicator.get().m_nDimension.setValue(stateCount * (stateCount - 1) / 2, null);
-		        	((Parameter<?>) substModel.ratesInput.get()).m_nDimension.setValue(stateCount* (stateCount - 1) / 2, null);
+		        	substModel.indicator.get().dimensionInput.setValue(stateCount * (stateCount - 1) / 2, null);
+		        	((Parameter.Base<?>) substModel.ratesInput.get()).dimensionInput.setValue(stateCount* (stateCount - 1) / 2, null);
 		        	RealParameter freqs = substModel.frequenciesInput.get().frequenciesInput.get();
-			        freqs.m_nDimension.setValue(stateCount, freqs);
+			        freqs.dimensionInput.setValue(stateCount, freqs);
 			        freqs.valuesInput.setValue(1.0/stateCount + "", freqs);
 			        // set offset on non-zero rate prior
 			        PartitionContext context = new PartitionContext(likelihood);

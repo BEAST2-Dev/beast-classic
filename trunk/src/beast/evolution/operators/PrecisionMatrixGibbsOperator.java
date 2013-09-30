@@ -34,6 +34,7 @@ import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeInterface;
 import beast.evolution.tree.TreeTraitMap;
 import beast.math.distributions.WishartDistribution;
 import beast.math.matrixalgebra.IllegalDimension;
@@ -66,7 +67,7 @@ public class PrecisionMatrixGibbsOperator extends Operator {
     //    private WishartDistribution priorDistribution;
     private double priorDf;
     private SymmetricMatrix priorInverseScaleMatrix;
-    private Tree treeModel;
+    private TreeInterface treeModel;
     private int dim;
     private double numberObservations;
     private String traitName;

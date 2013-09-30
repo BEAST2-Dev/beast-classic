@@ -2,6 +2,7 @@ package beast.continuous;
 
 
 
+
 import java.io.PrintStream;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.substitutionmodel.ContinuousSubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeInterface;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitMap;
 
@@ -424,7 +426,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     protected void acceptState() {
     } // nothing to do
 
-    public Tree getTreeModel() {
+    public TreeInterface getTreeModel() {
         return treeModel;
     }
 
@@ -540,7 +542,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
                                 return Double.class;
                             }
 
-                            public double[] getTrait(Tree tree, Node node) {
+                            public double[] getTrait(TreeInterface tree, Node node) {
                                 return getTraitForNode(tree, node, traitName);
                             }
                         }
@@ -574,7 +576,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     	return traitMap.getTrait(treeModel, treeModel.getRoot());
     }
 
-    public abstract double[] getTraitForNode(Tree tree, Node node, String traitName);
+    public abstract double[] getTraitForNode(TreeInterface tree, Node node, String traitName);
 
 //    public void check(RealParameter trait) throws Exception {
 //        diffusionModel.check(trait);
@@ -780,7 +782,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
 //        }
 //    };
 
-    Tree treeModel = null;
+    TreeInterface treeModel = null;
     //MultivariateDiffusionModel 
     ContinuousSubstitutionModel diffusionModel = null;
     String traitName = null;

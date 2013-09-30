@@ -8,6 +8,7 @@ package beast.continuous;
 //import dr.inference.model.CompoundSymmetricMatrix;
 //import dr.inference.model.Model;
 
+
 import java.util.List;
 import java.util.Random;
 
@@ -16,7 +17,7 @@ import beast.core.Input;
 import beast.core.State;
 import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeInterface;
 import beast.math.matrixalgebra.Vector;
 
 
@@ -181,8 +182,8 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
         return logL;
     }
 
-
-    public double[] getTraitForNode(Tree treeModel, Node node, String traitName) {
+    @Override
+    public double[] getTraitForNode(TreeInterface treeModel, Node node, String traitName) {
         return traitMap.getTrait(treeModel, node); 
     }
 

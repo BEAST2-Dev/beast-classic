@@ -1,17 +1,19 @@
 package beast.evolution.tree;
 
+import java.util.List;
+
 import beast.core.CalculationNode;
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeInterface;
 import beast.util.Randomizer;
 
 @Description("Maps nodes in a tree to entries of a parameter")
 public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]> {
-	public Input<Tree> treeInput = new Input<Tree>("tree", "tree for which to map the nodes", Validate.REQUIRED);
+	public Input<TreeInterface> treeInput = new Input<TreeInterface>("tree", "tree for which to map the nodes", Validate.REQUIRED);
 	public Input<RealParameter> parameterInput = new Input<RealParameter>("parameter",
 			"paramater for which to map entries for", Validate.REQUIRED);
 	public Input<String> traitName = new Input<String>("traitName", "name of the trait", "unnamed");
@@ -23,7 +25,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	
 	public Input<String> randomizeupper = new Input<String>("randomizeupper", "if specified, used as upper bound for randomly initialising unassigned nodes");
 	public Input<String> randomizelower = new Input<String>("randomizelower", "if specified, used as lower bound for randomly initialising unassigned nodes");
-	Tree tree;
+	TreeInterface tree;
 	RealParameter parameter;
 
 	/** flag to indicate the root has no trait **/
@@ -60,8 +62,8 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		
 		
 		if ((value.get() != null && value.get().trim().length() > 0) || randomizelower.get() != null || randomizeupper.get() != null) {
-	        String [] sTaxa = tree.getTaxaNames();
-	        boolean [] bDone = new boolean[sTaxa.length];
+	        List<String> sTaxa = tree.getTaxonset().asStringList();
+	        boolean [] bDone = new boolean[sTaxa.size()];
 	        
 			// we need to initialise the trait parameter
 	        int dim = traitvalues.length;
@@ -103,7 +105,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		                throw new Exception("could not parse trait: " + sTrait);
 		            }
 		            String sTaxonID = normalize(sStrs[0]);
-		            int iTaxon = indexOf(sTaxa, sTaxonID);
+		            int iTaxon = sTaxa.indexOf(sTaxonID);
 		            if (iTaxon < 0) {
 		                throw new Exception("Trait (" + sTaxonID + ") is not a known taxon. Spelling error perhaps?");
 		            }
@@ -113,15 +115,15 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		            	values[iTaxon * dim + i] = Double.parseDouble(sTraitValues[i]);
 		            }
 		            if (bDone[iTaxon]) {
-		            	throw new Exception("Trait for taxon " + sTaxa[iTaxon]+ " defined twice");
+		            	throw new Exception("Trait for taxon " + sTaxa.get(iTaxon)+ " defined twice");
 		            }
 		            bDone[iTaxon] = true;
 		        }
 			}
 	        // sanity check: did we cover all taxa?
-	        for (int i = 0; i < sTaxa.length; i++) {
+	        for (int i = 0; i < sTaxa.size(); i++) {
 	            if (!bDone[i]) {
-	                System.out.println("WARNING: no trait specified for " + sTaxa[i]);
+	                System.out.println("WARNING: no trait specified for " + sTaxa.get(i));
 	            }
 	        }
 	        
@@ -134,13 +136,13 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		}
 	}
 
-	private int indexOf(String[] sTaxa, String sTaxonID) {
-		int i = sTaxa.length - 1;
-		while (i >= 0 && !sTaxa[i].equals(sTaxonID)) {
-			i--;
-		}
-		return i;
-	}
+//	private int indexOf(String[] sTaxa, String sTaxonID) {
+//		int i = sTaxa.length - 1;
+//		while (i >= 0 && !sTaxa[i].equals(sTaxonID)) {
+//			i--;
+//		}
+//		return i;
+//	}
 
 	/**
      * remove start and end spaces
@@ -163,7 +165,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		return intent.get();
 	}
 
-	public double [] getTrait(Tree tree, Node node) {
+	public double [] getTrait(TreeInterface tree, Node node) {
 		int id = nodeToParameterIndexMap[node.getNr()];
 		parameter.getMatrixValues1(id, traitvalues);
 		return traitvalues.clone();
@@ -189,7 +191,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	}
 
 	@Override
-	public String getTraitString(Tree tree, Node node) {
+	public String getTraitString(TreeInterface tree, Node node) {
 		double [] values = getTrait(tree, node);
         if (values == null || values.length == 0) return null;
         if (values.length > 1) {

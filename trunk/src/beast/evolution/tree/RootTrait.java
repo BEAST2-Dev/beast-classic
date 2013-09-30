@@ -1,5 +1,6 @@
 package beast.evolution.tree;
 
+
 import java.io.PrintStream;
 
 import beast.core.CalculationNode;
@@ -8,7 +9,6 @@ import beast.core.Input;
 import beast.core.Loggable;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
-import beast.evolution.tree.Tree;
 
 
 
@@ -16,7 +16,7 @@ public class RootTrait extends CalculationNode implements Function, Loggable {
     public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
 
     TreeTraitMap map;
-    Tree tree;
+    TreeInterface tree;
     RealParameter parameter;
     int dim;
     
