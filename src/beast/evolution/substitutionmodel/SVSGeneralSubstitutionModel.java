@@ -198,7 +198,7 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
     	// no recalculation is required, so check this first.
     	Function v = ratesInput.get(); 
     	if (v instanceof Parameter<?>) {
-    		Parameter<?> p = (Parameter<?>) v;
+    		Parameter.Base<?> p = (Parameter.Base<?>) v;
     		if (p.somethingIsDirty()) {
     			if (frequencies.isDirtyCalculation()) {
 			    	return super.requiresRecalculation();

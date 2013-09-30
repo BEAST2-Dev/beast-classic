@@ -1,8 +1,9 @@
 package beast.evolution.tree;
 
 
+
 import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeInterface;
 
 /**
  * @author Andrew Rambaut
@@ -47,7 +48,7 @@ public interface TreeTrait<T> {
      * @param node a reference to a node
      * @return the trait value
      */
-    T getTrait(final Tree tree, final Node node);
+    T getTrait(final TreeInterface tree, final Node node);
 
     /**
      * Get a string representations of the trait value.
@@ -56,7 +57,7 @@ public interface TreeTrait<T> {
      * @param node a reference to a node
      * @return the trait string representation
      */
-    String getTraitString(final Tree tree, final Node node);
+    String getTraitString(final TreeInterface tree, final Node node);
 
     /**
      * Specifies whether this trait is loggable
@@ -88,7 +89,7 @@ public interface TreeTrait<T> {
             return Double.class;
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return formatTrait(getTrait(tree, node));
         }
 
@@ -109,7 +110,7 @@ public interface TreeTrait<T> {
             return Integer.class;
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return formatTrait(getTrait(tree, node));
         }
 
@@ -130,7 +131,7 @@ public interface TreeTrait<T> {
             return String.class;
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return getTrait(tree, node);
         }
     }
@@ -144,7 +145,7 @@ public interface TreeTrait<T> {
             return double[].class;
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return formatTrait(getTrait(tree, node));
         }
 
@@ -175,7 +176,7 @@ public interface TreeTrait<T> {
             return int[].class;
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return formatTrait(getTrait(tree, node));
         }
 
@@ -231,7 +232,7 @@ public interface TreeTrait<T> {
             return Intent.WHOLE_TREE;
         }
 
-        public T getTrait(Tree tree, Node node) {
+        public T getTrait(TreeInterface tree, Node node) {
             T count = null;
             if (includeExternalNodes) {
                 for (int i = 0; i < tree.getLeafNodeCount(); i++) {
@@ -271,7 +272,7 @@ public interface TreeTrait<T> {
             super(base);
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return DA.formatTrait(getTrait(tree, node));
         }
 
@@ -316,7 +317,7 @@ public interface TreeTrait<T> {
             super(base);
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return D.formatTrait(getTrait(tree, node));
         }
 
@@ -366,7 +367,7 @@ public interface TreeTrait<T> {
             return base.getIntent();
         }
 
-        public T getTrait(Tree tree, Node node) {
+        public T getTrait(TreeInterface tree, Node node) {
             TA values = base.getTrait(tree, node);
             if (values == null) {
                 return null;
@@ -407,7 +408,7 @@ public interface TreeTrait<T> {
             return total;
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return D.formatTrait(getTrait(tree, node));
         }
     }
@@ -458,11 +459,11 @@ public interface TreeTrait<T> {
             return Double.class;
         }
 
-        public Double getTrait(Tree tree, Node node) {
+        public Double getTrait(TreeInterface tree, Node node) {
             return base.getTrait(tree, node)[index];
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return D.formatTrait(getTrait(tree, node));
         }
     }
@@ -477,7 +478,7 @@ public interface TreeTrait<T> {
             super(name, base, index);
         }
 
-        public Double getTrait(Tree tree, Node node) {
+        public Double getTrait(TreeInterface tree, Node node) {
             return (base.getTrait(tree, node)[index]) / node.getLength();
         }
     }
@@ -496,11 +497,11 @@ public interface TreeTrait<T> {
             return Double.class;
         }
 
-        public Integer getTrait(Tree tree, Node node) {
+        public Integer getTrait(TreeInterface tree, Node node) {
             return base.getTrait(tree, node)[index];
         }
 
-        public String getTraitString(Tree tree, Node node) {
+        public String getTraitString(TreeInterface tree, Node node) {
             return I.formatTrait(getTrait(tree, node));
         }
     }

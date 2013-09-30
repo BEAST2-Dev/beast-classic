@@ -14,6 +14,7 @@ import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.substitutionmodel.SubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeInterface;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitProvider;
 import beast.util.Randomizer;
@@ -73,7 +74,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     	}
     	
         this.tag = tagInput.get();
-        Tree treeModel = treeInput.get();
+        TreeInterface treeModel = treeInput.get();
         patternCount = dataInput.get().getPatternCount();
         dataType = dataInput.get().getDataType();
         stateCount = dataType.getStateCount();
@@ -93,11 +94,11 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
                 return Intent.NODE;
             }
 
-            public int[] getTrait(Tree tree, Node node) {
+            public int[] getTrait(TreeInterface tree, Node node) {
                 return getStatesForNode(tree,node);
             }
 
-            public String getTraitString(Tree tree, Node node) {
+            public String getTraitString(TreeInterface tree, Node node) {
                 return formattedState(getStatesForNode(tree,node), dataType);
             }
         });
@@ -174,7 +175,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         return dataType;
     }
 
-    public int[] getStatesForNode(Tree tree, Node node) {
+    public int[] getStatesForNode(TreeInterface tree, Node node) {
         if (tree != treeInput.get()) {
             throw new RuntimeException("Can only reconstruct states on treeModel given to constructor");
         }
@@ -197,7 +198,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 
     public void redrawAncestralStates() {
         jointLogLikelihood = 0;
-        Tree tree = treeInput.get();
+        TreeInterface tree = treeInput.get();
         traverseSample(tree, tree.getRoot(), null);
         areStatesRedrawn = true;
     }
@@ -291,7 +292,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
      * @param node        - current node
      * @param parentState - character state of the parent node to 'node'
      */
-    public void traverseSample(Tree tree, Node node, int[] parentState) {
+    public void traverseSample(TreeInterface tree, Node node, int[] parentState) {
 
         int nodeNum = node.getNr();
 

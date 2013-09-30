@@ -28,10 +28,13 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 			"If it is a trait associated with a node, the metadata will be stored with the nodes." +
 			"Otherwise, the metadata will be listed before the Newick tree.", new ArrayList<BEASTObject>());
 
+	public Input<Boolean> combineParametersInput = new Input<Boolean>("combine", "put all parameters in a single field", false);
+	
 	List<Parameter<?>> parameters;
 	List<BranchRateModel> rates;
 	List<TreeTraitProvider> traits;
 	List<Function> valuables;
+	Boolean combineParameters;
 	
 	@Override
 	public void initAndValidate() throws Exception {
@@ -39,6 +42,7 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 		rates = new ArrayList<BranchRateModel>();
 		traits = new ArrayList<TreeTraitProvider>();
 		valuables = new ArrayList<Function>();
+		combineParameters = combineParametersInput.get();
 		
 		for (BEASTObject plugin : metadataInput.get()) {
 			if (plugin instanceof Parameter) {
@@ -76,18 +80,39 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
         out.print("tree STATE_" + nSample + " = ");
         if (valuables.size() > 0) {
         	out.print("[&");
-    		for (int j = 0; j < valuables.size(); j++) {
-    			Function valuable = valuables.get(j);
-        		for (int i = 0; i < valuable.getDimension(); i++) {
-        			out.print(((BEASTObject) valuable).getID() + "=" +  valuable.getArrayValue(i));
-        			if (i < valuable.getDimension() - 1) {
-        				out.print(",");
-        			}
-        		}
-    			if (j < valuables.size() - 1) {
-    				out.print(",");
-    			}
-        	}
+        	if (combineParameters) {
+	    		for (int j = 0; j < valuables.size(); j++) {
+	    			out.print(((BEASTObject)valuables.get(j)).getID());
+	    		}
+	    		out.print("={");
+	    		for (int j = 0; j < valuables.size(); j++) {
+	    			Function valuable = valuables.get(j);
+	        		for (int i = 0; i < valuable.getDimension(); i++) {
+	        			out.print(valuable.getArrayValue(i));
+	        			if (i < valuable.getDimension() - 1) {
+	        				out.print(",");
+	        			}
+	        		}
+	    			if (j < valuables.size() - 1) {
+	    				out.print(",");
+	    			}
+	        	}
+	    		out.print("}");
+        		 
+        	} else {
+	    		for (int j = 0; j < valuables.size(); j++) {
+	    			Function valuable = valuables.get(j);
+	        		for (int i = 0; i < valuable.getDimension(); i++) {
+	        			out.print(((BEASTObject) valuable).getID() + "=" +  valuable.getArrayValue(i));
+	        			if (i < valuable.getDimension() - 1) {
+	        				out.print(",");
+	        			}
+	        		}
+	    			if (j < valuables.size() - 1) {
+	    				out.print(",");
+	    			}
+	        	}
+    		}
         	out.print("] ");
         }
 		tree.getRoot().sort();
@@ -111,13 +136,32 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 			buf.append(node.labelNr + 1);
 		}
 		buf.append("[&");
-		if (parameters.size() > 0) {
-			for (Parameter<?> parameter : parameters) {
-				buf.append(parameter.getID()).append('=');
-				buf.append(parameter.getArrayValue(node.labelNr));
-				buf.append(',');
+		
+    	if (combineParameters) {
+			if (parameters.size() > 0) {
+				for (Parameter<?> parameter : parameters) {
+					buf.append(parameter.getID());
+				}
+				buf.append("={");
+				int k = 0;
+				for (Parameter<?> parameter : parameters) {
+					buf.append(parameter.getArrayValue(node.labelNr));
+					k++;
+					if (k < parameters.size()) {
+						buf.append(',');
+					}
+				}
+				buf.append("},");
 			}
-		}
+    	} else {
+			if (parameters.size() > 0) {
+				for (Parameter<?> parameter : parameters) {
+					buf.append(parameter.getID()).append('=');
+					buf.append(parameter.getArrayValue(node.labelNr));
+					buf.append(',');
+				}
+			}
+    	}
 		if (treeTraits.size() > 0) {
 			for (TreeTrait<?> trait : treeTraits) {
 				buf.append(trait.getTraitName()).append('=');

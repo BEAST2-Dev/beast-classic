@@ -40,7 +40,7 @@ public class AlignmentFromTraitMap extends Alignment {
         }
 
         taxaNames = new ArrayList<String>();
-        for (String name : traitMap.treeInput.get().getTaxaNames()) {
+        for (String name : traitMap.treeInput.get().getTaxonset().asStringList()) {
         	taxaNames.add(name);
         }
         

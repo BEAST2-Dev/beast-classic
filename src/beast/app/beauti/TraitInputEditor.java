@@ -39,6 +39,7 @@ import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.AncestralStateTreeLikelihood;
 import beast.evolution.tree.TraitSet;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeInterface;
 
 
 
@@ -55,7 +56,7 @@ public class TraitInputEditor extends ListInputEditor {
 	}
 
 	AncestralStateTreeLikelihood likelihood;
-	Tree tree;
+	TreeInterface tree;
     TraitSet traitSet;
     JTextField traitEntry;
     JComboBox relativeToComboBox;
@@ -118,7 +119,7 @@ public class TraitInputEditor extends ListInputEditor {
                 traitSet.setID("traitSet." + context);
                 try {
                 traitSet.initByName("traitname", "discrete",
-                        "taxa", tree.m_taxonset.get(),
+                        "taxa", tree.getTaxonset(),
                         "value", "");
                 m_input.setValue(traitSet, m_plugin);
                 data.initAndValidate();
@@ -147,7 +148,7 @@ public class TraitInputEditor extends ListInputEditor {
                                 String context = BeautiDoc.parsePartition(likelihood.getID());
                                 traitSet.setID("traitSet." + context);
                                 traitSet.initByName("traitname", "discrete",
-                                        "taxa", tree.m_taxonset.get(),
+                                        "taxa", tree.getTaxonset(),
                                         "value", "");
                             }
                             comp.add(checkBox);
@@ -185,7 +186,7 @@ public class TraitInputEditor extends ListInputEditor {
     	try {
     		traitSet.taxaInput.get().initAndValidate();
     		
-        	TaxonSet taxa = tree.m_taxonset.get();
+        	TaxonSet taxa = tree.getTaxonset();
         	taxa.initAndValidate();
         	sTaxa = taxa.asStringList();
     	} catch (Exception e) {
