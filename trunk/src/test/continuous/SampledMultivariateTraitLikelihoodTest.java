@@ -34,7 +34,8 @@ public class SampledMultivariateTraitLikelihoodTest {
 		MCMC mcmc = (MCMC) parser.parseFile(new File("examples/H5N1_HA_discrete2.xml"));
 		Distribution posterior = mcmc.posteriorInput.get();
 		double logP = mcmc.robustlyCalcPosterior(posterior);
-        assertEquals(-17376.726764175364, logP, 1e-5);
+		// used to be -17376.726764175364 before ClusterTree was made to scale branch lengths by 1/2
+        assertEquals(-17417.93849467215, logP, 1e-5);
 	}
 
 }
