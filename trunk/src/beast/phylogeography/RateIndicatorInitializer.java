@@ -57,10 +57,8 @@ public class RateIndicatorInitializer extends BEASTObject implements StateNodeIn
     }
 
     @Override
-    public List<StateNode> getInitialisedStateNodes() {
-
+    public void getInitialisedStateNodes(List<StateNode> list) {
         initStateNodes();
-        return Collections.singletonList(indicator.get());
-
+        list.addAll(Collections.singletonList(indicator.get()));
     }
 }
