@@ -112,6 +112,11 @@
 			<fileset dir="${beastiiclasspath}">
 				<include name="beast/**/*.class" />
 			</fileset>
+			<zipgroupfileset dir="${libBeast2}" includes="jam.jar" />
+			<zipgroupfileset dir="${libBeast2}" includes="beagle.jar" />
+			<zipgroupfileset dir="${libBeast2}" includes="itextpdf-5.2.1.jar" />
+			<zipgroupfileset dir="${libBeast2}" includes="colt.jar" />
+			<zipgroupfileset dir="${libBeast2}" includes="commons-math3-3.1.1.jar" />
 		</jar>
 		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.src.jar">
 			<fileset dir="${srcBEAST_CLASSIC}">
