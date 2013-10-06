@@ -1,12 +1,15 @@
 package beast.evolution.likelihood;
 
 
-import java.util.logging.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 import beagle.Beagle;
 import beast.core.Input;
 import beast.core.Input.Validate;
+import beast.core.parameter.IntegerParameter;
 import beast.evolution.datatype.DataType;
 import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.TreeLikelihood;
@@ -31,6 +34,20 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     
     public Input<Boolean> useJava = new Input<Boolean>("useJava", "prefer java, even if beagle is available", true);
     
+    
+	public Input<List<LeafTrait>> leafTriatsInput = new Input<List<LeafTrait>>("leaftrait", "list of leaf traits",
+			new ArrayList<LeafTrait>());
+
+	int[][] storedTipStates;
+
+	/** parameters for each of the leafs **/
+	IntegerParameter[] parameters;
+
+	/** and node number associated with parameter **/
+	int[] leafNr;
+
+	int traitDimension;
+
     /**
      * Constructor.
      * Now also takes a DataType so that ancestral states are printed using data codes
@@ -103,11 +120,11 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
             }
         });
 
-        if (m_useAmbiguities.get()) {
-            Logger.getLogger("dr.evomodel.treelikelihood").info("Ancestral reconstruction using ambiguities is currently "+
-            "not support without BEAGLE");
-            System.exit(-1);
-        }
+//        if (m_useAmbiguities.get()) {
+//            Logger.getLogger("dr.evomodel.treelikelihood").info("Ancestral reconstruction using ambiguities is currently "+
+//            "not support without BEAGLE");
+//            System.exit(-1);
+//        }
         if (beagle != null) {
             if (!(siteModelInput.get() instanceof SiteModel.Base)) {
             	throw new Exception ("siteModel input should be of type SiteModel.Base");
@@ -132,6 +149,66 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         if (m_siteModel.getCategoryCount() > 1)
             throw new RuntimeException("Reconstruction not implemented for multiple categories yet.");
 
+        
+        
+        
+        // stuff for dealing with ambiguities in tips
+        if (!m_useAmbiguities.get()) {
+        	return;
+        }
+		if (tipStates == null) {
+            int tipCount = treeInput.get().getLeafNodeCount();
+            tipStates = new int[tipCount][];
+
+            for (int k = 0; k < tipCount; k++) {
+            	int[] states = new int[patternCount];
+                for (int i = 0; i < patternCount; i++) {
+                    states[i] = dataInput.get().getPattern(k, i);
+                }
+                tipStates[k] = states;
+            }
+		}
+		traitDimension = tipStates[0].length;
+
+		leafNr = new int[leafTriatsInput.get().size()];
+		parameters = new IntegerParameter[leafTriatsInput.get().size()];
+
+		List<String> taxaNames = dataInput.get().getTaxaNames();
+		for (int i = 0; i < leafNr.length; i++) {
+			LeafTrait leafTrait = leafTriatsInput.get().get(i);
+			parameters[i] = leafTrait.parameter.get();
+			// sanity check
+			if (parameters[i].getDimension() != traitDimension) {
+				throw new Exception("Expected parameter dimension to be " + traitDimension + ", not "
+						+ parameters[i].getDimension());
+			}
+			// identify node
+			String taxon = leafTrait.taxonName.get();
+			int k = 0;
+			while (k < taxaNames.size() && !taxaNames.get(k).equals(taxon)) {
+				k++;
+			}
+			leafNr[i] = k;
+			// sanity check
+			if (k == taxaNames.size()) {
+				throw new Exception("Could not find taxon '" + taxon + "' in tree");
+			}
+			// initialise parameter value from states
+			Integer[] values = new Integer[tipStates[k].length];
+			for (int j = 0; j < tipStates[k].length; j++) {
+				values[j] = tipStates[k][j];
+			}
+			IntegerParameter p = new IntegerParameter(values);
+			p.setLower(0);
+			p.setUpper(dataType.getStateCount()-1);
+			parameters[i].assignFromWithoutID(p);
+		}
+
+		storedTipStates = new int[tipStates.length][traitDimension];
+		for (int i = 0; i < tipStates.length; i++) {
+			System.arraycopy(tipStates[i], 0, storedTipStates[i], 0, traitDimension);
+		}
+
     }
 
     @Override
@@ -144,6 +221,13 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 
         storedAreStatesRedrawn = areStatesRedrawn;
         storedJointLogLikelihood = jointLogLikelihood;
+        
+        
+        // deal with ambiguous tips
+		for (int i = 0; i < leafNr.length; i++) {
+			int k = leafNr[i];
+			System.arraycopy(tipStates[k], 0, storedTipStates[k], 0, traitDimension);
+		}
     }
 
     @Override
@@ -157,12 +241,52 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 
         areStatesRedrawn = storedAreStatesRedrawn;
         jointLogLikelihood = storedJointLogLikelihood;
+        
+        // deal with ambiguous tips
+		for (int i = 0; i < leafNr.length; i++) {
+			int k = leafNr[i];
+			int[] tmp = tipStates[k];
+			tipStates[k] = storedTipStates[k];
+			storedTipStates[k] = tmp;
+			// Does not handle ambiguities or missing taxa
+			likelihoodCore.setNodeStates(k, tipStates[k]);
+		}
+
     }
     
     @Override
     protected boolean requiresRecalculation() {
     	likelihoodKnown = false;
-    	return super.requiresRecalculation();
+    	boolean isDirty = super.requiresRecalculation();
+    	if (!m_useAmbiguities.get()) {
+    		return isDirty;
+    	}
+    	
+    	
+    	int hasDirt = Tree.IS_CLEAN;
+		
+		// check whether any of the leaf trait parameters changed
+		for (int i = 0; i < leafNr.length; i++) {
+			if (parameters[i].somethingIsDirty()) {
+				int k = leafNr[i];
+				for (int j = 0; j < traitDimension; j++) {
+					tipStates[k][j] = parameters[i].getValue(j);
+				}
+				likelihoodCore.setNodeStates(k, tipStates[k]);
+				isDirty = true;
+				// mark leaf's parent node as dirty
+				Node leaf = treeInput.get().getNode(k);
+				// leaf.makeDirty(Tree.IS_DIRTY);
+				leaf.getParent().makeDirty(Tree.IS_DIRTY);
+	            hasDirt = Tree.IS_DIRTY;
+			}
+		}
+		isDirty |= super.requiresRecalculation();
+		this.hasDirt |= hasDirt;
+
+		return isDirty;
+    	
+    	
     }
 //    protected void handleModelChangedEvent(Model model, Object object, int index) {
 //        super.handleModelChangedEvent(model, object, index);

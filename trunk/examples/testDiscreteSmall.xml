@@ -1,0 +1,265 @@
+<beast version='2.0'
+       namespace='beast.evolution.alignment:beast.core:beast.evolution.tree:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.tree.coalescent:beast.core.parameter'>
+
+	<data dataType="nucleotide" id="alignment" name="alignment">
+		<sequence id="1976.609_CY005917_A/Mall/ALB/31/1976_5.NA" taxon="NA">
+			ATGAAGACCATCATTGTTCTAAGCTATCTTTTCTGTCTGGCTCTCAGCCAAGACTACTCAGAGAGCAACAACAGCACTGCAACACTGTGCTTGGGGCATCATGCGGTACCAAATGGGACAATAGTGAAGACAATTACGGATGACCAAATTGAGGTGACCAATGCCACTGAGCTGGTCCAGAGCTCCTCAACAGGGAAAATATGCAACAACCCACATAGAATCCTTGATGGAAGGGACTGTACACTGATAGATGCCCTACTGGGAGACCCCCACTGTGATGTATTCCAAGATGAAACCTGGGACCTTTATGTGGAACGTAGCAGCGCCTTCAGCAACTGCTATCCATATGATGTACCAGACTATGCATCACTCAGGTCTCTAGTTGCTTCCTCAGGAACCCTAGAGTTCATCACAGAAGGATTCACATGGACAGGAGTCACTCAAAATGGAGGAAGCAATGCCTGCAAAAGAGGGCCTGCTAGTGGTTTCTTCAGCAGACTGAATTGGCTGACTAAATCTGGAAGTACTTACCCAGTGTTGAATGTGACTATGCCAAATAATGACAACTTTGACAAATTGTATGTCTGGGGAGTTCACCACCCGAGCACAAACCAAGAGCAAACCAACCTATACGTTCAGGCATCAGGAAGGGTCACAGTTTCAACTAGAAGGAGCCAACAAACCATAATCCCGAATATTGGATCCAGGCCTTGGGTCAGGGGCCAATCAGGAAGGATAAGCATCTACTGGACAATAGTGAAGCCGGGGGATGTACTAGTAATTAACAGCAATGGTAACCTGATCGCTCCTCGAGGGTACTTCAAAATGCGCACTGGGAAAAGCTCAATAATGAGATCAGATGCACCTATTGACACATGCATCTCTGAATGTATCACTCCTAATGGAAGCATCCCCAATGACAAGCCCTTTCAGAATGTAAACAAGATCACTTACGGAGCATGTCCTAAGTATGTCAAACAGAGCACTTTGAAACTGGCAACAGGGATGAGGAACGTGCCTGAGAAACAGACCAGGGGTCTGTTCGGTGCAATAGCAGGATTTATAGAAAATGGATGGGAAGGAATGATAGACGGCTGGTATGGTTTCAGACACCAGAACTCTGAGGGTACAGGACAAGCTGCAGACCTAAAAAGCACACAGGCAGCCATTGACCAGATTAATGGGAAGTTGAACCGGGTAATCGAGAAGACAAATGAGAAGTTTCACCAGATTGAAAAGGAATTCTCTGAAGTAGAAGGAAGAATCCAGGACCTTGAGAAATATGTTGAGGACACTAAGATAGATCTATGGTCTTACAATGCAGAGCTTCTGGTGGCCTTGGAAAACCAGCATACAATTGATCTTACTGATTCTGAAATGAACAGACTATTCGAAAAGACGAGGCGGCAACTGAGGGAGAATGCTGAAGATATGGGCAACGGTTGCTTCAAAATATACCACAAATGTGACAACGCATGTATAGAGTCAATCAGGAACGGGACCTATGATCATGACATATACAGAGATGAAGCATTAAACAACCGATTTCAAATCAAGGGTGTAGAGCTAAAATCTGGGTACAAAGATTGGATCTTATGGATTTCCTTTGCCATATCATGCTTTTTGCTTTGTGTTGTTCTACTGGGGTTCATTATGTGGGCCTGCCAAAGAGGCAACATTAGGTGCAACATTTGCATT
+		</sequence>
+		<sequence id="A_chicken_Fujian_1042_2005" taxon="A_chicken_Fujian_1042_2005">
+			ATGGAGAAAATAGTGCTTCTTCTTGCAATAGTCAGTCTTGTTAAAAGTGATCAGATTTGCATTGGTTACCATGCAAACAATTCGACAGAGCAGGTTGACACAATAATGGAAAAGAACGTTACTGTTACACATGCCCAAGACATACTGGAAAAGACACACAATGGGAAGCTCTGCGACTTAGATGGGGTGAAGCCTCTAATTTTGAGAGATTGTAGTGTAGCTGGATGGCTCCTCGGGAACCCAATGTGTGACGAATTCATCAATGTACCGGAATGGTCTTACATAGTGGAGAAGGCCAGTCCAGCCAATGACCTCTGTTACCCAGGTGATTTCAACGATTATGAAGAACTGAAACACCTATTGAGCAGAATAAACCATTTTGAGAAAATTCAGATCATCCCCAAAAGTTCTTGGTCCAATCATGAAGCCTCATCAGGGGTGAGCTCAGCATGTCCATACCTGGGAAAGCCCTCCTTTTTCAGAAATGTGGTATGGCTTATCAAAAAGAACAGTGCATACCCAACAATAAAGAGGAGCTACAATAATACCAACCAAGAAGATCTTTTGGTACTGTGGGGGATTCACCATCCTAATGATGCGGCAGAGCAGACAAAGCTCTATCAAAACCCAACCACCTATATTTCCGTTGGAACATCAACACTAAACCAGAGATTGGTACCAAAAATAGCCACCAGATCCAAAGTAAACGGGCAAAGTGGAAGGATGGAGTTCTTCTGGACAATTTTAAAACCGAATGATTCAATCAACTTCGAGAGTAATGGAAATTTCATTGCTCCAGAATATGCATACAAAATTGTCAAGAAAGGGGACTCAGCAATTATGAAAAGCGAATTGGAATATGGTAACTGCAACACCAAGTGTCAAACTCCAATGGGGGCGATAAACTCTAGTATGCCATTCCACAACATACACCCTCTCACCATCGGGGAATGCCCCAAATATGTGAAATCAAACAGATTAGTCCTTGCGACTGGGCTCAGAAATAGCCCTCAAAGAGAGAGAAGAAGAAAGAAGAGAGGACTATTTGGAGCTATAGCAGGTTTTATAGAGGGAGGATGGCAGGGAATGGTAGATGGTTGGTATGGATACCACCATAGCAATGAGCAGGGGAGTGGATACGCTGCAGACAAAGAATCCACTCAAAGGGCAATAGATGGAGTCACCAATAAGGTCAACTCGATCATTGACAAAATGAACACTCAGTTTGAGGCCGTTGGAAGGGAATTTAACAACTTAGAAAGGAGAATAGAGAATTTAAACAAGAAGATGGAAGACGGATTCCTAGATGTCTGGACTTATAATGCTGAACTTCTGGTTCTCATGGAAAATGAGAGAACTCTAGACTTTCATGACTCAAATGTCAAGAACCTTTACGACAAGGTCCGACTACAGCTTAGGGATAATGCAAAAGAGCTAGGTAACGGTTGTTTCGAGTTCTATCACAAATGTGATAATGAATGCATGGAAAGTGTAAGAAACGGAACGTATGACTACCCGCAGTATTCAGAAGAAGCAAGGCTAAAAAGAGAGGAAATTAGTGGAGTAAAATTGGAATCAATAGGAACTTACCAAATACTGTCAATTTATTCAACAGTGGCAAGTTCCCTAGCGCTGGCAATCATGGTAGCTGGTCTATCTTTATGGATGTGCTCCAATGGTTCGTTACAATGCAGAATT
+		</sequence>
+		<sequence id="A_duck_HongKong_821_2002" taxon="A_duck_HongKong_821_2002">
+			ATGGAGAAAATAGTGCTTCTTTTTGCAATAGTCAGTCTTGTCAAAAGTGATCAGATTTGCATTGGTTACCATGCAAACAACTCGACAGAGCAGGTTGACACAATAATGGAAAAGAACGTTACTGTTACACATGCCCAAGACATACTGGAAAAGACACACAACGGGAAGCTCTGCGATCTAGATGGAGTGAAGCCTCTAATTTTAAGAGATTGTAGTGTAGCTGGATGGCTCCTCGGAAACCCAATGTGTGACGAATTCATCAATGTGCCGGAATGGTCTTACATAGTGGAGAAGGCCAATCCAGCCAATGACCTCTGTTACCCAGGGGATTTCAACGACTATGAAGAATTGAAACACCTATTGAGCAGAATAAACCATTTTGAGAAAATTCAGATCATCCCCAAAAATTCTTGGTCCAGTCATGAAGCCTCATTAGGGGTGAGCTCAGCATGTCCATACCAGGGAAAGTCCTCCTTTTTCAGAAATGTGGTATGGCTTATCAAAAAGAACAGCGCATACCCAACAATAAAGAGGAGCTACAATAATACCAACCAAGAAGATCTTTTGGTACTGTGGGGGATTCACCATCCTAATGATGCGGCAGAGCAGACAAGGCTCTATCAAAACCCAACCACCTATATTTCCGTTGGGACATCAACACTAAACCAGAGATTGGTACCAAAAATAGCTACTAGATCCAAAGTAAACGGGCAAAGTGGAAGGATGGAGTTCTTCTGGACAATTTTAAAACCGAATGATGCAATCAACTTCGAGAGTAATGGAAATTTCATTGCTCCAGAATATGCATACAAAATTGTCAAGAAAGGGGACTCAGCAATTATGAAAAGTGAATTGGAATATGGTAACTGCAACACCAAGTGTCAAACTCCAATGGGGGCGATAAACTCTAGTATGCCATTCCACAATATACACCCTCTCACCATCGGGGAATGCCCCAAATATGTGAAATCAAACAGATTAGTCCTTGCGACTGGGCTCAGAAATAGCCCTCAAATAGAGAGAAGAAGAAAAAAGAGAGGATTATTTGGGGCTATAGCAGGTTTTATAGAGGGAGGATGGCAGGGAATGGTAGATGGTTGGTATGGGTACCACCATAGCAATGAGCAGGGGAGTGGGTACGCTGCAGACAAAGAATCCACTCAAAAGGCAATAGATGGAGTCACCAATAAGGTCAACTCGATCATTGACAAAATGAACACTCAGTTTGAGGCCGTTGGAAGGGAATTTAATAACTTAGAAAGGAGAATAGAGAATTTAAACAAGAAAATGGAAGACGGATTCCTAGATGTCTGGACTTATAATGCTGAACTTCTGGTTCTCATGGAAAATGAGAGAACTCTAGACTTTCATGACTCAAATGTCAAGAACCTTTACGACAAGGTCCGACTACAGCTTAGGGATAATGCAAAGGAGCTGGGTAACGGTTGTTTCGAGTTCTATCACAAATGTGATAATGAATGTATGGAAAGTGTAAGAAACGGAACGTATGACTACCAGCAGTATTCAGAAGAAGCAAGACTAAAAAGAGAGGAAATAAGTGGAGTAAAATTGGAATCAATAGGAACTTACCAAATACTGTCAATTTATTCTACAGTGGCGAGTTCCCTAGCACTGGCAATCATGGTAGCTGGTCTATCTTTATGGATGTGCTCCAATGGGTCGTTACAATGCAGAATT
+		</sequence>
+		<sequence id="A_chicken_Guangdong_174_2004" taxon="A_chicken_Guangdong_174_2004">
+			ATGGAGAAAATAGTGCTTCTTCTTGCAATAATCAGTCTTGTTAAAAGTGATCAGATTTGCATTGGTTACCATGCAAACAACTCGACAGAGCAGGTTGACACAATAATGGAAAAGAACGTCACTGTTACACATGCCCAAGACATACTGGAAAAGACACACAACGGGAAGCTCTGCGATCTAGATGGAGTGAAGCCTCTAATTTTAAGAGATTGTAGTGTAGCTGGATGGCTCCTCGGGAACCCAATGTGTGACGAATTCATCAATGTGCCGGAATGGTCTTACATAGTGGAGAAGGCCAATCCAGCTAATGACCTCTGTTACCCAGGGAATTTCAACGACTATGAAGAACTGAAACACCTATTGAGCAGAATAAACCATTTTGAGAAAATTCAGATCATCCCCAAAAGTTCTTGGTCCGATCATGAAGCCTCATCAGGGGTGAGCTCAGCATGTCCATACCAGGGAAGGTCCTCCTTTTTCAGAAATGTGGTATGGCTTATCAAAAAGAACAGTGCATACCCAATAATAAAGAGAAGCTACAATAATACCAACCAAGAAGATCTTTTGGTACTATGGGGGATTCACCACCCAAATGATGCGGCAGAGCAGACAAGGCTCTATCAAAACCCAACCACCTATATTTCCGTTGGGACATCAACACTAAACCAGAGATTGGTACCAAAAATAGCTACTAGATCCAAAGTAAACGGGCAAAGTGGAAGGATGGGGTTCTTCTGGACAATTTTAAAACCGAATGATGCAATCAACTTTGAGAGTAATGGAAATTTCATTGCTCCAGAATATGCATACAAAATTGTCAAGAAAGGGGACTCAGCAATTATGAAAAGTGAATTGGAATATGGTAACTGCAGCACCAAGTGTCAAACTCCAATGGGGGCGATAAACTCTAGTATGCCATTCCACAACATACACCCTCTCACCATCGGGGAATGCCCCAAATATGTGAAATCAAGCAGATTAGTCCTTGCGACTGGGCTCAGAAATAGCCCTCAAAGAGAGAGAAGAAGAAAAAAGAGAGGACTATTTGGAGCTATAGCAGGTTTTATAGAGGGAGGATGGCAGGGAATGGTAGATGGTTGGTATGGGTACCACCATAGCAATGAGCAGGGGAGTGGGTACGCTGCAGACAAAGAATCCACTCAAAAGGCAATAGATGGAGTCACCAATAAGGTCAACTCGATCATTGACAAAATGAACACTCAGTTTGAGGCCGTTGGAAGGGAATTTAATAACTTAGAAAGGAGAATAGAAAATTTGAACAAGAAGATGGAAGACGGATTCCTAGATGTCTGGACTTATAATGCTGAACTTCTGGTTCTCATGGAAAATGAGAGAACTCTAGACTTTCATGACTCAAATGTCAAGAACCTTTACGACAAGGTCCGACTACAGCTTAGGGATAATGCAAAGGAGCTGGGTAACGGTTGTTTCGAGTTCTATCACAGATGTGATAATGAATGTATGGAAAGTGTAAGAAACGGAACGTATGACTACCCGCAGTATTCAGAAGAAGCAAGATTAAAAGGAGAGGAAATAAGTGGAGTAAAATTGGAGTCAATAGGAACTTACCAAATACTGTCAATTTATTCAACAGTGGCGAGTTCCCTAGCACTGGCAATCATGGTGGCTGGTCTATCTTTATGGATGTGCTCCAATGGATCGTTACAATGCAGAATT
+		</sequence>
+		<sequence id="A_chicken_Hebei_326_2005" taxon="A_chicken_Hebei_326_2005">
+			ATGGAGAGAATAGTGCTTCTTCTTGCAATAATCGGTCTTGTTAAAAGTGATCAGATTTGCATTGGTTACCATGCAAACAACTCGACAGAGCAGGTTGACACAATAATGGAAAAGAACGTTACTGTTACACATGCTCAAGACATACTGGAGAAGACACACAACGGGAAGCTCTGCAACCCAGATGGAGTGAAGCCTCTAATTTTGAAAGATTGTAGTGTAGCTGGATGGCTCCTCGGAAACCCAATGTGTGACGAATTTATCAATGTGCCGGAATGGTCTTACATAGTGGAGAAGGCCAGTCCAGCCAATGGCCTCTGTTACCCAGGGGATTTCAATGACTATGAAGAACTGAAACACCTATTGAGCAGAATAAACCATTTTGAGAAAATTCAGATCATCCCCAAAAGTTCTTGGTCCGATCATGGAGCCTCATCAGGGGTGAGCTCAGCATGTTCCTATCTGGGGAAGCCCTCCTTTTTCAGAAATGTGGTATGGCTTATCAAAAAGAATAATACATACCCACCAATAAAGGTGAGCTACAACAATACCAACCAAGAAGATCTTTTGGTACTGTGGGGGATTCACCATCCCAATGATGAGGCAGAGCAGATAAAGATCTATCAAAACCCAACCACCTATATTTCCGTTGGAACATCAACACTAAACCAGAGATTGGTACCAAAAATAGCTACTAGATCCAAAGTAAACGGGCAAAGTGGAAGAATGGAGTTCTTCTGGACAATTTTAAAGCCGAATGATGCTATCAATTTCGATAGTAATGGAAATTTCATTGCTCCAGAATATGCATACAAAATTGTCAAGAAAGGGGACTCAGCGATTATGAAAAGTGAATTGGAATATGGCAACTGCAACACCAAGTGTCAAACTCCAATGGGGGCGATAAATTCTAGTATGCCATTCCACAACATACACCCTCTCACCGTCGGGGAATGCCCCAAATATGTGAAATCAAACAGATTAGTCCTCGCGACTGGACTCAGAAATGCCCCTCAAAGAGAGGGAGGAAGAAAAAAGAGAGGACTATTTGGAGCCATAGCAGGGTTTATAGAGGGAGGATGGCAGGGAATGGTAGATGGTTGGTATGGGTACCACCATAGCAATGAGCAGGGGAGTGGATACGCTGCAGACAAAGAATCCACTCAAAAGGCAATAGATGGAGTCACCAATAAGGTCAACTCGATCATTGACAAAATGAACACTCAGTTTGAGGCCGTTGGAAGGGAATTTAATAACTTAGAAAGGAGAATAGAAAATTTAAACAAGAAGATGGAGGACGGATTCCTAGATGTCTGGACTTATAACGCTGAACTTCTGGTTCTCATGGAAAATGAGAGAACTCTAGACTTTCATGACTCAAATGTCAAGAACCTTTACGAAAAGGTCCGACTACAGCTTAGGGATAATGCAAAGGAGCTGGGTAACGGTTGTTTCGAGTTCTATCACAAATGTGATAATGAATGTATGGAAAGTGTAAAAAACGGAACGTATGACTACCCGCAGTATTCAGAAGAAGCAAGACTAAACAGAGAGGAAATAAGTGGAGTAAAATTGGAATCAATGGGAACTTACCAAATACTGTCAATTTATTCAACAGTGGCGAGTTCCCTAGCATTGGCAATCATGGTAGCTGGTCTATCTTTATGGATGTGCTCCAATGGATCGTTACAATGCAGAATT
+		</sequence>
+	</data>
+	<trait spec='beast.evolution.tree.TraitSet' traitname='date' units='year' id='tipDates' value='
+		NA = 1976.0,
+		A_chicken_Fujian_1042_2005 = 2005.0,
+		A_duck_HongKong_821_2002 = 2002.0,
+		A_chicken_Guangdong_174_2004 = 2004.0,
+		A_chicken_Hebei_326_2005 = 2005.0'>
+		<taxa spec='beast.evolution.alignment.TaxonSet' alignment='@alignment'/>
+	</trait>
+	
+	<userDataType spec='beast.evolution.datatype.UserDataType' id='location' 
+		states='3'
+		codelength='-1'
+		codeMap='
+		Hebei = 0,
+		HongKong = 1,
+		Guangdong = 2,
+		? = 0 1 2,
+		- = 0 1 2'/>
+	
+	    <distribution spec='AncestralStateTreeLikelihood' useJava="false" id="NP.traitedtreeLikelihood" data='@NP.locations' tree="@NP.tree" siteModel="@geoSiteModel" tag="location"/>
+
+    <distribution spec='NodeStateTreeLikelihood' useJava="false" id="traitedtreeLikelihood" tag="location"> 
+		<leaftrait parameter='@trait(A_chicken_Fujian_1042_2005)' taxon='A_chicken_Fujian_1042_2005' spec='LeafTrait'/>
+    	<data spec="AlignmentFromTrait" userDataType="@location">
+			<traitSet id='traitset' spec='TraitSet'  
+			 traitname='discrete' value="
+						NA = Hebei,
+						A_chicken_Fujian_1042_2005 = Hebei,
+						A_duck_HongKong_821_2002 = HongKong,
+						A_chicken_Guangdong_174_2004 = Guangdong,
+						A_chicken_Hebei_326_2005 = Hebei">
+				<taxa spec='beast.evolution.alignment.TaxonSet' alignment='@alignment'/>
+			</traitSet>
+		</data>
+        <tree idref="tree"/>
+        <siteModel spec='SiteModel' id="geoSiteModel" gammaCategoryCount='1'>
+            <substModel spec="SVSGeneralSubstitutionModel" id="svs" rateIndicator='@rateIndicator'>        
+            <!--substModel spec="GeneralSubstitutionModel"-->        
+                <frequencies id='freqs' spec='Frequencies'>
+                        <frequencies id='frequencies' spec='parameter.RealParameter' value='.33 .33 .34'/>
+                </frequencies>
+                <rates id='relativeGeoRates' spec='parameter.RealParameter' value='1.' dimension='3'/>
+            </substModel>
+            <!--mutationRate idref="geoMutationRate"/-->
+        </siteModel>
+		<branchRateModel id="StrictClockModel" spec="beast.evolution.branchratemodel.StrictClockModel">
+			<parameter id="geoclock.rate" name="clock.rate" value="1.0"/>
+		</branchRateModel>
+    </distribution>
+                
+    <rateIndicator id='rateIndicator' spec='parameter.BooleanParameter' value='1.' dimension='3'/>
+					
+	<distribution spec='TreeLikelihood' id="treeLikelihood" useAmbiguities="false">
+		<data idref="alignment"/>
+		<tree idref="tree"/>
+		<siteModel id="SiteModel" spec="SiteModel" gammaCategoryCount="4">
+			<parameter dimension="1" id="gammaShape" name="shape" value="0.5" lower="0.0" upper="1000.0"/>
+			<substModel spec='HKY' id="hky">
+				<parameter name='kappa' id="hky.kappa" value="1.0" lower="0.0"/>
+				<input name ="frequencies" id='seq.freqs' spec='Frequencies' data="@alignment"/>
+			</substModel>
+		</siteModel>
+		<branchRateModel spec='beast.evolution.branchratemodel.UCRelaxedClockModel' id="branchRates">
+			<distr id='lognormal' spec="beast.math.distributions.LogNormalDistributionModel" meanInRealSpace="true">
+				<parameter name='M' id='ucld.mean' value="1." lower="0.0" upper="Infinity"/>
+				<parameter name='S' id='ucld.stdev' value="0.33333" lower="0.0" upper="Infinity"/>
+			</distr>
+			<parameter spec='IntegerParameter' name='rateCategories' id='rateCategories' value="1"/>
+			<input name='tree' idref="tree"/>
+		</branchRateModel>
+	</distribution>
+   
+ 
+	<!-- b/(d+s) -->
+	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="actualGeoRates" expression="relativeGeoRates rateIndicator *"> 
+		<parameter idref="relativeGeoRates"/>
+		<parameter idref="rateIndicator"/>
+    </RPNcalculator>
+	
+<!--
+	<ParameterCumSum spec="beast.core.util.ParameterCumSum" id="nonZeroRates" arg="@rateIndicator"/> 
+-->
+    <tree spec='beast.util.ClusterTree' id='tree' clusterType='upgma' trait="@tipDates">
+        <input name='taxa' idref='alignment'/>
+    </tree>
+		
+	<parameter name="popSize" id="popSize" value="100." lower="0." upper="Infinity" />
+
+            
+    <run spec="MCMC" id="mcmc" chainLength="100000000" >
+    
+    	<!--init spec="beast.phylogeography.RateIndicatorInitializer" id="indicatorInitialiser" substitutionModel="@svs" rateIndicator="@rateIndicator"/-->
+    	
+        <state storeEvery='100000'>
+            <stateNode idref="tree"/>
+            <stateNode idref="rateIndicator"/>
+            <stateNode idref="relativeGeoRates"/>
+        	<!--stateNode spec='parameter.RealParameter' id="geoMutationRate" value="1." lower="0." upper="100."/-->
+			<stateNode idref="geoclock.rate"/>
+        	<stateNode idref="popSize"/>
+			<stateNode idref="ucld.mean"/>
+			<stateNode idref="ucld.stdev"/>
+			<stateNode idref="rateCategories"/>
+			<stateNode idref="gammaShape"/>
+			<stateNode idref='hky.kappa'/>
+
+			<stateNode spec='parameter.IntegerParameter' id='trait(A_chicken_Fujian_1042_2005)' value='0'/>
+			<stateNode idref='chicken_indices'/>
+ 		</state>		
+
+		<distribution spec='CompoundDistribution' id='posterior'>
+			<distribution idref="treeLikelihood"/>
+			<distribution spec='CompoundDistribution' id='prior'>
+<!--
+				<distribution id="transitionMatrixWellConnected" spec="beast.math.distributions.TransitionMatrixPrior" substitutionModel="@svs" rateIndicator="@rateIndicator"/>
+				<distribution  x="@nonZeroRates" id="nonZeroRatePrior" spec='beast.math.distributions.Prior'>
+					<distr spec='beast.math.distributions.Poisson' id='nonZeroRatePrior_Poi' lambda="0.693" offset="3.0"/>
+				</distribution>
+-->
+				<distribution  x="@popSize" id="popSizePrior" spec='beast.math.distributions.Prior'>
+					<distr spec='beast.math.distributions.OneOnX' id='popSizePrior_OneOnX'/>
+				</distribution>
+				<distribution  x="@ucld.mean" id="ucld.meanPrior" spec='beast.math.distributions.Prior'>
+					<distr spec='beast.math.distributions.Exponential' id='ucld.meanPrior_Exp' lambda="1." offset="0.0"/>
+				</distribution>
+				<distribution  x="@ucld.stdev" id="ucld.stdevPrior" spec='beast.math.distributions.Prior'>
+					<distr spec='beast.math.distributions.Exponential' id='ucld.stdevPrior_Exp' lambda="0.333333333333" offset="0.0"/>
+				</distribution>
+				<distribution  id='kappaPrior' x="@hky.kappa" spec='beast.math.distributions.Prior'>
+					<distr spec='beast.math.distributions.LogNormalDistributionModel' M="1." S="1.25" offset="0.0" meanInRealSpace="false"/>
+				</distribution>
+				<distribution  id='geoclockPrior' x="@geoclock.rate" spec='beast.math.distributions.Prior'>
+					<distr spec='beast.math.distributions.Gamma' alpha="0.001" beta="1000." offset="0.0"/>
+				</distribution>
+				<distribution  id='discreteTraitPrior' x="@relativeGeoRates" spec='beast.math.distributions.Prior'>
+					<distr spec='beast.math.distributions.Gamma' alpha="1." beta="1." offset="0.0"/>
+				</distribution>
+				<distribution spec='CompoundDistribution' id='coalescentLikelihood'>
+					<distribution id="coalescent" spec="Coalescent">
+						<treeIntervals spec='TreeIntervals' id='TreeIntervals'>
+							 <tree idref="tree"/>
+						</treeIntervals>
+						<populationModel spec="ConstantPopulation" id='ConstantPopulation' popSize='@popSize'/>
+					</distribution>
+				</distribution>
+
+				<distribution idref="traitedtreeLikelihood"/>
+			</distribution>
+		</distribution>
+ 
+<!--
+	    <operator id="UniformOperator.chicken_trait" spec="UniformOperator" parameter="@trait(A_chicken_Fujian_1042_2005)" weight="30.0"/>
+-->
+	    <operator id="IntegerOperator.blackbird_Hunan" spec="GeneralIntegerOperator" parameter="@trait(A_chicken_Fujian_1042_2005)" weight="30.0">
+			<index id='chicken_indices' spec='parameter.IntegerParameter' value='0 1 2'/>
+		</operator>
+
+		<operator id='kappaScaler' spec='ScaleOperator' scaleFactor=".75" weight="0.1" parameter="@hky.kappa"/>
+		<operator id='gammaShapeScaler' spec='ScaleOperator' scaleFactor=".75" weight="0.1" parameter="@gammaShape"/>
+
+        <operator id='georateScaler' spec='ScaleOperator' scaleFactor="0.99" weight="30" parameter="@relativeGeoRates" scaleAllIndependently="true"/>
+		<operator spec="BitFlipOperator" id="indicatorFlip" parameter="@rateIndicator" weight="30"/>
+
+		<operator id="ucldMeanScaler" spec="ScaleOperator" parameter="@ucld.mean" scaleFactor=".75" weight="3" />
+		<operator id='ucldStdevScaler' spec='ScaleOperator' parameter="@ucld.stdev" scaleFactor="0.75" weight="3"/>		
+
+	 	<operator id='geoMuScaler' spec='ScaleOperator' scaleFactor="0.9" weight="3" parameter="@geoclock.rate"/>  
+		<operator spec="BitFlipBSSVSOperator" id="BSSVSoperator" indicator="@rateIndicator" mu="@geoclock.rate" weight="30"/>
+	
+        <operator spec='Uniform' weight="20" tree="@tree"/>
+        <operator id='treeScaler' spec='ScaleOperator' scaleFactor="0.75" weight="1.0" rootOnly='true' tree="@tree"/>
+        <operator spec='SubtreeSlide' weight="5." gaussian="true" size="0.0034" tree="@tree" />
+        <operator id='narrow' spec='Exchange' isNarrow='true' weight="1" tree="@tree"/>
+        <operator id='wide' spec='Exchange' isNarrow='false' weight="1" tree="@tree"/>
+        <operator spec='WilsonBalding' weight="1" tree="@tree"/>
+	
+       	<operator id='popSizeScaler' spec='ScaleOperator' scaleFactor="0.75" weight="1" parameter="@popSize"/>
+		<operator id="treeMutScaler" spec="UpDownOperator" up="@ucld.mean" down="@tree" scaleFactor=".9" weight="3" />
+						
+		<operator id="categoriesIntOperator" spec="UniformOperator" weight="10" parameter="@rateCategories"/>
+		<operator id="categorySwap" spec="SwapOperator" weight="10" intparameter="@rateCategories"/>
+		
+		<operator id="treeGeoMutScaler" spec="UpDownOperator" up="@geoclock.rate" down="@tree" scaleFactor=".9" weight="3" />
+
+        <logger logEvery="1000" fileName="testPhylogeo_H5N1_4taxa_$(seed).log">
+	        <model idref='posterior'/>
+            <log idref="posterior"/>
+            <log idref="prior"/>
+            <log idref="coalescentLikelihood"/>
+            <log idref="traitedtreeLikelihood"/>
+            <log spec='beast.evolution.tree.TreeHeightLogger' tree='@tree'/>
+            <log idref="popSize"/>
+            <log idref="hky.kappa"/>							
+			<log idref="ucld.mean"/>
+			<log idref="ucld.stdev"/>
+			<log idref="gammaShape"/>
+		
+            <log idref="geoclock.rate"/>
+<!--            <log idref="nonZeroRates"/>-->
+			<log idref='trait(A_chicken_Fujian_1042_2005)'/>
+        </logger>
+
+        <logger logEvery="1000" fileName="testPhylogeo_H5N1_geo_4taxa_$(seed).log">
+            <log idref="traitedtreeLikelihood"/>
+            <log idref="geoclock.rate"/>
+<!--            <log idref="nonZeroRates"/>-->
+            <log idref="relativeGeoRates"/>
+            <log idref="rateIndicator"/>
+            <log idref="actualGeoRates"/>
+        </logger>
+        
+		<logger logEvery="10000" fileName="testPhylogeo_H5N1_4taxa_$(seed).trees" mode="tree">
+			<log spec='TreeWithTraitLogger' tree='@tree'>
+				<metadata idref="posterior"/>
+				<metadata idref="traitedtreeLikelihood"/>
+				<metadata idref="branchRates"/>
+			</log>
+		</logger>
+
+        
+        <logger logEvery="10000">
+	        <model idref='posterior'/>
+            <log idref="posterior"/>
+<!--            <log idref="nonZeroRatePrior"/>-->
+            <log idref="discreteTraitPrior"/>
+            <log idref="coalescentLikelihood"/>
+            <log idref="treeLikelihood"/>
+            <log idref="traitedtreeLikelihood"/>
+            <log idref="geoclock.rate"/>
+<!--            <log idref="nonZeroRates"/>-->
+            <log spec='beast.evolution.tree.TreeHeightLogger' tree='@tree'/>
+							
+            <log idref="hky.kappa"/>
+			<log idref="ucld.mean"/>
+			<log idref="ucld.stdev"/>
+			<log idref="gammaShape"/>
+			<log idref='trait(A_chicken_Fujian_1042_2005)'/>
+<!--			
+            <log idref="relativeGeoRates"/>
+            <log idref="rateIndicator"/>
+            <log idref="actualGeoRates"/>
+-->
+        </logger>
+    </run>
+</beast>
