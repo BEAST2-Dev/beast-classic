@@ -20,7 +20,7 @@
 	<property name="beastiipath" location="../beastii" />
 	<property name="beastiiclasspath" location="${beastiipath}/build" />
 	<property name="Add_on_dir" value="${release_dir}/add-on" />
-	<property name="version" value="1.0.1" />
+	<property name="version" value="1.1.0" />
 
     <import file="${beast2path}/build.xml" />
 
@@ -117,6 +117,7 @@
 			<zipgroupfileset dir="${libBeast2}" includes="itextpdf-5.2.1.jar" />
 			<zipgroupfileset dir="${libBeast2}" includes="colt.jar" />
 			<zipgroupfileset dir="${libBeast2}" includes="commons-math3-3.1.1.jar" />
+			<zipgroupfileset dir="${libBEAST_CLASSIC}" includes="mtj.jar"/>
 		</jar>
 		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.src.jar">
 			<fileset dir="${srcBEAST_CLASSIC}">
