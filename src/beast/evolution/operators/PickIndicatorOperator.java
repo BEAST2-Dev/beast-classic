@@ -4,6 +4,7 @@ package beast.evolution.operators;
 import java.util.HashSet;
 import java.util.Set;
 
+import beast.core.Description;
 import beast.core.Input;
 import beast.core.Operator;
 import beast.core.Input.Validate;
@@ -16,6 +17,9 @@ import beast.util.Randomizer;
  *         Date: Oct 26, 2011
  *         Time: 2:52:09 PM
  */
+
+@Description("Propose a new set of indicators independent of the previous state")
+
 public class PickIndicatorOperator extends Operator {
 
     public Input<BooleanParameter> parameter = new Input<BooleanParameter>("parameter", "the parameter to operate a flip on.", Validate.REQUIRED);
