@@ -3,15 +3,12 @@ package beast.evolution.tree;
 
 import java.io.PrintStream;
 
-import beast.core.CalculationNode;
-import beast.core.Function;
-import beast.core.Input;
-import beast.core.Loggable;
+import beast.core.*;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 
 
-
+@Description("A logger for the type of the tree root")
 public class RootTrait extends CalculationNode implements Function, Loggable {
     public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
 
