@@ -532,7 +532,7 @@
                         <frequencies id='frequencies' spec='parameter.RealParameter' value='0.143 0.143 0.143 0.143 0.143 0.143 0.142'/>
                 </frequencies>
                 <rates id='relativeGeoRates' spec='parameter.RealParameter' value='1.' dimension='21'/>
-                <rateIndicator id='rateIndicator' spec='parameter.BooleanParameter' value='1'  dimension='21'/>
+                <rateIndicator id='rateIndicator' spec='parameter.BooleanParameter' value='true'  dimension='21'/>
             </substModel>
             <mutationRate idref="geoMutationRate"/>
         </siteModel>
