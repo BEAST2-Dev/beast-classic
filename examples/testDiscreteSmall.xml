@@ -36,10 +36,11 @@
 		Guangdong = 2,
 		? = 0 1 2,
 		- = 0 1 2'/>
-	
+<!--
 	    <distribution spec='AncestralStateTreeLikelihood' useJava="false" id="NP.traitedtreeLikelihood" data='@NP.locations' tree="@NP.tree" siteModel="@geoSiteModel" tag="location"/>
+-->
 
-    <distribution spec='NodeStateTreeLikelihood' useJava="false" id="traitedtreeLikelihood" tag="location"> 
+    <distribution spec='AncestralStateTreeLikelihood' useJava="false" id="traitedtreeLikelihood" tag="location" useAmbiguities='false'> 
 		<leaftrait parameter='@trait(A_chicken_Fujian_1042_2005)' taxon='A_chicken_Fujian_1042_2005' spec='LeafTrait'/>
     	<data spec="AlignmentFromTrait" userDataType="@location">
 			<traitSet id='traitset' spec='TraitSet'  
@@ -68,7 +69,7 @@
 		</branchRateModel>
     </distribution>
                 
-    <rateIndicator id='rateIndicator' spec='parameter.BooleanParameter' value='1.' dimension='3'/>
+    <rateIndicator id='rateIndicator' spec='parameter.BooleanParameter' value='true' dimension='3'/>
 					
 	<distribution spec='TreeLikelihood' id="treeLikelihood" useAmbiguities="false">
 		<data idref="alignment"/>
@@ -134,17 +135,17 @@
 <!--
 				<distribution id="transitionMatrixWellConnected" spec="beast.math.distributions.TransitionMatrixPrior" substitutionModel="@svs" rateIndicator="@rateIndicator"/>
 				<distribution  x="@nonZeroRates" id="nonZeroRatePrior" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.Poisson' id='nonZeroRatePrior_Poi' lambda="0.693" offset="3.0"/>
+					<distr spec='beast.math.distributions.Poisson' id='nonZeroRatePrior_Poi' mean="0.693" offset="3.0"/>
 				</distribution>
 -->
 				<distribution  x="@popSize" id="popSizePrior" spec='beast.math.distributions.Prior'>
 					<distr spec='beast.math.distributions.OneOnX' id='popSizePrior_OneOnX'/>
 				</distribution>
 				<distribution  x="@ucld.mean" id="ucld.meanPrior" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.Exponential' id='ucld.meanPrior_Exp' lambda="1." offset="0.0"/>
+					<distr spec='beast.math.distributions.Exponential' id='ucld.meanPrior_Exp' mean="1." offset="0.0"/>
 				</distribution>
 				<distribution  x="@ucld.stdev" id="ucld.stdevPrior" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.Exponential' id='ucld.stdevPrior_Exp' lambda="0.333333333333" offset="0.0"/>
+					<distr spec='beast.math.distributions.Exponential' id='ucld.stdevPrior_Exp' mean="0.333333333333" offset="0.0"/>
 				</distribution>
 				<distribution  id='kappaPrior' x="@hky.kappa" spec='beast.math.distributions.Prior'>
 					<distr spec='beast.math.distributions.LogNormalDistributionModel' M="1." S="1.25" offset="0.0" meanInRealSpace="false"/>
@@ -172,7 +173,7 @@
 	    <operator id="UniformOperator.chicken_trait" spec="UniformOperator" parameter="@trait(A_chicken_Fujian_1042_2005)" weight="30.0"/>
 -->
 	    <operator id="IntegerOperator.blackbird_Hunan" spec="GeneralIntegerOperator" parameter="@trait(A_chicken_Fujian_1042_2005)" weight="30.0">
-			<index id='chicken_indices' spec='parameter.IntegerParameter' value='0 1 2'/>
+			<index id='chicken_indices' spec='parameter.IntegerParameter' value='0 2'/>
 		</operator>
 
 		<operator id='kappaScaler' spec='ScaleOperator' scaleFactor=".75" weight="0.1" parameter="@hky.kappa"/>
