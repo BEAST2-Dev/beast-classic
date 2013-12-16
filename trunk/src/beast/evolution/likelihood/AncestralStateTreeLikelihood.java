@@ -153,7 +153,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         
         
         // stuff for dealing with ambiguities in tips
-        if (!m_useAmbiguities.get()) {
+        if (!m_useAmbiguities.get() && leafTriatsInput.get().size() == 0) {
         	return;
         }
 		if (tipStates == null) {
