@@ -79,7 +79,9 @@
 		<javac srcdir="${srcBEAST_CLASSIC}" destdir="${buildBEAST_CLASSIC}" classpathref="classpath" 
 		       fork="true"
 		       memoryinitialsize="256m"
-		       memorymaximumsize="256m">
+		       memorymaximumsize="256m"
+		 	   source="1.6"
+		       target="1.6">
 			<include name="beast/**/**" />
 			<include name="dr/**/**" />
 			<!-- compile JUnit test classes -->
