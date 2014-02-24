@@ -224,10 +224,12 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         
         
         // deal with ambiguous tips
-		for (int i = 0; i < leafNr.length; i++) {
-			int k = leafNr[i];
-			System.arraycopy(tipStates[k], 0, storedTipStates[k], 0, traitDimension);
-		}
+        if (leafNr != null) {
+			for (int i = 0; i < leafNr.length; i++) {
+				int k = leafNr[i];
+				System.arraycopy(tipStates[k], 0, storedTipStates[k], 0, traitDimension);
+			}
+        }
     }
 
     @Override
@@ -243,15 +245,16 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         jointLogLikelihood = storedJointLogLikelihood;
         
         // deal with ambiguous tips
-		for (int i = 0; i < leafNr.length; i++) {
-			int k = leafNr[i];
-			int[] tmp = tipStates[k];
-			tipStates[k] = storedTipStates[k];
-			storedTipStates[k] = tmp;
-			// Does not handle ambiguities or missing taxa
-			likelihoodCore.setNodeStates(k, tipStates[k]);
-		}
-
+        if (leafNr != null) {
+			for (int i = 0; i < leafNr.length; i++) {
+				int k = leafNr[i];
+				int[] tmp = tipStates[k];
+				tipStates[k] = storedTipStates[k];
+				storedTipStates[k] = tmp;
+				// Does not handle ambiguities or missing taxa
+				likelihoodCore.setNodeStates(k, tipStates[k]);
+			}
+        }
     }
     
     @Override

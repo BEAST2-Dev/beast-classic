@@ -41,7 +41,7 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 				        <mutationRate        spec='parameter.RealParameter' id='mutationRate.s:$(n)' value='1.0'        estimate='false'/>
 				        <shape               spec='parameter.RealParameter' id='gammaShape.s:$(n)' value='1.0'         estimate='false'/>
 					<substModel spec="SVSGeneralSubstitutionModel" id="svs.s:$(n)">
-						<rateIndicator id='rateIndicator.s:$(n)' spec='parameter.BooleanParameter' value='1.' dimension='6'/>
+						<rateIndicator id='rateIndicator.s:$(n)' spec='parameter.BooleanParameter' value='true' dimension='6'/>
 					    <frequencies id='traitfreqs.s:$(n)' spec='Frequencies'>
 					            <frequencies id='traitfrequencies.s:$(n)' spec='parameter.RealParameter' value='.25 .25 .25 .25'/>
 					    </frequencies>
