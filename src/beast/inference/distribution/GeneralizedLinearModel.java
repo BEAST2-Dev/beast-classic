@@ -16,6 +16,8 @@ import beast.core.util.Log;
 @Description("...")
 public class GeneralizedLinearModel extends Distribution implements Function {
     public Input<RealParameter> dependentParamInput = new Input<RealParameter>("dependentParam", "description here");
+    public Input<List<RealParameter>> independentParamInput = new Input<List<RealParameter>>("dependentParam", "description here", new ArrayList<RealParameter>());
+    public Input<List<RealParameter>> designMatrixInput = new Input<List<RealParameter>>("dependentParam", "description here", new ArrayList<RealParameter>());
 
     @Override
     public void initAndValidate() throws Exception {
@@ -25,6 +27,9 @@ public class GeneralizedLinearModel extends Distribution implements Function {
             N = dependentParam.getDimension();
         } else
             N = 0;
+        
+        this.independentParam = independentParamInput.get();
+
     }
     
     protected RealParameter dependentParam;
@@ -126,7 +131,7 @@ public class GeneralizedLinearModel extends Distribution implements Function {
         return numRandomEffects;
     }
 
-    public double[] getXBeta() {
+	public double[] getXBeta() {
 
         double[] xBeta = new double[N];
 

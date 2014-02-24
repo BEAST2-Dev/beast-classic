@@ -1,16 +1,28 @@
 package beast.inference.distribution;
 
+
 import beast.core.*;
+import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 
-@Description("...")
+@Description("(Log-) linear regression model")
 public class LinearRegression extends GeneralizedLinearModel {
-	public Input<Boolean> logTransformInput = new Input<Boolean>("logTransform", "description here");
+	public Input<Boolean> logTransformInput = new Input<Boolean>("logTransform", "linear model if false, log-linear model if true", false);
+	public Input<RealParameter> scaleInput = new Input<RealParameter>("scale", "description here", Validate.REQUIRED);
+	public Input<RealParameter> scaleDesignInput = new Input<RealParameter>("scaleDesign", "description here");
 
 	@Override
 	public void initAndValidate() throws Exception {
 		super.initAndValidate();
 		this.logTransform = logTransformInput.get();
+		
+		if (scaleDesignInput.get() == null) {
+			RealParameter scaleDesign = new RealParameter();
+			scaleDesign.setDimension(dependentParam.getDimension());
+			addScaleParameter(scaleInput.get(), scaleDesign);
+		} else {
+			addScaleParameter(scaleInput.get(), scaleDesignInput.get());
+		}
 	}
 
 	private static final double normalizingConstant = -0.5 * Math.log(2 * Math.PI);
