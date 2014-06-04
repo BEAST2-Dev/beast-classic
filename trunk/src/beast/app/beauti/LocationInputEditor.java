@@ -29,8 +29,9 @@ import beast.app.beauti.GuessPatternDialog;
 import beast.app.draw.ListInputEditor;
 import beast.app.draw.SmallLabel;
 import beast.continuous.SampledMultivariateTraitLikelihood;
-import beast.core.Input;
+import beast.core.BEASTInterface;
 import beast.core.BEASTObject;
+import beast.core.Input;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AlignmentFromTraitMap;
 import beast.evolution.alignment.TaxonSet;
@@ -66,7 +67,7 @@ public class LocationInputEditor extends ListInputEditor {
     String m_sPattern = ".*_(..).*";
 
 	@Override
-	public void init(Input<?> input, BEASTObject plugin, int itemNr,	ExpandOption bExpandOption, boolean bAddButtons) {
+	public void init(Input<?> input, BEASTInterface plugin, int itemNr,	ExpandOption bExpandOption, boolean bAddButtons) {
         m_bAddButtons = bAddButtons;
         m_input = input;
         m_plugin = plugin;
@@ -84,7 +85,7 @@ public class LocationInputEditor extends ListInputEditor {
 		likelihood = likelihood_;
 		m_plugin = likelihood.dataInput.get();
 		try {
-			m_input = m_plugin.getInput("traitSet");
+			m_input = BEASTObject.getInput(m_plugin, "traitSet");
 		}catch (Exception e) {
 			// TODO: handle exception
 		}

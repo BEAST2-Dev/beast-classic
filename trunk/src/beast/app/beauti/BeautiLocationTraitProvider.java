@@ -12,9 +12,10 @@ import beast.app.beauti.BeautiAlignmentProvider;
 import beast.app.beauti.BeautiDoc;
 import beast.app.beauti.PartitionContext;
 import beast.continuous.SampledMultivariateTraitLikelihood;
+import beast.core.BEASTInterface;
+import beast.core.BEASTObject;
 import beast.core.State;
 import beast.core.StateNode;
-import beast.core.BEASTObject;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.tree.Tree;
 
@@ -23,7 +24,7 @@ import beast.evolution.tree.Tree;
 public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 
 	@Override
-	List<BEASTObject> getAlignments(BeautiDoc doc) {
+	List<BEASTInterface> getAlignments(BeautiDoc doc) {
 		try {
             List<String> trees = new ArrayList<String>();
             doc.scrubAll(true, false);
@@ -40,7 +41,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
             	PartitionContext context = new PartitionContext(name, name, name, tree);
 
             	Alignment alignment = (Alignment) doc.addAlignmentWithSubnet(context, template.get());
-            	List<BEASTObject> list = new ArrayList<BEASTObject>();
+            	List<BEASTInterface> list = new ArrayList<BEASTInterface>();
             	list.add(alignment);
             	editAlignment(alignment, doc);
             	return list;
