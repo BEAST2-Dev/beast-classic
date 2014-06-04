@@ -12,10 +12,11 @@ import javax.swing.border.EmptyBorder;
 import beast.app.beauti.BeautiAlignmentProvider;
 import beast.app.beauti.BeautiDoc;
 import beast.app.beauti.PartitionContext;
+import beast.core.BEASTInterface;
+import beast.core.BEASTObject;
 import beast.core.Description;
 import beast.core.State;
 import beast.core.StateNode;
-import beast.core.BEASTObject;
 import beast.core.parameter.Parameter;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
@@ -35,7 +36,7 @@ import beast.math.distributions.Prior;
 public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 
 	@Override
-	List<BEASTObject> getAlignments(BeautiDoc doc) {
+	List<BEASTInterface> getAlignments(BeautiDoc doc) {
 		try {
             List<String> trees = new ArrayList<String>();
             doc.scrubAll(true, false);
@@ -52,7 +53,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
             	PartitionContext context = new PartitionContext(name, name, name, tree);
 
             	Alignment alignment = (Alignment) doc.addAlignmentWithSubnet(context, template.get());
-            	List<BEASTObject> list = new ArrayList<BEASTObject>();
+            	List<BEASTInterface> list = new ArrayList<BEASTInterface>();
             	list.add(alignment);
             	editAlignment(alignment, doc);
             	return list;

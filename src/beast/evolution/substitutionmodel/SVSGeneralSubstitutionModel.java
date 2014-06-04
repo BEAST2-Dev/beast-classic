@@ -1,7 +1,7 @@
 package beast.evolution.substitutionmodel;
 
 
-import java.lang.reflect.Array;
+
 import java.util.Arrays;
 
 import beast.core.Function;
@@ -27,6 +27,11 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
     public Input<BooleanParameter> indicator = new Input<BooleanParameter>("rateIndicator",
             "rates to indicate the presence or absence of transition matrix entries", Validate.REQUIRED);
 
+    public Input<Boolean> isSymmetricInput = new Input<Boolean>("symmetric",
+    		"Indicates the rate matrix is symmetric. " +
+            "If true (default) n(n-1)/2 rates and indicators need to be specified. " +
+            "If false, n(n-1) rates and indicators need to be specified.", Boolean.TRUE);
+
     private BooleanParameter rateIndicator;
 
     @Override
@@ -36,9 +41,14 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
 
         updateMatrix = true;
         nrOfStates = frequencies.getFreqs().length;
-        if (ratesInput.get().getDimension() != nrOfStates * (nrOfStates-1)/2) {
+        if (isSymmetricInput.get() && ratesInput.get().getDimension() != nrOfStates * (nrOfStates-1)/2) {
             throw new Exception("Dimension of input 'rates' is " + ratesInput.get().getDimension() + " but a " +
                     "rate matrix of dimension " + nrOfStates + "x" + (nrOfStates -1) + "/2" + "=" + nrOfStates * (nrOfStates -1) / 2 + " was " +
+                    "expected");
+        }
+        if (!isSymmetricInput.get() && ratesInput.get().getDimension() != nrOfStates * (nrOfStates-1)) {
+            throw new Exception("Dimension of input 'rates' is " + ratesInput.get().getDimension() + " but a " +
+                    "rate matrix of dimension " + nrOfStates + "x" + (nrOfStates -1)  + "=" + nrOfStates * (nrOfStates -1) / 2 + " was " +
                     "expected");
         }
 
@@ -150,13 +160,17 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
     /** sets up rate matrix **/
     @Override
     protected void setupRateMatrix() {
+    	if (!isSymmetricInput.get()) {
+    		super.setupRateMatrix();
+    		return;
+    	}
         double [] fFreqs = frequencies.getFreqs();
         int count = 0;
         for (int i = 0; i < nrOfStates; i++) {
             rateMatrix[i][i] = 0;
             for (int j = i+1; j <  nrOfStates; j++) {
                 rateMatrix[i][j] = relativeRates[count];
-                rateMatrix[j][i] = relativeRates[count];
+               	rateMatrix[j][i] = relativeRates[count];
                 count++;
             }
 //             for (int j = i+1; j < m_nStates; j++) {
