@@ -9,6 +9,7 @@ import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.BooleanParameter;
 import beast.core.parameter.Parameter;
+import beast.core.util.Log;
 import beast.evolution.substitutionmodel.GeneralSubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.inference.BayesianStochasticSearchVariableSelection;
@@ -47,9 +48,14 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
                     "expected");
         }
         if (!isSymmetricInput.get() && ratesInput.get().getDimension() != nrOfStates * (nrOfStates-1)) {
-            throw new Exception("Dimension of input 'rates' is " + ratesInput.get().getDimension() + " but a " +
-                    "rate matrix of dimension " + nrOfStates + "x" + (nrOfStates -1)  + "=" + nrOfStates * (nrOfStates -1) / 2 + " was " +
-                    "expected");
+            int dim = nrOfStates * (nrOfStates -1);
+            Log.warning.println("Dimension of input 'rates' is " + ratesInput.get().getDimension() + ". " +
+            		"Changing dimension to " + nrOfStates + "x" + (nrOfStates -1)  + "=" + dim);
+            if (ratesInput.get() instanceof Parameter.Base) {
+            	((Parameter.Base)ratesInput.get()).setDimension(dim);
+            }
+            Log.warning.println("Setting dimension of indicators to " + dim);
+            indicator.get().setDimension(dim);
         }
 
         eigenSystem = createEigenSystem();
