@@ -43,7 +43,7 @@ public class AlignmentFromTrait extends Alignment {
 	            List<String> sDataTypes = AddOnManager.find(beast.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
 	            for (String sDataType : sDataTypes) {
 	                DataType dataType = (DataType) Class.forName(sDataType).newInstance();
-	                if (dataTypeInput.get().equals(dataType.getDescription())) {
+	                if (dataTypeInput.get().equals(dataType.getTypeDescription())) {
 	                    m_dataType = dataType;
 	                    break;
 	                }

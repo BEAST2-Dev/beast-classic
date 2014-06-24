@@ -85,7 +85,7 @@ public class LocationInputEditor extends ListInputEditor {
 		likelihood = likelihood_;
 		m_plugin = likelihood.dataInput.get();
 		try {
-			m_input = BEASTObject.getInput(m_plugin, "traitSet");
+			m_input = m_plugin.getInput("traitSet");
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
