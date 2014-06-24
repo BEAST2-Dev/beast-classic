@@ -80,4 +80,10 @@ public class ContinuousDataType extends DataType.Base {
 		return values;
 	}
 
+	@Override
+	public String getTypeDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
