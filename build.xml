@@ -13,7 +13,7 @@
 	<property name="libBEAST_CLASSIC" location="lib" />
 	<property name="release_dir" value="release" />
 	<property name="distBEAST_CLASSIC" location="${buildBEAST_CLASSIC}/dist" />
-	<property name="beast2path" location="../beast2" />
+	<property name="beast2path" location="../beast2.1.3" />
 	<property name="libBeast2" location="${beast2path}/lib" />
 	<property name="srcBeast2" location="${beast2path}/src" />
 	<property name="beast2classpath" location="${beast2path}/build" />
@@ -80,8 +80,12 @@
 		       fork="true"
 		       memoryinitialsize="256m"
 		       memorymaximumsize="256m"
+		 	   source="1.8"
+		       target="1.8">
+<!--
 		 	   source="1.6"
 		       target="1.6">
+-->
 			<include name="beast/**/**" />
 			<include name="dr/**/**" />
 			<!-- compile JUnit test classes -->
