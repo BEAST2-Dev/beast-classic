@@ -123,7 +123,7 @@ suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.freq
 	    <data spec='beast.evolution.alignment.AlignmentFromTraitMap' id='$(n)'>
 			<userDataType spec='beast.evolution.datatype.LocationDataType'/>
 			<traitMap id='traitmap.s:$(n)' spec='beast.evolution.tree.TreeTraitMap' tree='@Tree.t:$(n)' parameter='@location.$(n)' traitName='location' 
-				randomizeupper="45 -70" randomizelower="28 -122">
+				randomizeupper="90 180" randomizelower="-90 -180">
 			</traitMap>
 		</data>
 		<siteModel spec='SiteModel' id="geoContSiteModel.s:$(n)">
