@@ -23,7 +23,10 @@ public class SampledMultivariateTraitLikelihoodTest {
 		MCMC mcmc = (MCMC) parser.parseFile(new File("examples/RacRABV_LogNRRW2.xml"));
 		Distribution posterior = mcmc.posteriorInput.get();
 		double logP = mcmc.robustlyCalcPosterior(posterior);
-        assertEquals(-3042252.6578551414, logP, 1e-5);
+		// logP changed with reimplementation of relaxed clock
+        // assertEquals(-3042252.6578551414, logP, 1e-5);
+        assertEquals(-854843.2551478981, logP, 1e-5);
+        
 	}
 
 	@Test
@@ -35,7 +38,9 @@ public class SampledMultivariateTraitLikelihoodTest {
 		Distribution posterior = mcmc.posteriorInput.get();
 		double logP = mcmc.robustlyCalcPosterior(posterior);
 		// used to be -17376.726764175364 before ClusterTree was made to scale branch lengths by 1/2
-        assertEquals(-17417.93849467215, logP, 1e-5);
+		// logP changed with reimplementation of relaxed clock
+        // assertEquals(-17417.93849467215, logP, 1e-5);
+        assertEquals(-15883.60532266501, logP, 1e-5);
 	}
 
 }

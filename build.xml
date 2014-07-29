@@ -128,6 +128,8 @@
 		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.src.jar">
 			<fileset dir="${srcBEAST_CLASSIC}">
 				<include name="beast/**/*.java" />
+				<include name="dr/**/*.java" />
+				<include name="test/**/*.java" />
 				<include name="beast/**/*.png" />
 				<include name="beast/**/*.xsl" />
 			</fileset>
