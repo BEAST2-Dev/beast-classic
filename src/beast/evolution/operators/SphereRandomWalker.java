@@ -2,10 +2,13 @@ package beast.evolution.operators;
 
 import java.text.DecimalFormat;
 
+import org.json.JSONObject;
+
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.Operator;
 import beast.core.Input.Validate;
+import beast.core.OperatorSchedule;
 import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -21,6 +24,9 @@ public class SphereRandomWalker extends Operator {
             new Input<Boolean>("useGaussian", "Use Gaussian to move instead of uniform interval. Default false.", false);
 
     public Input<Operator> operatorInput = new Input<Operator>("operator" ,"optional tree operator -- locations of filthy nodes will get a new locaiton");
+    public Input<Boolean> optimiseInput = new Input<Boolean>("optimise", "if true, the window size will be optimised throughou the MCMC run", true);
+    
+    
     
 	RealParameter location;
 	double windowSize;
@@ -29,6 +35,8 @@ public class SphereRandomWalker extends Operator {
 	
 	Operator operator;
 	TreeInterface tree;
+	
+	boolean optimise = false;
 
 	@Override
 	public void initAndValidate() throws Exception {
@@ -38,8 +46,10 @@ public class SphereRandomWalker extends Operator {
 		useGaussian = useGaussianInput.get();
 		if (operatorInput.get() != null) {
 			operator = operatorInput.get();
+			operator.setOperatorSchedule(new OperatorSchedule());
 			tree = (TreeInterface) operator.getInput("tree").get();
 		}
+		optimise = optimiseInput.get();
 	}
 
 	@Override
@@ -49,10 +59,9 @@ public class SphereRandomWalker extends Operator {
 			double logHR = operator.proposal();
 			for (Node node : tree.getNodesAsArray()) {
 				if (node.isDirty() == Tree.IS_FILTHY) {
-					if (node.getNr() < tree.getLeafNodeCount()) {
-						throw new RuntimeException("nodeNr < LeafNodeCount -- leafs should not be moved");
+					if (node.getNr() >=  tree.getLeafNodeCount()) {
+						doproposal(2 * node.getNr());
 					}
-					doproposal(2 * node.getNr());
 				}
 			}
 			return logHR;
@@ -103,6 +112,29 @@ public class SphereRandomWalker extends Operator {
         return 0.0;
 	}
 
+	@Override
+	public void accept() {
+		if (operator != null) {
+			operator.accept();
+		}
+		super.accept();
+	}
+	
+	@Override
+	public void reject() {
+		if (operator != null) {
+			operator.reject();
+		}
+		super.reject();
+	}
+	
+	@Override
+	public void restoreFromFile(JSONObject o) {
+		super.restoreFromFile(o);
+		if (operator != null) {
+			// TODO
+		}
+	}
     @Override
     public double getCoercableParameterValue() {
         return windowSize;
@@ -114,11 +146,17 @@ public class SphereRandomWalker extends Operator {
     }
     @Override
     public void optimize(double logAlpha) {
-        // must be overridden by operator implementation to have an effect
-        double fDelta = calcDelta(logAlpha);
-
-        fDelta += Math.log(windowSize);
-        windowSize = Math.exp(fDelta);
+    	if (optimise) {
+    		if (operator != null) {
+    			operator.optimize(logAlpha);
+    			return;
+    		}
+	        // must be overridden by operator implementation to have an effect
+	        double fDelta = calcDelta(logAlpha);
+	
+	        fDelta += Math.log(windowSize);
+	        windowSize = Math.exp(fDelta);
+    	}
     }
 
     @Override
