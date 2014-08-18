@@ -3,6 +3,7 @@ package beast.continuous;
 
 
 
+
 import java.io.PrintStream;
 import java.util.List;
 
@@ -577,6 +578,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     }
 
     public abstract double[] getTraitForNode(TreeInterface tree, Node node, String traitName);
+    
 
 //    public void check(RealParameter trait) throws Exception {
 //        diffusionModel.check(trait);
@@ -797,7 +799,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     private BranchRateModel.Base rateModel = null;
     private boolean hasRateModel = false;
 
-    private double treeLength;
+    double treeLength;
     private double storedTreeLength;
 
     private boolean reportAsMultivariate;
