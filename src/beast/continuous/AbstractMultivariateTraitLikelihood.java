@@ -5,6 +5,7 @@ package beast.continuous;
 
 
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.List;
 
 import beast.core.Description;
@@ -350,6 +351,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
             	updateAllNodes();
             } else {
             	Node [] nodes = treeModel.getNodesAsArray();
+            	Arrays.fill(validLogLikelihoods, true);
             	for (int i = 0; i < nodes.length; i++) {
             		if (nodes[i].isDirty() != Tree.IS_CLEAN) {
                         validLogLikelihoods[nodes[i].getNr()] = false;

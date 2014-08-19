@@ -151,7 +151,11 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
 //            if (logL > 0) {
 //                logL = diffusionModel.getLogLikelihood(parentTrait, childTrait, time);
 //            }
+            if (new Double(logL).isInfinite()) {
+                System.err.println("AbstractMultivariateTraitLikelihood: likelihood is infinite");
+            }
             if (new Double(logL).isNaN()) {
+            	//logL = diffusionModel.getLogLikelihood(parentTrait, childTrait, time);
                 System.err.println("AbstractMultivariateTraitLikelihood: likelihood is undefined");
                 System.err.println("time = " + time);
                 System.err.println("parent trait value = " + new Vector(parentTrait));
