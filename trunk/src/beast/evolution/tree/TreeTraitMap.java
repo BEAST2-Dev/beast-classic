@@ -24,11 +24,13 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 			"the value could be Taxon1=10 20,Taxon2=20 30,Taxon3=10 10");
 
 	public Input<Boolean> initAsMeanInput =new Input<Boolean>("initByMean", "initialise internal nodes by taking the mean of its children", false);
+	public Input<Double> jitterInput =new Input<Double>("jitter", "amount of jitter used to ensure traits are not exactly the same when using initByMean", 0.0001);
 	
 	public Input<String> randomizeupper = new Input<String>("randomizeupper", "if specified, used as upper bound for randomly initialising unassigned nodes");
 	public Input<String> randomizelower = new Input<String>("randomizelower", "if specified, used as lower bound for randomly initialising unassigned nodes");
 	TreeInterface tree;
 	RealParameter parameter;
+	
 
 	/** flag to indicate the root has no trait **/
 	boolean rootHasNoTrait;
@@ -142,6 +144,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 
 	/** set trait value as mean of its children **/
 	private void initInternalNodes(Node node, Double[] values, int dim) {
+		double jitter = jitterInput.get();
 		if (!node.isLeaf()) {
 			for (Node child : node.getChildren()) {
 				initInternalNodes(child, values, dim);
@@ -151,7 +154,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 				for (Node child : node.getChildren()) {
 					value += values[child.getNr() * dim + i];
 				}
-				values[node.getNr() * dim + i] = value / dim;
+				values[node.getNr() * dim + i] = value / dim + Randomizer.nextDouble() * jitter - jitter / 2.0;
 			}
 		}
 	}

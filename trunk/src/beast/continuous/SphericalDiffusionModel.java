@@ -46,6 +46,13 @@ public class SphericalDiffusionModel extends ContinuousSubstitutionModel {
 	@Override
     public double getLogLikelihood(double[] start, double[] stop, double time) {
 		
+		if (time <= 1e-20) {
+			return -1e100;
+		}
+		if (start[0] == stop[0] && start[1] == stop[1]) {
+			return -1e100;
+		}
+		
 		// assumes start = {latitude, longitude}
 		// assumes stop = {latitude, longitude}
 		// and -90 < latitude < 90, -180 < longitude < 180
