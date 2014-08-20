@@ -332,35 +332,52 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     
     @Override
     protected boolean requiresRecalculation() {
-    	if (true) {
-	    	recalculateTreeLength();
-	    	updateAllNodes();
-	        likelihoodKnown = false;
-	        return true;
-    	}
+    	
+//    	if (true) {
+//	    	recalculateTreeLength();
+//	    	updateAllNodes();
+//	        likelihoodKnown = false;
+//	        return true;
+//    	}
     	
     	if (diffusionModel.isDirtyCalculation() || rateModel.isDirtyCalculation()
-    			|| traitParameter.somethingIsDirty() 
     			|| (deltaParameter != null && deltaParameter.somethingIsDirty())) {
+        	recalculateTreeLength();
+	    	updateAllNodes();
+            likelihoodKnown = false;
+    	}
+    	if (traitParameter.somethingIsDirty()) {
+        	recalculateTreeLength();
+    		int d = traitParameter.getMinorDimension1();
+        	Arrays.fill(validLogLikelihoods, true);
+        	Node [] nodes = treeModel.getNodesAsArray();
+    		for (int i = 0; i < traitParameter.getMinorDimension2(); i++) {
+    			if (traitParameter.isDirty(i * 2)) {
+    				validLogLikelihoods[i] = false;
+    				for (Node child : nodes[i].getChildren()) {
+    					validLogLikelihoods[child.getNr()] = false;
+    				}
+    			}
+    		}
             likelihoodKnown = false;
     	}
     	if (treeModel.somethingIsDirty()) {
-            if (useTreeLength || (scaleByTime && treeModel.getRoot().isDirty() != Tree.IS_CLEAN)) {
+//            if (useTreeLength || (scaleByTime && treeModel.getRoot().isDirty() != Tree.IS_CLEAN)) {
             	// recalc everything
             	recalculateTreeLength();
             	updateAllNodes();
-            } else {
-            	Node [] nodes = treeModel.getNodesAsArray();
-            	Arrays.fill(validLogLikelihoods, true);
-            	for (int i = 0; i < nodes.length; i++) {
-            		if (nodes[i].isDirty() != Tree.IS_CLEAN) {
-                        validLogLikelihoods[nodes[i].getNr()] = false;
-                        validLogLikelihoods[nodes[i].getLeft().getNr()] = false;
-                        validLogLikelihoods[nodes[i].getRight().getNr()] = false;
-            		}
-            	}
-                likelihoodKnown = false;
-            }
+//            }
+//        	Node [] nodes = treeModel.getNodesAsArray();
+//        	Arrays.fill(validLogLikelihoods, true);
+//        	for (int i = 0; i < nodes.length; i++) {
+//        		if (nodes[i].isDirty() != Tree.IS_CLEAN) {
+//                    validLogLikelihoods[nodes[i].getNr()] = false;
+//    				for (Node child : nodes[i].getChildren()) {
+//    					validLogLikelihoods[child.getNr()] = false;
+//    				}
+//        		}
+//        	}
+            likelihoodKnown = false;
     	}
     	return true;
     }

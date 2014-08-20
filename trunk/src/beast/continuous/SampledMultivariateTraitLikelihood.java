@@ -12,6 +12,7 @@ package beast.continuous;
 import java.util.List;
 import java.util.Random;
 
+import cern.colt.Arrays;
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.State;
@@ -74,7 +75,7 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
      */
     @Override
     public double calculateLogLikelihood() {
-
+//System.err.println("NEW calculateLogLikelihood");
         if (!cacheBranches)
             logP= traitLogLikelihood(null, treeModel.getRoot());
         else
@@ -127,6 +128,7 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
                 logL = diffusionModel.getLogLikelihood(parentTrait, childTrait, time);
                 cachedLogLikelihoods[nodeNumber] = logL;
                 validLogLikelihoods[nodeNumber] = true;
+//System.err.println(nodeNumber + " " + Arrays.toString(parentTrait) + Arrays.toString(childTrait) + " " + time + " " + logL);
             } else
                 logL = cachedLogLikelihoods[nodeNumber];
         }
