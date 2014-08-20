@@ -349,15 +349,17 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     	if (traitParameter.somethingIsDirty()) {
         	recalculateTreeLength();
     		int d = traitParameter.getMinorDimension1();
-        	Arrays.fill(validLogLikelihoods, true);
-        	Node [] nodes = treeModel.getNodesAsArray();
-    		for (int i = 0; i < traitParameter.getMinorDimension2(); i++) {
-    			if (traitParameter.isDirty(i * 2)) {
-    				validLogLikelihoods[i] = false;
-    				for (Node child : nodes[i].getChildren()) {
-    					validLogLikelihoods[child.getNr()] = false;
-    				}
-    			}
+    		if (cacheBranches) {
+	        	Arrays.fill(validLogLikelihoods, true);
+	        	Node [] nodes = treeModel.getNodesAsArray();
+	    		for (int i = 0; i < traitParameter.getMinorDimension2(); i++) {
+	    			if (traitParameter.isDirty(i * 2)) {
+	    				validLogLikelihoods[i] = false;
+	    				for (Node child : nodes[i].getChildren()) {
+	    					validLogLikelihoods[child.getNr()] = false;
+	    				}
+	    			}
+	    		}
     		}
             likelihoodKnown = false;
     	}
