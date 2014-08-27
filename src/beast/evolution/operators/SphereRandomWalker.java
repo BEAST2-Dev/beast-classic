@@ -81,16 +81,26 @@ public class SphereRandomWalker extends Operator {
         } else {
             newLatitude += Randomizer.nextDouble() * 2 * windowSize - windowSize;
         }
-        if (newLatitude < -90 || newLatitude > 90 || newLatitude < location.getLower() || newLatitude > location.getUpper()) {
-            return Double.NEGATIVE_INFINITY;
-        }
-        
         double newLongitude = longitude;
         if (useGaussian) {
             newLongitude += Randomizer.nextGaussian() * windowSize;
         } else {
             newLongitude += Randomizer.nextDouble() * 2 * windowSize - windowSize;
         }
+
+        if (newLatitude < -90) {
+        	newLatitude = -90 + (-90 - newLatitude);
+        	newLongitude += 180;
+        }
+        if (newLatitude > 90) {
+        	newLatitude = 90 - (newLatitude - 90);  
+        	newLongitude += 180;
+        }
+        
+        if (newLatitude < location.getLower() || newLatitude > location.getUpper()) {
+            return Double.NEGATIVE_INFINITY;
+        }
+        
         while (newLongitude < -180) {
         	newLongitude += 360;
         }
