@@ -23,8 +23,10 @@ public class SphereRandomWalker extends Operator {
     public Input<Boolean> useGaussianInput =
             new Input<Boolean>("useGaussian", "Use Gaussian to move instead of uniform interval. Default false.", false);
 
-    public Input<Operator> operatorInput = new Input<Operator>("operator" ,"optional tree operator -- locations of filthy nodes will get a new locaiton");
-    public Input<Boolean> optimiseInput = new Input<Boolean>("optimise", "if true, the window size will be optimised throughou the MCMC run", true);
+    public Input<Operator> operatorInput = new Input<Operator>("operator" ,"optional tree operator -- locations of filthy " +
+            "nodes will get a new location");
+    public Input<Boolean> optimiseInput = new Input<Boolean>("optimise", "if true, the window size will be optimised " +
+            "throughout the MCMC run", true);
     
     
     
@@ -59,15 +61,16 @@ public class SphereRandomWalker extends Operator {
 			double logHR = operator.proposal();
 			for (Node node : tree.getNodesAsArray()) {
 				if (node.isDirty() == Tree.IS_FILTHY) {
-					if (node.getNr() >=  tree.getLeafNodeCount()) {
-						doproposal(2 * node.getNr());
+                    // Why not isLeaf?? (JH) (Q2R)
+					if (node.getNr() >= tree.getLeafNodeCount()) {
+						logHR += doproposal(2 * node.getNr());
 					}
 				}
 			}
 			return logHR;
 		}
 		
-        int i = Randomizer.nextInt(range/2-1);
+        final int i = Randomizer.nextInt(range/2-1);
         return doproposal(range + i * 2);
 	}
 	
