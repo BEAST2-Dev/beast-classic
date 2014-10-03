@@ -766,6 +766,17 @@ public abstract class IntegratedMultivariateTraitLikelihood extends AbstractMult
             out2[offset2 + i] = (in0[offset0 + i] * weight0 + in1[offset1 + i] * weight1) * totalInverseWeight;
         }
     }
+    
+    public static void computeWeightedAverage(double[] in0, int offset0, double weight0,
+            double[] in1, int offset1, double weight1,
+            double[] out2, int offset2,
+            int length) {
+
+		final double totalInverseWeight = 1.0 / (weight0 + weight1);
+		for (int i = 0; i < length; i++) {
+		out2[offset2 + i] = (in0[offset0 + i] * weight0 + in1[offset1 + i] * weight1) * totalInverseWeight;
+		}
+	}
 
     public double[] getShiftForBranchLength(Node node) {
         if (driftModels.get() != null) {
