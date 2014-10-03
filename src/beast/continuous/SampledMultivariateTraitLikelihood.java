@@ -12,7 +12,6 @@ package beast.continuous;
 import java.util.List;
 import java.util.Random;
 
-import cern.colt.Arrays;
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.State;

@@ -143,7 +143,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	}
 
 	/** set trait value as mean of its children **/
-	private void initInternalNodes(Node node, Double[] values, int dim) {
+	void initInternalNodes(Node node, Double[] values, int dim) {
 		double jitter = jitterInput.get();
 		if (!node.isLeaf()) {
 			for (Node child : node.getChildren()) {
@@ -154,7 +154,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 				for (Node child : node.getChildren()) {
 					value += values[child.getNr() * dim + i];
 				}
-				values[node.getNr() * dim + i] = value / dim + Randomizer.nextDouble() * jitter - jitter / 2.0;
+				values[node.getNr() * dim + i] = value / node.getChildCount() + Randomizer.nextDouble() * jitter - jitter / 2.0;
 			}
 		}
 	}
