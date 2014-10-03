@@ -4,6 +4,7 @@ package beast.continuous;
 
 
 
+
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
@@ -17,11 +18,9 @@ import beast.evolution.alignment.AlignmentFromTraitMap;
 import beast.evolution.branchratemodel.BranchRateModel;
 import beast.evolution.datatype.ContinuousDataType;
 import beast.evolution.likelihood.GenericTreeLikelihood;
-import beast.evolution.likelihood.TreeLikelihood;
 import beast.evolution.sitemodel.SiteModel;
 import beast.evolution.substitutionmodel.ContinuousSubstitutionModel;
 import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeInterface;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitMap;
@@ -50,7 +49,9 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     public Input<Boolean> reportAsMultivariateInput = new Input<Boolean>("reportAsMultivariate", "", true);
     public Input<Boolean> reciprocalRatesInput = new Input<Boolean>("reciprocalRates", "" , false);
 
-	    
+
+    protected List<BranchRateModel> optimalValues = null;
+
     public static final String TRAIT_LIKELIHOOD = "multivariateTraitLikelihood";
     public static final String CONJUGATE_ROOT_PRIOR = "conjugateRootPrior";
     public static final String MODEL = "diffusionModel";
@@ -507,7 +508,18 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
             updateAllNodes();
     }
 
-    
+    public double[] getOptimalValue(Node node) {
+        if (optimalValues != null) {
+            final int dim = optimalValues.size();
+            double[] optVals = new double[dim];
+            for (int i = 0; i < dim; ++i) {
+                optVals[i] = optimalValues.get(i).getRateForBranch(node);
+            }
+            return optVals;
+        } else {
+            throw new RuntimeException("getOptimalValue should not be called.");
+        }
+    }
     
     
 //    public LogColumn[] getColumns() {
