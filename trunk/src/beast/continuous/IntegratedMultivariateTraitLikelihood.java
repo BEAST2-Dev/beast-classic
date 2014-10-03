@@ -28,7 +28,6 @@ package beast.continuous;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 import dr.evomodel.continuous.MissingTraits;
 import dr.math.distributions.WishartSufficientStatistics;
