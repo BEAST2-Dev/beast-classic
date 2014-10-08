@@ -163,6 +163,13 @@ public class SphericalDiffusionModel extends ContinuousSubstitutionModel {
 	final static int NR_OF_STEPS = 1000;
 	
 	public double[] sample(double[] start, double time, double precision) throws ConvergenceException, FunctionEvaluationException, IllegalArgumentException {
+		return sample(start, time, precision, new double[]{0.0, Math.PI * 2.0});
+	}
+	
+	/** anglerange[0] = lower bound, anglerange[1] = upper bound of range for angle2
+	 * **/
+	public double[] sample(double[] start, double time, double precision,
+			double [] angleRange) throws ConvergenceException, FunctionEvaluationException, IllegalArgumentException {
 		
 		// first, sample an angle from the spherical diffusion density
 		final double inverseVariance = precision / time;
@@ -199,7 +206,8 @@ public class SphericalDiffusionModel extends ContinuousSubstitutionModel {
 		
 		// now we have an angle, use this to rotate the point [0,0] over
 		// this angle in a random direction angle2
-		double angle2 = Randomizer.nextDouble() * Math.PI * 2.0;
+		double angle2 = angleRange[0] + Randomizer.nextDouble() * (angleRange[1] - angleRange[0]);
+		//angleRange[0] = angle2;
 
 	    double [] xC = new double[] {Math.cos(angle), Math.sin(angle)*Math.cos(angle2), Math.sin(angle)*Math.sin(angle2)};
 
