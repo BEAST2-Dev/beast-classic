@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import beast.core.BEASTObject;
+
 /**
  * An interface for objects that can provide TreeTraits (i.e., information about the nodes and
  * branches of a tree).
@@ -32,7 +34,7 @@ public interface TreeTraitProvider {
      * class or as a delegate. It is itself a TreeTraitProvider so can be instantiated and
      * passed as is.
      */
-    public class Helper implements TreeTraitProvider {
+    public class Helper extends BEASTObject implements TreeTraitProvider {
 
         /**
          * Default constructor
@@ -129,5 +131,10 @@ public interface TreeTraitProvider {
         // Private members
 
         private Map<String, TreeTrait<?>> traits = new HashMap<String, TreeTrait<?>>();
+
+		@Override
+		public void initAndValidate() throws Exception {
+			// nothing to do
+		}
     }
 }
