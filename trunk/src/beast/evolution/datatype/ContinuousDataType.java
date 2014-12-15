@@ -13,7 +13,7 @@ public class ContinuousDataType extends DataType.Base {
 		
 	/* return the dimension of the data type */
 	public int getDimension() {
-		return 0;
+		return 1;
 	}
 	
 	@Override
