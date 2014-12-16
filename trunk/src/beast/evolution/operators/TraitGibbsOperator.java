@@ -239,7 +239,7 @@ public class TraitGibbsOperator extends Operator {
 					validPoint = !Double.isInfinite(parameterPrior.logPdf(draw));
 				}
 
-			} while (validPoint);
+			} while (!validPoint);
 		} catch (Exception e) {
 			return Double.NEGATIVE_INFINITY;
 		}
