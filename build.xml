@@ -20,7 +20,7 @@
 	<property name="beastiipath" location="../beastii" />
 	<property name="beastiiclasspath" location="${beastiipath}/build" />
 	<property name="Add_on_dir" value="${release_dir}/add-on" />
-	<property name="version" value="1.1.7" />
+	<property name="version" value="1.1.8" />
 
     <import file="${beast2path}/build.xml" />
 
