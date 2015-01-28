@@ -1,28 +1,35 @@
 \documentclass{article}
 \usepackage{url,graphicx}
 
-\newcommand{\BEASTVersion}{2.0}
-\newcommand{\TracerVersion}{1.5}
-\newcommand{\FigTreeVersion}{1.3.1}
+\newcommand{\includeimage}[2][]{%
+%HEVEA\imgsrc{#2.hevea.png}%
+%BEGIN LATEX
+\includegraphics[#1]{#2}
+%END LATEX
+}
 
+\newcommand{\BEASTVersion}{2.2.x}
+\newcommand{\TracerVersion}{1.6}
+\newcommand{\FigTreeVersion}{1.4.2}
+\newcommand{\LocationTree}{{\texttt{location\_tree\_with\_trait.tree}}}
 \bibliographystyle{cell}
 
 
 \begin{document}
-\title{Ancestral Reconstruction/Discrete Phylogeography with BEAST 2.0}
-\author{Remco Bouckaert \url{remco@cs.auckland.ac.nz}}
+\title{Ancestral Reconstruction/Discrete Phylogeography with BEAST {\BEASTVersion}}
+\author{Remco Bouckaert \url{remco@cs.auckland.ac.nz} and Walter Xie}
 \maketitle
 
 \section{Introduction}
 
 
-In this tutorial we describe a full Bayesian framework for phylogeography developed in  \cite{Lemey:2009uq}.
+In this tutorial we describe a full Bayesian framework for phylogeography developed in \cite{Lemey:2009uq}.
 
 You will need the following software at your disposal:
 
 \begin{itemize}
 
-\item {\bf BEAST} - this package contains the BEAST program, BEAUti, TreeAnnotator and other utility programs. This tutorial is written for BEAST v{\BEASTVersion}, which has support for multiple partitions. It is available for download from \\* \texttt{http://beast2.cs.auckland.ac.nz/}.
+\item {\bf BEAST} - this package contains the BEAST program, BEAUti, TreeAnnotator and other utility programs. This tutorial is written for BEAST v{\BEASTVersion}, which has support for multiple partitions. It is available for download from \\* \texttt{http://www.beast2.org/}.
 \item {\bf Tracer} - this program is used to explore the output of BEAST (and other Bayesian MCMC programs). It graphically and
 quantitively summarizes the distributions of continuous parameters and provides diagnostic information. At the time of
 writing, the current version is v{\TracerVersion}. It is available for download from \texttt{http://beast.bio.ed.ac.uk/}.
@@ -39,7 +46,7 @@ It consists of 43 sequences of 1698 characters.
 
 We go through the following steps:
 \begin{itemize}
-\item The first step is to install the beast-classic add-on that contains the phylogegraphic models. 
+\item The first step is to install the beast-classic package that contains the phylogegraphic models. 
 \item Then, we use BEAUti to set up the analysis, and write it to an XML file.
 \item We use BEAST to run the MCMC analysis based on the XML file.
 \item The results will need to be checked for convergence using Tracer.
@@ -48,23 +55,30 @@ We go through the following steps:
 
 \subsubsection*{Set up BEAUti for phylogeography}
 
-Phylogeography as described in this tutorial is part of the {\tt beast-classic} add-on.
+Phylogeography as described in this tutorial is part of the {\tt beast-classic} package.
 If you not already have it installed, you can
-install the add-on through BEAUti. Start BEAUti by double clicking on its icon. 
-Select the File/Manage Add-ons menu. A dialog pops up showing the add-ons already installed. 
+install the package through BEAUti. Start BEAUti by double clicking on its icon. 
+Select the \texttt{File}/\texttt{Manage Packages} menu. A dialog pops up showing the packages already installed. 
 
-\begin{center}
-\includegraphics[scale=0.4]{figures/addonmgr.png}
-\end{center}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3]{figures/addonmgr}
+\caption{Package manager}
+\label{fig.datapartition} 
+\end{figure}
 
 
-Select the BEAST-CLASSIC entry in the list, and click the Install button. After a little while the dialog is updated and it shows that the add-on is now installed.
-BEAST-CLASSIC requires BEASTii, so if you have not already installed BEASTii, an error message may be shown warning that BEASTii should be installed as well.
+Select the BEAST-CLASSIC entry in the list, and click the Install button. After a little while the dialog is updated and it shows that the package is now installed.
+BEAST-CLASSIC requires BEASTlabs, so if you have not already installed BEASTlabs, an error message may be shown warning that BEASTlabs should be installed as well.
 
-\begin{center}
-\includegraphics[scale=0.4]{figures/addonmgr2.png}
-\end{center}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3]{figures/addonmgr2}
+\caption{Package manager showing packages already installed}
+\label{fig.datapartition} 
+\end{figure}
 
+Please restart BEAUti after new packages are installed. 
 
 
 \subsection*{BEAUti}
@@ -75,8 +89,8 @@ BEAST-CLASSIC requires BEASTii, so if you have not already installed BEASTii, an
 To load a NEXUS format alignment, simply select the \texttt{Import
 Alignment} option from the File menu: 
 
-Select the file called \texttt{H5N1.nex}, which is located in the place where the beast-classic add-on is installed 
-under the {\tt examples/nexus} directory. Typically, add-ons are installed here:
+Select the file called \texttt{H5N1.nex}, which is located in the place where the beast-classic package is installed 
+under the {\tt examples/nexus} directory. Typically, packages are installed here:
 \begin{itemize}
 \item for Windows, in your home directory (e.g. {\tt c:$\backslash$Users$\backslash$joe}) under the {\tt BEAST} directory,
 \item for Mac, in the {\tt Library/Application Support/BEAST} directory in your home directory (e.g. {\tt /Users/joe}),
@@ -88,33 +102,36 @@ The file contains an alignment of sequences. The \texttt{H5N1.nex} looks like th
 \begin{verbatim}
 #NEXUS
 BEGIN DATA;
-       DIMENSIONS  NTAX =47 NCHAR=2811;
-       FORMAT DATATYPE = DNA GAP = - MISSING = ?;
+       DIMENSIONS  NTAX=43 NCHAR=1698;
+       FORMAT DATATYPE=DNA GAP=- MISSING=?;
        MATRIX 	
-hOH10_97.2_41.053_80.706  TTCCCTATCTACACAATACCAGACAAGCTA...
-hWVa01_93.2_40.505_80.575 TTCCCTATCTACACAATACCAGACAAGCTA...
-NY01_03.4_41.057_73.794   TTCCCTATCTACACAATACCAGACAAGCTA...
-NY03_03.4_42.934_76.565   TTCCCTATCTACACAATACCAGACAAGCTA...
-NY04_03.4_42.617_75.037   TTCCCTATCTACACAATACCAGACAAGCTA...
-NY12_03.4_42.996_78.170   TTCCCTATCTACACAATACCAGACAAGCTA...
+A_chicken_Fujian_1042_2005    ATGGAGAAAATAGTGCTTCTTCTT...
+A_duck_Fujian_897_2005        ATGGAGAAAATAGTGCTTCTTCTT...
+A_duck_Fujian_13_2002         ATGGAGAAAATAGTGCTTCTTCTT...
+A_swine_Fujian_F1_2001        ATGGAGAAAATAGTGCTTCTTCTT...
+A_Chicken_Guangdong_810_2005  ATGGAGAAAATAGTACTTCTTCTT...
+A_goose_Guangdong_2216_2005   ATGGAGAAAATAGTGCTTCTTCTT...
          ... ...
-
-;
 END;
 \end{verbatim}
 
-\medskip{}
+\begin{figure}
+\centering	
+\includeimage[width=0.5\textwidth]{figures/AddPartition}
+\caption{Add Partition window (Only appear if related packages are installed).}
+\label{fig:addPartition}
+\end{figure}
+
+An \texttt{Add Partition} window (Figure \ref{fig:addPartition}) would pop up if the related package is installed. Select \texttt{Add Alignment} and click \textbf{OK} to continue.
 
 Once loaded, a partition is displayed in the main panel.
 You can double click any alignment (partition) to show its detail.
 
 \begin{figure}
-\begin{center}
-
-\includegraphics[scale=0.4]{figures/BEAUti_DataPartitions}
-
-\end{center}
-\caption{\label{fig.datapartition} Data partition panel after loading alignment.}
+\centering	
+\includeimage[scale=0.3,clip=true,trim=0 400 0 0]{figures/BEAUti_DataPartitions}
+\caption{Data partition panel after loading alignment.}
+\label{fig.datapartition} 
 \end{figure}
 
 \subsubsection*{Set up dates}
@@ -129,8 +146,10 @@ A dialog pops up, where we can specify the dates as follows: the dates are encod
 So, we want to use everything after the last underscore, as shown in Figure \ref{fig.dates}.
 
 \begin{figure}
-\includegraphics[scale=0.4]{figures/BEAUti_dates.png}
-\caption{\label{fig.dates}Setting up the dates for H5N1}
+\centering	
+\includeimage[scale=0.3]{figures/BEAUti_dates}
+\caption{Setting up the dates for H5N1}
+\label{fig.dates}
 \end{figure}
 
 Click OK and the dates are populated by the correct value. Always double check that this happened correctly and no strange outliers or wrong encodings cause any problems, of course.
@@ -142,7 +161,12 @@ Select the Site model tab, and change the site model to HKY, and frequency model
 Also, set the gamma category count to 4, and check the estimate box on the 'Shape' parameter that now pops up.
 The screen should look like this:
 
-\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_sitemodel.png}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3,clip=true,trim=0 400 0 0]{figures/BEAUti_sitemodel}
+\caption{Setting the site model}
+\label{fig.BEAUti_sitemodel}
+\end{figure}
 
 \subsubsection*{Setting the clock model}
 
@@ -150,55 +174,110 @@ We use a strict clock, but to make the analysis converge a bit quicker, we fix t
 First, click the menu Mode, and unset 'Automatically set clock rate'. Then, uncheck the estimate flag on the clock rate, and change the rate to 0.004.
 The screen should look like this:
 
-\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_clockmodel.png}
-
+\begin{figure}
+\centering	
+\includeimage[scale=0.3]{figures/BEAUti_clockmodel}
+\caption{Setting the clock model}
+\label{fig.BEAUti_clockmodel}
+\end{figure}
 
 \subsubsection*{Priors}
 
 Change the tree prior from Yule to Coalescent with Constant Population. The other priors are fine. The screen should look like this:
 
-\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_priors.png}
-
+\begin{figure}
+\centering	
+\includeimage[scale=0.3,clip=true,trim=0 400 0 0]{figures/BEAUti_priors}
+\caption{Setting the tree prior}
+\label{fig.BEAUti_priors}
+\end{figure}
 
 \subsubsection*{Setting up a discrete trait}
 
 Go to the Partitions tab, and click the + button at the bottom of the screen.
-If the installation of the beast-classic add-on went OK, a dialog pops up, where you can select what to add.
+If the installation of the beast-classic package went OK, a dialog pops up, where you can select what to add (Figure~\ref{fig.BEAUti_trait}).
 
-\includegraphics[scale=0.4]{figures/BEAUti_trait.png}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3]{figures/BEAUti_trait}
+\caption{Add discrete trait}
+\label{fig.BEAUti_trait}
+\end{figure}
 
-Select 'discrete trait' and click OK. Now you can give a name to the trait, and select a tree to associate the trait with. 
-Here we will use 'location'.
+Select 'Add discrete trait' and click OK. Now you can give a name to the trait, and select a tree to associate the trait with. Here we will use 'location' (Figure~\ref{fig.BEAUti_trait2}).
 
-\includegraphics[scale=0.4,clip=true,trim=240 200 240 200]{figures/BEAUti_trait2.png}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3]{figures/BEAUti_trait2}
+\caption{Naming location trait}
+\label{fig.BEAUti_trait2}
+\end{figure}
 
-Change the name and click OK. Now, a dialog pops up where you can manually add the locations. However, the location is already encoded in the name, so we can `guess' it. Click the Guess button and a dialog pops up where we can choose to define the names by splitting on underscore and select the third group. Before you click OK, the screen should look like this:
+Change the name and click OK. Now, a dialog pops up where you can manually add the locations. However, the location is already encoded in the name, so we can `guess' it. Click the Guess button and a dialog pops up where we can choose to define the names by splitting on underscore and select the third group. Before you click OK, the screen should look like Figure~\ref{fig.BEAUti_trait3}.
 
-\includegraphics[scale=0.4,clip=true,trim=260 60 260 60]{figures/BEAUti_trait3.png}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3]{figures/BEAUti_trait3}
+\caption{Guess location}
+\label{fig.BEAUti_trait3}
+\end{figure}
 
-After clicking OK, the list is populated by locations, like so:
+After clicking OK, the list is populated by locations, like Figure~\ref{fig.BEAUti_trait4}
 
-\includegraphics[scale=0.4,clip=true,trim=260 60 260 60]{figures/BEAUti_trait4.png}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3]{figures/BEAUti_trait4}
+\caption{Locations}
+\label{fig.BEAUti_trait4}
+\end{figure}
 
 You want to double check that all locations are indeed the ones you want, because it is easy for an irregularity to creep into taxon names, and the guess-work may not be correct.
-Click close, and the data partitions panel has a new partition added for location.
+Click close, and the data partitions panel has a new partition added for location (Figure~\ref{fig.BEAUti_DataPartitions2}).
 
-\includegraphics[scale=0.4]{figures/BEAUti_DataPartitions2.png}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3]{figures/BEAUti_DataPartitions2}
+\caption{Data partitions panel has a new partition added for location}
+\label{fig.BEAUti_DataPartitions2}
+\end{figure}
 
 To get the trait edit dialog back, double click the location partition.
+
+\subsubsection*{Setting the site model}
+
+Click the site model tab, and select the 'location' on the left.
+This shows the site model for the trait (Figure~\ref{fig.BEAUti_sitemodel2}).
+
+\begin{figure}
+\centering	
+\includeimage[scale=0.3,clip=true,trim=0 400 0 0]{figures/BEAUti_sitemodel2}
+\caption{Site model for the trait}
+\label{fig.BEAUti_sitemodel2}
+\end{figure}
+
 
 \subsubsection*{Setting the clock model}
 
 Click the clock model tab, and select the 'location' on the left.
-This shows the strict clock for the trait.
+This shows the strict clock for the trait (Figure~\ref{fig.BEAUti_clockmodel2}).
 
-\includegraphics[scale=0.4,clip=true,trim=0 300 0 0]{figures/BEAUti_clockmodel2.png}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3,clip=true,trim=0 400 0 0]{figures/BEAUti_clockmodel2}
+\caption{Clock model for the trait}
+\label{fig.BEAUti_clockmodel2}
+\end{figure}
 
 \subsubsection*{Priors}
 
-Click the priors tab, to show the extra priors added for the discrete analysis.
+Click the priors tab, to show the extra priors added for the discrete analysis (Figure~\ref{fig.BEAUti_priors2}).
 
-\includegraphics[scale=0.4,clip=true,trim=0 200 0 0]{figures/BEAUti_priors2.png}
+\begin{figure}
+\centering	
+\includeimage[scale=0.3,clip=true,trim=0 400 0 0]{figures/BEAUti_priors2}
+\caption{The extra priors added for the discrete analysis}
+\label{fig.BEAUti_priors2}
+\end{figure}
 
 \subsubsection*{Setting the MCMC options }
 
@@ -226,32 +305,21 @@ contain much information about the distributions of the parameters.
 You probably want to aim to store no more than 10,000 samples so this should be
 set to no less than chain length / 10,000.
 
-For this exercise we will set the screen log to 100000 and the file log to 2000. The final two
-options give the file names of the log files for the sampled parameters and
+For this exercise we will set the screen log to 10,000, and the file log to 2,000 and tree log to 2,000 (Figure \ref{fig.MCMC}). The final two options give the file names of the log files for the sampled parameters and
 the trees. These will be set to a default based on the name of the
 imported NEXUS file. 
 
 \begin{figure}
-\begin{center}
-
-\includegraphics[scale=0.4,clip=true,trim=0 200 0 0]{figures/BEAUti_MCMC}
-
-\end{center}
-\caption{\label{fig.MCMC} Setting up the MCMC paremeters.}
+\centering	
+\includeimage[scale=0.3]{figures/BEAUti_MCMC}
+\caption{Setting up the MCMC parameters.}
+\label{fig.MCMC}
 \end{figure}
 
 
 If you are using windows then we suggest you add the suffix \texttt{.txt} to both of these (so,
-\texttt{gopher.log.txt} and \texttt{gopher.trees.txt}) so that Windows recognizes
+\texttt{H5N1.log.txt} and \texttt{H5N1.trees.txt}) so that Windows recognizes
 these as text files. 
-
-
-
-
-
-
-
-
 
 
 
@@ -262,15 +330,13 @@ We are now ready to create the BEAST XML file. To do this, either select the {\b
 \subsection*{Running BEAST }
 
 Now run BEAST and when it asks for an input file, provide your newly
-created XML file as input by click \textbf{Choose File ...}, and then click \textbf{Run}. 
+created XML file as input by click \textbf{Choose File ...}, and then click \textbf{Run} (Figure \ref{fig.BEAST}). 
 
 \begin{figure}
-\begin{center}
-
-\includegraphics[scale=0.5]{figures/BEAST}
-
-\end{center}
-\caption{\label{fig.BEAST} Launching BEAST.}
+\centering	
+\includeimage[scale=0.4]{figures/BEAST}
+\caption{Launching BEAST.}
+\label{fig.BEAST} 
 \end{figure}
 
 
@@ -279,64 +345,92 @@ reporting information to the screen. The actual results files are
 saved to the disk in the same location as your input file. The output to the screen will
 look something like this: 
 
-{\scriptsize   
+{\tiny   
 \begin{verbatim}
 
-          BEAST v2.0.e Prerelease r794, 2002-2011
-       Bayesian Evolutionary Analysis Sampling Trees
-                 Designed and developed by
-Remco Bouckaert, Alexei J. Drummond, Andrew Rambaut and Marc A. Suchard
-                              
-               Department of Computer Science
-                   University of Auckland
-                  remco@cs.auckland.ac.nz
-                  alexei@cs.auckland.ac.nz
-                              
-             Institute of Evolutionary Biology
-                  University of Edinburgh
-                     a.rambaut@ed.ac.uk
-                              
-              David Geffen School of Medicine
-           University of California, Los Angeles
-                     msuchard@ucla.edu
-                              
-                Downloads, Help & Resources:
-              	http://beast2.cs.auckland.ac.nz
-                              
-Source code distributed under the GNU Lesser General Public License:
-              	http://code.google.com/p/beast2
-                              
-                     BEAST developers:
-	Alex Alekseyenko, Trevor Bedford, Erik Bloomquist, Joseph Heled, 
-	Sebastian Hoehna, Denise Kuehnert, Philippe Lemey, Wai Lok Sibon Li, 
-	Gerton Lunter, Sidney Markowitz, Vladimir Minin, Michael Defoin Platel, 
-          	Oliver Pybus, Chieh-Hsi Wu, Walter Xie
-                              
-                         Thanks to:
-    	Roald Forsberg, Beth Shapiro and Korbinian Strimmer
 
-File: H5N1.xml seed: 1347411445277 threads: 1
+                        BEAST v2.2.0, 2002-2015
+             Bayesian Evolutionary Analysis Sampling Trees
+                       Designed and developed by
+ Remco Bouckaert, Alexei J. Drummond, Andrew Rambaut & Marc A. Suchard
+                                    
+                     Department of Computer Science
+                         University of Auckland
+                        remco@cs.auckland.ac.nz
+                        alexei@cs.auckland.ac.nz
+                                    
+                   Institute of Evolutionary Biology
+                        University of Edinburgh
+                           a.rambaut@ed.ac.uk
+                                    
+                    David Geffen School of Medicine
+                 University of California, Los Angeles
+                           msuchard@ucla.edu
+                                    
+                      Downloads, Help & Resources:
+                           http://beast2.org/
+                                    
+  Source code distributed under the GNU Lesser General Public License:
+                   http://github.com/CompEvol/beast2
+                                    
+                           BEAST developers:
+   Alex Alekseyenko, Trevor Bedford, Erik Bloomquist, Joseph Heled, 
+ Sebastian Hoehna, Denise Kuehnert, Philippe Lemey, Wai Lok Sibon Li, 
+Gerton Lunter, Sidney Markowitz, Vladimir Minin, Michael Defoin Platel, 
+                 Oliver Pybus, Chieh-Hsi Wu, Walter Xie
+                                    
+                               Thanks to:
+          Roald Forsberg, Beth Shapiro and Korbinian Strimmer
 
-Random number seed: 1347411445277
+File: H5N1.xml seed: 1422413146822 threads: 1
+Random number seed: 1422413146822
 
 ... ...
 
+        2980000     -5980.9740       243.0        -5831.4429      -149.5311 2m22s/Msamples
+        2990000     -5989.5101       240.6        -5831.7579      -157.7522 2m22s/Msamples
+        3000000     -5974.5263       243.7        -5822.6040      -151.9222 2m22s/Msamples
+
+Operator                                           Tuning    #accept    #reject      Pr(m)  Pr(acc|m)
+ScaleOperator(treeScaler.t:H5N1)                   0.7016       1515      52031     0.0178     0.0283 Try setting scaleFactor to about 0.838
+ScaleOperator(treeRootScaler.t:H5N1)               0.6473       4281      49470     0.0178     0.0796 Try setting scaleFactor to about 0.805
+Uniform(UniformOperator.t:H5N1)                         -     223496     311065     0.1784     0.4181 
+SubtreeSlide(SubtreeSlide.t:H5N1)                  1.0905      43385     224037     0.0892     0.1622 
+Exchange(narrow.t:H5N1)                                 -      45722     221721     0.0892     0.1710 
+Exchange(wide.t:H5N1)                                   -        272      52908     0.0178     0.0051 
+WilsonBalding(WilsonBalding.t:H5N1)                     -        308      53151     0.0178     0.0058 
+ScaleOperator(KappaScaler.s:H5N1)                  0.5009        436       1378     0.0006     0.2404 
+ScaleOperator(gammaShapeScaler.s:H5N1)             0.4178        470       1316     0.0006     0.2632 
+ScaleOperator(PopSizeScaler.t:H5N1)                0.4261      13910      39472     0.0178     0.2606 
+ScaleOperator(georateScaler.s:location)            0.5944     150520     383804     0.1784     0.2817 
+BitFlipOperator(indicatorFlip.s:location)               -     163471     372882     0.1784     0.3048 
+ScaleOperator(geoMuScaler.c:location)              0.2809      17932      35522     0.0178     0.3355 
+BitFlipBSSVSOperator(BSSVSoperator.c:location)          -     103321     432205     0.1784     0.1929 
+
+     Tuning: The value of the operator's tuning parameter, or '-' if the operator can't be optimized.
+    #accept: The total number of times a proposal by this operator has been accepted.
+    #reject: The total number of times a proposal by this operator has been rejected.
+      Pr(m): The probability this operator is chosen in a step of the MCMC (i.e. the normalized weight).
+  Pr(acc|m): The acceptance probability (#accept as a fraction of the total proposals for this operator).
+
+
+Total calculation time: 434.077 seconds
+End likelihood: -5974.526339265577
 \end{verbatim}}
 
 \subsection*{Analysing the results}
 
 Run the program called {\bf Tracer} to analyze the output of BEAST. When the main
 window has opened, choose {\bf Import Trace File...} from the {\bf File} menu and select the file that
-BEAST has created called \texttt{H5N1.123123.log} where 123123 is the seed you used.
+BEAST has created called \texttt{H5N1.log}. 
+%where 123123 is the seed you used.
 You should now see a window like in Figure \ref{fig.tracer}.
 
 \begin{figure}
-\begin{center}
-
-\frame{\includegraphics[scale=0.4]{figures/Tracer}}
-
-\end{center}
-\caption{\label{fig.tracer} Tracer with the H5N1 data.}
+\centering	
+\includeimage[scale=0.3]{figures/Tracer}
+\caption{Tracer with the H5N1 data.}
+\label{fig.tracer} 
 \end{figure}
 
 
@@ -358,30 +452,30 @@ nodes as well as the 95\% HPD interval of divergence times for each clade in the
 node. Run the {\bf TreeAnnotator} program and set it up to look like in Figure \ref{fig.TreeAnnotator}.
 
 \begin{figure}
-\begin{center}
-
-\frame{\includegraphics[scale=0.4]{figures/TreeAnnotator}}
-
-\end{center}
-\caption{\label{fig.TreeAnnotator} Using TreeAnnotator to summarise the tree set.}
+\centering	
+\includeimage[scale=0.4]{figures/TreeAnnotator}
+\caption{Using TreeAnnotator to summarise the tree set.}
+\label{fig.TreeAnnotator} 
 \end{figure}
 
 
-The burnin is the number of trees to remove from the start of the sample. Unlike {\bf Tracer} which specifies the number of steps as a burnin, in {\bf TreeAnnotator} you need to specify the actual number of trees. For this run, we use the default setting.
+The burnin is the number of trees to remove from the start of the sample. Unlike {\bf Tracer} which specifies the number of steps as a burnin, in {\bf TreeAnnotator} you need to specify the actual number of trees. For this run, we use the default setting 0.
 
-The {\bf Posterior probability limit} option specifies a limit such that if a node is found at less than this frequency in the sample of trees (i.e., has a posterior probability less than this limit), it will not be annotated. The default of 0.5 means that only nodes seen in the majority of trees will be annotated. Set this to zero to annotate all nodes.
+The {\bf Posterior probability limit} option specifies a limit such that if a node is found at less than this frequency in the sample of trees (i.e., has a posterior probability less than this limit), it will not be annotated. 
+%The default of 0.5 means that only nodes seen in the majority of trees will be annotated. 
+Set this to 0 to annotate all nodes.
 
 For {\bf Target tree type} you can either choose a specific tree from a file or ask TreeAnnotator to find a tree in your sample. The default option, {\bf Maximum clade credibility tree}, finds the tree with the highest product of the posterior probability of all its nodes.
 
 Choose {\bf Mean heights} for node heights. This sets the heights (ages) of each node in the tree to the mean height across the entire sample of trees for that clade.
 
-For the input file, select the trees file that BEAST created (by default this will be called \texttt{gopher.species.trees}) and select a file for the output (here we called it \texttt{gopher.species.tree}).
+For the input file, select the trees file that BEAST created (by default this will be called \LocationTree{}s) and select a file for the output (here we called it \LocationTree{}).
 
 Now press \texttt{Run} and wait for the program to finish.
 
 \subsection*{Distribution of root location}
 
-When you open the summary tree in a text editor, and look at the end of the tree definition, grab the last entry for location.set and location.set.prob. They might look something like this:
+When you open the summary tree \LocationTree{} in a text editor, and look at the end of the tree definition, grab the last entry for location.set and location.set.prob. They might look something like this:
 \\
 {\tt
 location.set = \{"Hunan","Guangxi","Fujian","HongKong","Guangdong"\}
@@ -406,22 +500,20 @@ This distribution shows that the 95\% HPD consists of all locations except Hunan
 strong indication that Hong-Kong might be the root with over 60\% probability. It is quite
 typical that a lot of locations are part of the 95\% HPD in discrete phylogeography.
 
-\subsection*{Viewing the Sprecies Tree}
+\subsection*{Viewing the Location Tree}
 
 We can look at the tree in another program called {\bf FigTree}. Run this program, and open
-the \texttt{summary.tree} file by using the Open command in the File menu. The tree should appear.
+the \LocationTree{} file by using the \texttt{Open} command in the \texttt{File} menu. The tree should appear.
 You can now try selecting some of the options in the control panel on the left. Try selecting
 {\bf Appearance} to get colour on the branches by location. Also, you can set the branch width
 according to posterior support. You should end up with something like Figure \ref{fig.figtree}.
 
 \begin{figure}
-\begin{center}
-
-\frame{\includegraphics[scale=0.4]{figures/figtree.pdf}}
-
-\end{center}
-\caption{\label{fig.figtree} Figtree representation of the summary tree. Branch colours represent location
+\centering
+\includeimage[scale=0.4]{figures/figtree.pdf}
+\caption{Figtree representation of the summary tree. Branch colours represent location
 and branch widths posterior support for the branch.}
+\label{fig.figtree} 
 \end{figure}
 
 
@@ -436,19 +528,19 @@ Alternatively, you can load the species tree set (note this is NOT the summary t
 The image should look something like Figure \ref{fig.DensiTree}.
 
 \begin{figure}
-\begin{center}
-\frame{\includegraphics[scale=0.4]{figures/DensiTree.pdf}}
-\end{center}
-\caption{\label{fig.DensiTree} DensiTree representation of the species tree.}
+\centering
+\includeimage[scale=0.4]{figures/DensiTree.pdf}
+\caption{DensiTree representation of the species tree.}
+\label{fig.DensiTree} 
 \end{figure}
 
 You can colour branches by location to get something like Figure \ref{fig.DensiTree2}.
 
 \begin{figure}
-\begin{center}
-\frame{\includegraphics[scale=0.4]{figures/DensiTree2.pdf}}
-\end{center}
-\caption{\label{fig.DensiTree2} DensiTree with branches coloured by location.}
+\centering
+\includeimage[scale=0.4]{figures/DensiTree2.pdf}
+\caption{DensiTree with branches coloured by location.}
+\label{fig.DensiTree2} 
 \end{figure}
 
 \subsection*{Post processing geography}
@@ -474,16 +566,22 @@ Now, open the 'Output' tab in the panel on the left hand side. Here, you can cho
 
 Select the `generate' button to generate the KML file, and a world map appears with the tree superimposed onto the area where the rabies epidemic occurred.
 
-\frame{\includegraphics[scale=0.4]{figures/spread.png}}
+\begin{figure}
+\centering
+\includeimage[scale=0.3]{figures/spread}
+\caption{A world map appears with the tree superimposed onto the area}
+\label{fig.DensiTree2} 
+\end{figure}
 
 The KML file can be read into google earth. Here, the spread of the epidemic can be animated through time. The coloured areas represent the 95\% HPD regions of the locations of the internal nodes of the summary tree.
 
 \begin{figure}
-
-\frame{\includegraphics[scale=0.25]{figures/google-earth0.png}}
-\frame{\includegraphics[scale=0.25]{figures/google-earth1.png}}
-\frame{\includegraphics[scale=0.5]{figures/google-earth2.png}}
-\caption{\label{fig.ge}Google earth used to animate the KML file}
+\centering
+\includeimage[scale=0.2]{figures/google-earth0}
+\includeimage[scale=0.2]{figures/google-earth1}
+\includeimage[scale=0.4]{figures/google-earth2}
+\caption{Google earth used to animate the KML file}
+\label{fig.ge}
 \end{figure}
 
 
