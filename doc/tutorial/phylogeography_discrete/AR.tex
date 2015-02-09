@@ -1,5 +1,12 @@
 \documentclass{article}
 \usepackage{url,graphicx}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
 
 \newcommand{\includeimage}[2][]{%
 %HEVEA\imgsrc{#2.hevea.png}%
@@ -89,13 +96,15 @@ Please restart BEAUti after new packages are installed.
 To load a NEXUS format alignment, simply select the \texttt{Import
 Alignment} option from the File menu: 
 
-Select the file called \texttt{H5N1.nex}, which is located in the place where the beast-classic package is installed 
+Select the file called \href{http://beast-classic.googlecode.com/svn/trunk/examples/nexus/H5N1.nex}{H5N1.nex},
+which is located in the place where the beast-classic package is installed
 under the {\tt examples/nexus} directory. Typically, packages are installed here:
 \begin{itemize}
 \item for Windows, in your home directory (e.g. {\tt c:$\backslash$Users$\backslash$joe}) under the {\tt BEAST} directory,
 \item for Mac, in the {\tt Library/Application Support/BEAST} directory in your home directory (e.g. {\tt /Users/joe}),
 \item for Linux, in the {\tt .beast} directory in your home directory (e.g {\tt /home/joe}).
 \end{itemize}
+Or click the link to download the data. After the data is opened in your web browser, right click mouse and save it as \texttt{H5N1.nex}.
 
 The file contains an alignment of sequences. The \texttt{H5N1.nex} looks like this (content has been truncated):
 
