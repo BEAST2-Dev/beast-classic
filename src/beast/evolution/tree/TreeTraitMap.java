@@ -104,6 +104,10 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 				String [] sValues = value.get().split(",");
 		        for (String sTrait : sValues) {
 		            sTrait = sTrait.replaceAll("\\s+", " ");
+                    if( sTrait.matches("\\s+") ) {
+                        // ignore extra commas
+                        continue;
+                    }
 		            String[] sStrs = sTrait.split("=");
 		            if (sStrs.length != 2) {
 		                throw new Exception("could not parse trait: " + sTrait);
