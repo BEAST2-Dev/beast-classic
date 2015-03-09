@@ -18,83 +18,78 @@ import beast.util.Randomizer;
 public class BitFlipBSSVSOperator extends Operator {
 
     public Input<BooleanParameter> indicator = new Input<BooleanParameter>("indicator", "the parameter to operate a flip on.", Validate.REQUIRED);
-    public Input<RealParameter> rateParameter = new Input<RealParameter>("mu", "the rateparameter in the substitution model (mutation rate).", Validate.REQUIRED);
+    public Input<RealParameter> rateParameter = new Input<RealParameter>("mu", "the rate parameter in the substitution model " +
+            "(mutation rate).", Validate.REQUIRED);
     public Input<Double> m_pScaleFactor = new Input<Double>("scaleFactor", "scaling factor: larger means more bold proposals", 1.0);
 
 
     private double scaleFactor;
 
-        public void initAndValidate() {
+    public void initAndValidate() {
 
-            scaleFactor = m_pScaleFactor.get();
+        scaleFactor = m_pScaleFactor.get();
+    }
+
+    /**
+     * Change the parameter and return the hastings ratio.
+     * Flip (Switch a 0 to 1 or 1 to 0) for a random bit in a bit vector.
+     * Return the hastings ratio which makes all subsets of vectors with the same number of 1 bits
+     * equiprobable, unless usesPriorOnSum = false then all configurations are equiprobable
+     */
+
+    @Override
+    public double proposal() {
+
+        final BooleanParameter p = indicator.get(this);
+
+        final int dim = p.getDimension();
+
+        double sum = 0.0;
+        for(int i = 0; i < dim; i++) {
+            if( p.getValue(i) ) sum += 1;
         }
 
-        /**
-         * Change the parameter and return the hastings ratio.
-         * Flip (Switch a 0 to 1 or 1 to 0) for a random bit in a bit vector.
-         * Return the hastings ratio which makes all subsets of vectors with the same number of 1 bits
-         * equiprobable, unless usesPriorOnSum = false then all configurations are equiprobable
-         */
+        final int pos = Randomizer.nextInt(dim);
 
-        @Override
-        public double proposal() {
+        final boolean value = p.getValue(pos);
 
-            final BooleanParameter p = indicator.get(this);
+        double rand = 0;
+        if (rateParameter != null)
+            rand = Randomizer.nextDouble();
 
-            final int dim = p.getDimension();
+        double logq = 0.0;
+        if ( ! value ) {
+            p.setValue(pos, true);
 
-            double sum = 0.0;
-            for(int i = 0; i < dim; i++) {
-                if( p.getValue(i) ) sum += 1;
-            }
-
-            final int pos = Randomizer.nextInt(dim);
-
-            final boolean value = p.getValue(pos);
-
-            double rand = 0;
-            if (rateParameter != null)
-                rand = Randomizer.nextDouble();
-
-
-            double logq = 0.0;
-            if ( ! value ) {
-                p.setValue(pos, true);
-
-                logq = -Math.log((dim - sum) / (sum + 1));
+            logq = -Math.log((dim - sum) / (sum + 1));
 //	               rand = 0.5 - rand;
+        } else {
+            // assert value;
 
-
-            } else {
-                assert value;
-
-                p.setValue(pos, false);
-                logq = -Math.log(sum / (dim - sum + 1));
+            p.setValue(pos, false);
+            logq = -Math.log(sum / (dim - sum + 1));
 //	              rand = 0.5 + rand;
-                rand *= -1;
-
-            }
-
-            RealParameter rates = rateParameter.get(this);
-            if (rates != null) {
-                final double scale = Math.exp((rand) * scaleFactor);
-                logq += Math.log(scale);
-
-                final double oldValue = rates.getValue(0);
-                final double newValue = scale * oldValue;
-
-                if (outsideBounds(newValue, rates))
-                    return Double.NEGATIVE_INFINITY;
-
-                rates.setValue(0, newValue);
-            }
-
-            
-
-            return logq;
+            rand *= -1;
         }
 
-        private boolean outsideBounds(double value, RealParameter param) {
+        RealParameter rates = rateParameter.get(this);
+        if (rates != null) {
+            final double scale = Math.exp((rand) * scaleFactor);
+            logq += Math.log(scale);
+
+            final double oldValue = rates.getValue(0);
+            final double newValue = scale * oldValue;
+
+            if (outsideBounds(newValue, rates))
+                return Double.NEGATIVE_INFINITY;
+
+            rates.setValue(0, newValue);
+        }
+
+        return logq;
+    }
+
+    private boolean outsideBounds(double value, RealParameter param) {
         final Double l = param.getLower();
         final Double h = param.getUpper();
 
@@ -102,5 +97,5 @@ public class BitFlipBSSVSOperator extends Operator {
         //return (l != null && value < l || h != null && value > h);
     }
 
-    }
+}
 
