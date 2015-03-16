@@ -341,7 +341,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
 //	        return true;
 //    	}
     	
-    	if (diffusionModel.isDirtyCalculation() || rateModel.isDirtyCalculation()
+    	if (diffusionModel.isDirtyCalculation() || (hasRateModel && rateModel.isDirtyCalculation())
     			|| (deltaParameter != null && deltaParameter.somethingIsDirty())) {
         	recalculateTreeLength();
 	    	updateAllNodes();
