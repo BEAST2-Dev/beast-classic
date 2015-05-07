@@ -68,7 +68,10 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 			<distr spec='beast.math.distributions.Gamma' alpha="0.001" beta="1000." offset="0.0"/>
 		</distribution>
 		<distribution  id='relativeGeoRatesPrior.s:$(n)' x="@relativeGeoRates.s:$(n)" spec='beast.math.distributions.Prior'>
-			<distr spec='beast.math.distributions.Gamma' alpha="1." beta="1." offset="0.0"/>
+			<distr spec='beast.math.distributions.Gamma' offset="0.0"/>
+				<alpha spec='parameter.RealParameter' estimate='false' value='1.0'/>
+				<beta spec='parameter.RealParameter' estimate='false' value='1.0'/>
+			</distr>
 		</distribution>
 		<distribution  id="nonZeroRatePrior.s:$(n)" x="@nonZeroRates.s:$(n)"  spec='beast.math.distributions.Prior'>
 			<distr spec='beast.math.distributions.Poisson' lambda="0.693" offset="6.0"/>
