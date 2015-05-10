@@ -65,16 +65,21 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 
 
 		<distribution  id='geoclockPrior.c:$(n)' x="@traitClockRate.c:$(n)" spec='beast.math.distributions.Prior'>
-			<distr spec='beast.math.distributions.Gamma' alpha="0.001" beta="1000." offset="0.0"/>
+			<distr spec='beast.math.distributions.Gamma' offset="0.0">
+				<alpha spec='parameter.RealParameter' estimate='false' value='0.001'/>
+				<beta spec='parameter.RealParameter' estimate='false' value='1000.0'/>
+			</distr>
 		</distribution>
 		<distribution  id='relativeGeoRatesPrior.s:$(n)' x="@relativeGeoRates.s:$(n)" spec='beast.math.distributions.Prior'>
-			<distr spec='beast.math.distributions.Gamma' offset="0.0"/>
+			<distr spec='beast.math.distributions.Gamma' offset="0.0">
 				<alpha spec='parameter.RealParameter' estimate='false' value='1.0'/>
 				<beta spec='parameter.RealParameter' estimate='false' value='1.0'/>
 			</distr>
 		</distribution>
 		<distribution  id="nonZeroRatePrior.s:$(n)" x="@nonZeroRates.s:$(n)"  spec='beast.math.distributions.Prior'>
-			<distr spec='beast.math.distributions.Poisson' lambda="0.693" offset="6.0"/>
+			<distr spec='beast.math.distributions.Poisson' offset="6.0">
+				<lambda spec='parameter.RealParameter' estimate='false' value='0.693'/>
+			</distr>
 		</distribution>
 
 
