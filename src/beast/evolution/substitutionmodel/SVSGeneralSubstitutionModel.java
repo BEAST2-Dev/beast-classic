@@ -58,6 +58,10 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
             indicator.get().setDimension(dim);
         }
 
+        if (!isSymmetricInput.get() && eigenSystemClass.equals(DefaultEigenSystem.class.getName())) {
+        	Log.warning.println("WARNING: eigenSystemClass is DefautlEigneSystem, which may cause trouble with asymtric analysis. "
+        			+ "You may want to consider eigensystem='beast.evolution.substitutionmodel.RobustEigenSystem' instead.");
+        }
         eigenSystem = createEigenSystem();
         
 //        if (robust.get()){
