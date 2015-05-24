@@ -1,0 +1,1 @@
+[BEAST 2](http://code.google.com/p/beast2) add-on with wrappers around [BEAST 1](http://code.google.com/p/beast-mcmc) classes
