@@ -330,7 +330,7 @@ public class BeautiContinuousPhylogeographyTest extends BeautiBase {
 			// 2. Set the site model to HKY (empirical)
 			warning("2. Set the site model to HKY (empirical)");
 			f.selectTab("Site Model");
-			JComboBoxFixture substModel = beautiFrame.comboBox();
+			JComboBoxFixture substModel = beautiFrame.comboBox("substModel");
 			substModel.selectItem("HKY");
 			beautiFrame.comboBox("frequencies").selectItem("Empirical");
 			printBeautiState(f);
@@ -349,8 +349,8 @@ public class BeautiContinuousPhylogeographyTest extends BeautiBase {
 			screenshotTaker.saveComponentAsPng(beauti.frame, PREFIX + "priors.png");
 
 			assertStateEquals("Tree.t:RacRABV", "clockRate.c:RacRABV", "kappa.s:RacRABV", "popSize.t:RacRABV");
-			assertOperatorsEqual("treeScaler.t:RacRABV", "treeRootScaler.t:RacRABV", "UniformOperator.t:RacRABV",
-					"SubtreeSlide.t:RacRABV", "narrow.t:RacRABV", "wide.t:RacRABV", "WilsonBalding.t:RacRABV",
+			assertOperatorsEqual("CoalescentConstantTreeScaler.t:RacRABV", "CoalescentConstantTreeRootScaler.t:RacRABV", "CoalescentConstantUniformOperator.t:RacRABV",
+					"CoalescentConstantSubtreeSlide.t:RacRABV", "CoalescentConstantNarrow.t:RacRABV", "CoalescentConstantWide.t:RacRABV", "CoalescentConstantWilsonBalding.t:RacRABV",
 					"StrictClockRateScaler.c:RacRABV", "strictClockUpDownOperator.c:RacRABV", "KappaScaler.s:RacRABV",
 					"PopSizeScaler.t:RacRABV");
 			assertPriorsEqual("CoalescentConstant.t:RacRABV", "ClockPrior.c:RacRABV", "KappaPrior.s:RacRABV",

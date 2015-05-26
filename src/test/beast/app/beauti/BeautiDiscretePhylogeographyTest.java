@@ -82,7 +82,7 @@ public class BeautiDiscretePhylogeographyTest extends BeautiBase {
 			// 2. Set the site model to HKY+G4 (empirical)
 			warning("2. Set the site model to HKY (empirical)");
 			f.selectTab("Site Model");
-			JComboBoxFixture substModel = beautiFrame.comboBox();
+			JComboBoxFixture substModel = beautiFrame.comboBox("substModel");
 			substModel.selectItem("HKY");
 			beautiFrame.comboBox("frequencies").selectItem("Empirical");
 
