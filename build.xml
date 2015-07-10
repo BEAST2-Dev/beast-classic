@@ -20,7 +20,7 @@
 	<property name="BEASTLabspath" location="../BEASTLabs" />
 	<property name="BEASTLabsclasspath" location="${BEASTLabspath}/build" />
 	<property name="Add_on_dir" value="${release_dir}/add-on" />
-	<property name="version" value="1.2.0" />
+	<property name="version" value="1.2.1" />
 
     <import file="${beast2path}/build.xml" />
 
@@ -34,6 +34,7 @@
 		<fileset dir="${libBeast2}" includes="beagle.jar"/>
 		<fileset dir="${libBeast2}" includes="jam.jar"/>
 		<fileset dir="${libBeast2}" includes="colt.jar"/>
+		<fileset dir="${libBeast2}" includes="antlr-runtime-4.5.jar"/>
 		<fileset dir="${libBEAST_CLASSIC}" includes="mtj.jar"/>
         <pathelement path="${beast2classpath}"/>
         <pathelement path="${BEASTLabsclasspath}"/>
@@ -219,6 +220,7 @@
 		</copy>
 		<copy todir="${Add_on_dir}/templates">
 			<fileset file="templates/discrete-trait.xml" />
+			<fileset file="templates/ClassicSubtseModels.xml" />
 		</copy>
 		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.addon.v${version}.zip">
 			<fileset dir="${Add_on_dir}">
