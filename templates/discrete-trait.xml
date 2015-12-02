@@ -3,8 +3,8 @@
 
 
 <mergewith point='aux-partitions-panels'>
-		<alignmentProvider id="Add Continuous Geography" spec='BeautiLocationTraitProvider' template='@LocationTrait'/>
-		<alignmentProvider id="Add Discrete Trait" spec='BeautiDiscreteTraitProvider' template='@DiscreteTrait'/>
+		<alignmentProvider id="Add Continuous Geography" spec='beast.app.beauti.BeautiLocationTraitProvider' template='@LocationTrait'/>
+		<alignmentProvider id="Add Discrete Trait" spec='beast.app.beauti.BeautiDiscreteTraitProvider' template='@DiscreteTrait'/>
 <!--
 		<panel spec='BeautiPanelConfig' panelname="Discrete Trait" tiptext="Discrete Trait details"
             path='distribution/distribution[id="prior"]/distribution[id="discrete-trait"]/distribution'

@@ -281,6 +281,7 @@ public class TraitInputEditor extends ListInputEditor {
             }
 
         });
+        table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         table.setRowHeight(24);
         JScrollPane scrollPane = new JScrollPane(table);
         return scrollPane;

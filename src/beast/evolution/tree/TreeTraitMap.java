@@ -7,6 +7,7 @@ import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
+import beast.core.util.Log;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.TreeInterface;
 import beast.util.Randomizer;
@@ -120,7 +121,12 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		            String sTraitValue = normalize(sStrs[1]);
 		            String [] sTraitValues = sTraitValue.split("\\s");
 		            for (int i = 0; i < sTraitValues.length; i++) {
-		            	values[iTaxon * dim + i] = Double.parseDouble(sTraitValues[i]);
+		            	try {
+		            		values[iTaxon * dim + i] = Double.parseDouble(sTraitValues[i]);
+		            	} catch (Exception e) {
+		            		Log.err.println("Could not parse >>" + sTraitValues[i] + "<< " + e.getMessage());
+		            		throw e;
+		            	}
 		            }
 		            if (bDone[iTaxon]) {
 		            	throw new Exception("Trait for taxon " + sTaxa.get(iTaxon)+ " defined twice");

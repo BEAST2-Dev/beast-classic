@@ -212,6 +212,7 @@ public class LocationInputEditor extends ListInputEditor {
             }
 
         });
+        table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowHeight(24);
         table.getColumnModel().getColumn(0).setPreferredWidth(300);
