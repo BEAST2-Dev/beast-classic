@@ -1,7 +1,6 @@
 package beast.app.beauti;
 
 import java.awt.Frame;
-import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import beast.app.beauti.BeautiAlignmentProvider;
 import beast.app.beauti.BeautiDoc;
 import beast.app.beauti.PartitionContext;
 import beast.core.BEASTInterface;
-import beast.core.BEASTObject;
 import beast.core.Description;
 import beast.core.State;
 import beast.core.StateNode;
@@ -66,7 +64,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 	
 	@Override
 	int matches(Alignment alignment) {
-		for (BEASTObject output : alignment.outputs) {
+		for (BEASTInterface output : alignment.getOutputs()) {
 			if (output instanceof AncestralStateTreeLikelihood) {
 				return 10;
 			}
@@ -79,7 +77,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 	void editAlignment(Alignment alignment, BeautiDoc doc) {
 		TraitInputEditor editor = new TraitInputEditor(doc);
 		AncestralStateTreeLikelihood likelihood = null;
-		for (BEASTObject output : alignment.outputs) {
+		for (BEASTInterface output : alignment.getOutputs()) {
 			if (output instanceof AncestralStateTreeLikelihood) {
 				likelihood = (AncestralStateTreeLikelihood) output;
 				editor.initPanel(likelihood);

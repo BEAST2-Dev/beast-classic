@@ -13,7 +13,6 @@ import beast.app.beauti.BeautiDoc;
 import beast.app.beauti.PartitionContext;
 import beast.continuous.SampledMultivariateTraitLikelihood;
 import beast.core.BEASTInterface;
-import beast.core.BEASTObject;
 import beast.core.State;
 import beast.core.StateNode;
 import beast.evolution.alignment.Alignment;
@@ -54,7 +53,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 	
 	@Override
 	int matches(Alignment alignment) {
-		for (BEASTObject output : alignment.outputs) {
+		for (BEASTInterface output : alignment.getOutputs()) {
 			if (output instanceof beast.continuous.SampledMultivariateTraitLikelihood) {
 				return 10;
 			}
@@ -67,7 +66,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 	void editAlignment(Alignment alignment, BeautiDoc doc) {
 		LocationInputEditor editor = new LocationInputEditor(doc);
 		SampledMultivariateTraitLikelihood likelihood = null;
-		for (BEASTObject output : alignment.outputs) {
+		for (BEASTInterface output : alignment.getOutputs()) {
 			if (output instanceof SampledMultivariateTraitLikelihood) {
 				likelihood = (SampledMultivariateTraitLikelihood) output;
 				editor.initPanel(likelihood);
