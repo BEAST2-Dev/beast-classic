@@ -15,7 +15,7 @@
 %END LATEX
 }
 
-\newcommand{\BEASTVersion}{2.2.x}
+\newcommand{\BEASTVersion}{2.3.x}
 \newcommand{\TracerVersion}{1.6}
 \newcommand{\FigTreeVersion}{1.4.2}
 \newcommand{\LocationTree}{{\texttt{location\_tree\_with\_trait.tree}}}
@@ -38,7 +38,7 @@ You will need the following software at your disposal:
 
 \item {\bf BEAST} - this package contains the BEAST program, BEAUti, TreeAnnotator and other utility programs. This tutorial is written for BEAST v{\BEASTVersion}, which has support for multiple partitions. It is available for download from \\* \texttt{http://www.beast2.org/}.
 \item {\bf Tracer} - this program is used to explore the output of BEAST (and other Bayesian MCMC programs). It graphically and
-quantitively summarizes the distributions of continuous parameters and provides diagnostic information. At the time of
+quantitively summarises the distributions of continuous parameters and provides diagnostic information. At the time of
 writing, the current version is v{\TracerVersion}. It is available for download from \texttt{http://beast.bio.ed.ac.uk/}.
 \item {\bf FigTree} - this is an application for displaying and printing molecular phylogenies, in particular those obtained using
 BEAST. At the time of writing, the current version is v{\FigTreeVersion}. It is available for download from \texttt{http://tree.bio.ed.ac.uk/}.
@@ -47,13 +47,13 @@ BEAST. At the time of writing, the current version is v{\FigTreeVersion}. It is 
 \end{itemize}
 
 
-This tutorial guides you through a discrete phylogegraphy analysis of a H5N1 epidemic in South China.
+This tutorial guides you through a discrete phylogeography analysis of a H5N1 epidemic in South China.
 The data is a subset of a larger set compiled by \cite{wallace:2007st}.
 It consists of 43 sequences of 1698 characters.
 
 We go through the following steps:
 \begin{itemize}
-\item The first step is to install the beast-classic package that contains the phylogegraphic models. 
+\item The first step is to install the beast-classic package that contains the phylogeographic models. 
 \item Then, we use BEAUti to set up the analysis, and write it to an XML file.
 \item We use BEAST to run the MCMC analysis based on the XML file.
 \item The results will need to be checked for convergence using Tracer.
@@ -356,9 +356,7 @@ look something like this:
 
 {\tiny   
 \begin{verbatim}
-
-
-                        BEAST v2.2.0, 2002-2015
+                   BEAST v2.3.2 Prerelease, 2002-2015
              Bayesian Evolutionary Analysis Sampling Trees
                        Designed and developed by
  Remco Bouckaert, Alexei J. Drummond, Andrew Rambaut & Marc A. Suchard
@@ -391,8 +389,11 @@ Gerton Lunter, Sidney Markowitz, Vladimir Minin, Michael Defoin Platel,
                                Thanks to:
           Roald Forsberg, Beth Shapiro and Korbinian Strimmer
 
-File: H5N1.xml seed: 1422413146822 threads: 1
 Random number seed: 1422413146822
+
+File: H5N1_HA_discrete2.xml seed: 1422413146822 threads: 1
+Loading package BEAST_CLASSIC v1.2.
+Loading package BEASTLabs v1.3.2
 
 ... ...
 

@@ -147,6 +147,11 @@ public class BeautiDiscretePhylogeographyTest extends BeautiBase {
 			printBeautiState(f);
 			screenshotTaker.saveComponentAsPng(beauti.frame, PREFIX + "DataPartitions2.png");
 
+			
+			f.selectTab("Site Model");
+			beautiFrame.list().selectItem("location");
+			screenshotTaker.saveComponentAsPng(beauti.frame, PREFIX + "sitemodel2.png");
+
 			// 6. View clock
 			warning("6. View clock models");
 			f.selectTab("Clock Model");
