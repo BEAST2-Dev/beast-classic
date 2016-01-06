@@ -73,7 +73,7 @@ public class TraitInputEditor extends ListInputEditor {
 	public void init(Input<?> input, BEASTInterface plugin, int itemNr,	ExpandOption bExpandOption, boolean bAddButtons) {
         m_bAddButtons = bAddButtons;
         m_input = input;
-        m_plugin = plugin;
+        m_beastObject = plugin;
         this.itemNr = itemNr;
         m_bAddButtons = bAddButtons;
 		this.itemNr = itemNr;
@@ -96,9 +96,9 @@ public class TraitInputEditor extends ListInputEditor {
 //    public void init2(Input<?> input, Plugin plugin, int itemNr, ExpandOption bExpandOption, boolean bAddButtons) {
 	public void initPanel(AncestralStateTreeLikelihood likelihood_) {
 		likelihood = likelihood_;
-		m_plugin = likelihood.dataInput.get();
+		m_beastObject = likelihood.dataInput.get();
 		try {
-			m_input = m_plugin.getInput("traitSet");
+			m_input = m_beastObject.getInput("traitSet");
 		}catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -111,7 +111,7 @@ public class TraitInputEditor extends ListInputEditor {
         	}
     		AlignmentFromTrait traitData = (AlignmentFromTrait) data;
             m_input = traitData.traitInput;
-            m_plugin = traitData;
+            m_beastObject = traitData;
             traitSet = traitData.traitInput.get();
             
             if (traitSet == null) {
@@ -122,7 +122,7 @@ public class TraitInputEditor extends ListInputEditor {
                 traitSet.initByName("traitname", "discrete",
                         "taxa", tree.getTaxonset(),
                         "value", "");
-                m_input.setValue(traitSet, m_plugin);
+                m_input.setValue(traitSet, m_beastObject);
                 data.initAndValidate();
                 } catch (Exception e) {
 					// TODO: handle exception
@@ -156,9 +156,9 @@ public class TraitInputEditor extends ListInputEditor {
                             comp.add(createButtonBox());
                             comp.add(createListBox());
                             validateInput();
-                            m_input.setValue(traitSet, m_plugin);
+                            m_input.setValue(traitSet, m_beastObject);
                         } else {
-                            m_input.setValue(null, m_plugin);
+                            m_input.setValue(null, m_beastObject);
                             comp.add(checkBox);
                         }
                     } catch (Exception ex) {
