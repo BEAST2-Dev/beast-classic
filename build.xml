@@ -212,7 +212,7 @@
 			<fileset dir="examples/nexus" includes="*"/>
 		</copy>
 		<copy todir="${Add_on_dir}/lib">
-			<fileset dir="${libBEAST_CLASSIC}" includes="colt.jar"/>
+			<fileset dir="${libBEAST_CLASSIC}" includes="mtj.jar"/>
 			<fileset dir="${distBEAST_CLASSIC}" includes="BEAST_CLASSIC.addon.jar" />
 		</copy>
 		<copy todir="${Add_on_dir}">
