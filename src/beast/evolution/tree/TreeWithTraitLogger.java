@@ -60,7 +60,7 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 	}
 	
 	@Override
-	public void init(PrintStream out) throws Exception {
+	public void init(PrintStream out) {
 		m_tree.get().init(out);
 	}
 

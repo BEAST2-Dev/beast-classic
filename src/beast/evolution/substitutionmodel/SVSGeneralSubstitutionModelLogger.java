@@ -70,7 +70,7 @@ public class SVSGeneralSubstitutionModelLogger extends BEASTObject implements Lo
     }
 
     @Override
-    public void init(PrintStream out) throws Exception {
+    public void init(PrintStream out) {
         String mainID = (getID() == null || getID().matches("\\s*"))
                 ? "geoSubstModel"
                 : getID();

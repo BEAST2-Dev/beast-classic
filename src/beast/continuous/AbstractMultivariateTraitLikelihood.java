@@ -536,7 +536,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     
     /** loggable implementation **/
     @Override
-    public void init(PrintStream out) throws Exception {
+    public void init(PrintStream out) {
     	out.print(getID() + ".joint\t" + getID() + ".data\t");
     }
     

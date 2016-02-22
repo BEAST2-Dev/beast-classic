@@ -43,7 +43,7 @@ public class RootTrait extends CalculationNode implements Function, Loggable {
 	}
 
 	@Override
-	public void init(PrintStream out) throws Exception {
+	public void init(PrintStream out) {
 		String id = getID();
 		if (id == null) {
 			id = "RootTrait";
