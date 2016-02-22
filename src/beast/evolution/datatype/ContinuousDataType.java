@@ -22,7 +22,7 @@ public class ContinuousDataType extends DataType.Base {
 	}
 
 	@Override
-	public List<Integer> string2state(String sSequence) throws Exception {
+	public List<Integer> string2state(String sSequence) {
 		return null;
 	}
 

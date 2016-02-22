@@ -2,6 +2,7 @@ package beast.evolution.substitutionmodel;
 
 
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import beast.core.Function;
@@ -36,14 +37,14 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
     private BooleanParameter rateIndicator;
 
     @Override
-    public void initAndValidate() throws Exception{
+    public void initAndValidate(){
 
         frequencies = frequenciesInput.get();
 
         updateMatrix = true;
         nrOfStates = frequencies.getFreqs().length;
         if (isSymmetricInput.get() && ratesInput.get().getDimension() != nrOfStates * (nrOfStates-1)/2) {
-            throw new Exception("Dimension of input 'rates' is " + ratesInput.get().getDimension() + " but a " +
+            throw new IllegalArgumentException("Dimension of input 'rates' is " + ratesInput.get().getDimension() + " but a " +
                     "rate matrix of dimension " + nrOfStates + "x" + (nrOfStates -1) + "/2" + "=" + nrOfStates * (nrOfStates -1) / 2 + " was " +
                     "expected");
         }
@@ -62,7 +63,12 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
         	Log.warning.println("WARNING: eigenSystemClass is DefautlEigneSystem, which may cause trouble with asymtric analysis. "
         			+ "You may want to consider eigensystem='beast.evolution.substitutionmodel.RobustEigenSystem' instead.");
         }
-        eigenSystem = createEigenSystem();
+        try {
+			eigenSystem = createEigenSystem();
+		} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			throw new IllegalArgumentException(e);
+		}
         
 //        if (robust.get()){
 //            eigenSystem = new RobustEigenSystem(m_nStates);

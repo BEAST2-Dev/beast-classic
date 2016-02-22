@@ -44,7 +44,7 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
 	public Input<Boolean> initFromTree = new Input<Boolean>("initFromTree","initiliase initial state from tree", false);
 	
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 		super.initAndValidate();
 		if (initFromTree.get()) {
 			Node [] nodes = treeModel.getNodesAsArray();

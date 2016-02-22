@@ -11,7 +11,7 @@ public class LeafTrait extends CalculationNode {
 	public Input<String> taxonName = new Input<String>("taxon", "taxon name identifying the leaf", Validate.REQUIRED);
 	public Input<IntegerParameter> parameter = new Input<IntegerParameter>("parameter", "parameter associated with the leaf", Validate.REQUIRED);
 	
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 		// nothing to do
 	};
 }

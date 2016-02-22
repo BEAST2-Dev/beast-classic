@@ -70,7 +70,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     int[][] tipStates; // used to store tip states when using beagle
     
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     	if (dataInput.get().getSiteCount() == 0) {
     		return;
     	}
@@ -127,7 +127,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 //        }
         if (beagle != null) {
             if (!(siteModelInput.get() instanceof SiteModel.Base)) {
-            	throw new Exception ("siteModel input should be of type SiteModel.Base");
+            	throw new IllegalArgumentException ("siteModel input should be of type SiteModel.Base");
             }
             m_siteModel = (SiteModel.Base) siteModelInput.get();
         	substitutionModel = (SubstitutionModel.Base) m_siteModel.substModelInput.get();
@@ -179,7 +179,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 			parameters[i] = leafTrait.parameter.get();
 			// sanity check
 			if (parameters[i].getDimension() != traitDimension) {
-				throw new Exception("Expected parameter dimension to be " + traitDimension + ", not "
+				throw new IllegalArgumentException("Expected parameter dimension to be " + traitDimension + ", not "
 						+ parameters[i].getDimension());
 			}
 			// identify node
@@ -191,7 +191,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 			leafNr[i] = k;
 			// sanity check
 			if (k == taxaNames.size()) {
-				throw new Exception("Could not find taxon '" + taxon + "' in tree");
+				throw new IllegalArgumentException("Could not find taxon '" + taxon + "' in tree");
 			}
 			// initialise parameter value from states
 			Integer[] values = new Integer[tipStates[k].length];
@@ -334,7 +334,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 
     
     @Override
-    public double calculateLogP() throws Exception {
+    public double calculateLogP() {
         areStatesRedrawn = false;
         double marginalLogLikelihood = super.calculateLogP();
         if (returnMarginalLogLikelihood) {

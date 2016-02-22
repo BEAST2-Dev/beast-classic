@@ -48,7 +48,7 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
     private double[] zeros;
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
         gmrfField = GMRFSkyrideLikelihoodInput .get();
         popSizeParameter = gmrfField.getPopSizeParameter();
         precisionParameter = gmrfField.getPrecisionParameter();
@@ -385,7 +385,7 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
     }
 
     @Override
-    public List<StateNode> listStateNodes() throws Exception {
+    public List<StateNode> listStateNodes() {
     	List<StateNode> list = new ArrayList<StateNode>();
         list.add(precisionParameter);
         if (lambdaParameter.isEstimatedInput.get()) {

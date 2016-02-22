@@ -97,7 +97,7 @@ public class TraitGibbsOperator extends Operator {
 	TreeTraitMap traitMap;
 	
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
     	traitMap = mapInput.get();
 
 		this.traitModel = traitModelInput.get();

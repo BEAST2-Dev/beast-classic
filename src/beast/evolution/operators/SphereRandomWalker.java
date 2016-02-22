@@ -41,7 +41,7 @@ public class SphereRandomWalker extends Operator {
 	boolean optimise = false;
 
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 		location = locationInput.get();
 		windowSize = windowSizeInput.get();
 		range = 1 + location.getDimension()/2;

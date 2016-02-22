@@ -77,7 +77,7 @@ public class PrecisionMatrixGibbsOperator extends Operator {
     TreeTraitMap traitMap;
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     	traitMap = mapInput.get();
     	treeModel = treeInput.get();
     	precisionParam = precisionParamInput.get();

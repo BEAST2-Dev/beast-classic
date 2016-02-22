@@ -76,7 +76,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     protected double[] m_StoredBranchLengths;
     
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
         //super.initAndValidate();
         m_branchLengths = new double[0];
         m_StoredBranchLengths = new double[0];
@@ -125,7 +125,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
         if (dataInput.get() instanceof AlignmentFromTraitMap) {
         	traitMap = ((AlignmentFromTraitMap) dataInput.get()).getTraitMap();
         } else {
-        	throw new Exception ("Expected that data input is AlignmentFromTraitMap");
+        	throw new IllegalArgumentException ("Expected that data input is AlignmentFromTraitMap");
         }
         recalculateTreeLength();                           
 //        printInformtion();
@@ -492,7 +492,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     }
     
     @Override
-    public double calculateLogP() throws Exception {
+    public double calculateLogP() {
     	logP = getLogLikelihood();
     	return logP;
     }

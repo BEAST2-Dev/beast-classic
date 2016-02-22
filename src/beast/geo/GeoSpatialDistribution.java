@@ -3,7 +3,12 @@ package beast.geo;
 
 
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import beast.core.*;
 import beast.core.Input.Validate;
@@ -30,9 +35,13 @@ public class GeoSpatialDistribution extends CalculationNode implements Multivari
     public static final String ALL_NODES= "all";
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     	label = labelInput.get();
-    	regions = Polygon2D.readKMLFile(fileInput.get());
+    	try {
+			regions = Polygon2D.readKMLFile(fileInput.get());
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			throw new IllegalArgumentException(e);
+		}
     	outside = !insideInput.get();
     	union = unionInput.get();
     }

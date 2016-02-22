@@ -494,7 +494,7 @@ public class Polygon2D {
         }
     }
 
-    public static List<Polygon2D> readKMLFile(String fileName) throws Exception {
+    public static List<Polygon2D> readKMLFile(String fileName) throws SAXException, IOException, ParserConfigurationException  {
         List<Polygon2D> polygons = new ArrayList<Polygon2D>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //factory.setValidating(true);

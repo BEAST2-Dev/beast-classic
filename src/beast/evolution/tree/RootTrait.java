@@ -17,7 +17,7 @@ public class RootTrait extends CalculationNode implements Function, Loggable {
     RealParameter parameter;
     int dim;
     
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     	map = mapInput.get();
     	tree = map.tree;
     	parameter = map.parameterInput.get();

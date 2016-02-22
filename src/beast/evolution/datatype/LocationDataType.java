@@ -6,7 +6,7 @@ import beast.core.Description;
 public class LocationDataType extends ContinuousDataType {
 	
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 		// nothing to do
 	}
 	

@@ -23,7 +23,7 @@ import beast.evolution.tree.Tree;
 public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 
 	@Override
-	List<BEASTInterface> getAlignments(BeautiDoc doc) {
+	protected List<BEASTInterface> getAlignments(BeautiDoc doc) {
 		try {
             List<String> trees = new ArrayList<String>();
             doc.scrubAll(true, false);

@@ -8,7 +8,7 @@ import beast.core.*;
 public class LogisticRegression extends GeneralizedLinearModel {
 
 	@Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     	super.initAndValidate();
     }
 

@@ -21,7 +21,7 @@ public class MultivariateNormalDistribution extends Distribution {
 
     Function arg;
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
         multivariatenormaldistribution = new dr.math.distributions.MultivariateNormalDistribution(
                              mean.get().getValues(),
                              precision.get().getValues());
@@ -29,7 +29,7 @@ public class MultivariateNormalDistribution extends Distribution {
     }
 
     @Override
-    public double calculateLogP() throws Exception {
+    public double calculateLogP() {
     	double [] y = new double[arg.getDimension()];
     	for (int i = 0; i < y.length; i++) {
     		y[i] = arg.getArrayValue(i);

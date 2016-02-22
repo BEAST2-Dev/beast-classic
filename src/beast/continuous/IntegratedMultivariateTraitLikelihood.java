@@ -113,7 +113,7 @@ public abstract class IntegratedMultivariateTraitLikelihood extends AbstractMult
 //        super(traitName, treeModel, diffusionModel, traitParameter, deltaParameter, missingIndices, cacheBranches, scaleByTime,
 //                useTreeLength, rateModel, driftModels, samplingDensity, reportAsMultivariate, reciprocalRates);
 
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     	super.initAndValidate();
     	
         // Delegate caches to helper

@@ -26,7 +26,7 @@ public class AlignmentFromTrait extends Alignment {
 	    }
 
 	    @Override
-	    public void initAndValidate() throws Exception {
+	    public void initAndValidate() {
 	    	traitSet = traitInput.get();
 	    	patternIndex = new int[0];
 	        counts = new ArrayList<List<Integer>>();
@@ -37,12 +37,17 @@ public class AlignmentFromTrait extends Alignment {
 	            m_dataType = userDataTypeInput.get();
 	        } else {
 	            if (types.indexOf(dataTypeInput.get()) < 0) {
-	                throw new Exception("data type + '" + dataTypeInput.get() + "' cannot be found. " +
+	                throw new IllegalArgumentException("data type + '" + dataTypeInput.get() + "' cannot be found. " +
 	                        "Choose one of " + Arrays.toString(types.toArray(new String[0])));
 	            }
 	            List<String> sDataTypes = AddOnManager.find(beast.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
 	            for (String sDataType : sDataTypes) {
-	                DataType dataType = (DataType) Class.forName(sDataType).newInstance();
+	                DataType dataType = null;
+					try {
+						dataType = (DataType) Class.forName(sDataType).newInstance();
+					} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+						throw new IllegalArgumentException(e);
+					}
 	                if (dataTypeInput.get().equals(dataType.getTypeDescription())) {
 	                    m_dataType = dataType;
 	                    break;
@@ -61,7 +66,7 @@ public class AlignmentFromTrait extends Alignment {
 	        for (int i = 0; i < taxaNames.size(); i++) {
 	        	String sValue = traitSet.getStringValue(i);
 	        	if (sValue == null) {
-	        		throw new Exception("Trait not specified for " + i);
+	        		throw new IllegalArgumentException("Trait not specified for " + i);
 	        	}
 	        	List<Integer> iStates = m_dataType.string2state(sValue);
 	        	counts.add(iStates);

@@ -28,7 +28,7 @@ public class GeneralIntegerOperator extends Operator {
 	IntegerParameter parameter;
 	
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 		howMany = howManyyInput.get();
 		
 		parameter = parameterInput.get();
@@ -61,7 +61,7 @@ public class GeneralIntegerOperator extends Operator {
     		RealParameter probsParam = probsInput.get();
     		IntegerParameter indexParam = indexInput.get();
     		if (probsParam.getDimension() != indexParam.getDimension()) {
-    			throw new Exception("probs and index must be of the same length");
+    			throw new IllegalArgumentException("probs and index must be of the same length");
     		}
     		Integer [] indices = indexParam.getValues();
     		int max = 0;
@@ -80,7 +80,7 @@ public class GeneralIntegerOperator extends Operator {
     		sum += f;
     	}
     	if (Math.abs(sum - 1.0) > 1e-6) {
-    		throw new Exception("Probabilities must sum to one (instead of " + sum + ")");
+    		throw new IllegalArgumentException("Probabilities must sum to one (instead of " + sum + ")");
     	}
     	
     	// convert to cumulative pdf

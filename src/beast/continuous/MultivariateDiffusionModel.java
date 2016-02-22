@@ -26,12 +26,12 @@ public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
     int dimension;
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     	//diffusionPrecisionMatrix = 
         this.diffusionPrecisionMatrixParameter = diffusionPrecisionMatrixInput.get();
         dimension = (int) Math.sqrt(diffusionPrecisionMatrixParameter.getDimension());
         if (dimension * dimension != diffusionPrecisionMatrixParameter.getDimension()) {
-        	throw new Exception ("Dimension of diffusion matrix should be a square");
+        	throw new IllegalArgumentException ("Dimension of diffusion matrix should be a square");
         }
         calculatePrecisionInfo();
     }

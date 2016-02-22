@@ -133,7 +133,7 @@ public interface TreeTraitProvider {
         private Map<String, TreeTrait<?>> traits = new HashMap<String, TreeTrait<?>>();
 
 		@Override
-		public void initAndValidate() throws Exception {
+		public void initAndValidate() {
 			// nothing to do
 		}
     }

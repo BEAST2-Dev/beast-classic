@@ -51,7 +51,7 @@ public class SVSGeneralSubstitutionModelLogger extends BEASTObject implements Lo
     public SVSGeneralSubstitutionModelLogger() { }
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
         model = modelInput.get();
     }
 

@@ -20,7 +20,7 @@ public class WishartDistribution extends Distribution {
     Function arg;
     
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     	if (scaleMatrix.get() != null) {
     		wishartdistribution = new dr.math.distributions.WishartDistribution(df.get(), scaleMatrix.get().getValues());
     	} else {
@@ -30,7 +30,7 @@ public class WishartDistribution extends Distribution {
     }
 
     @Override
-    public double calculateLogP() throws Exception {
+    public double calculateLogP() {
     	double [] y = new double[arg.getDimension()];
     	for (int i = 0; i < y.length; i++) {
     		y[i] = arg.getArrayValue(i);

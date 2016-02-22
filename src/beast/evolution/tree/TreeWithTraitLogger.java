@@ -37,7 +37,7 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 	Boolean combineParameters;
 	
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 		parameters = new ArrayList<Parameter<?>>();
 		rates = new ArrayList<BranchRateModel>();
 		traits = new ArrayList<TreeTraitProvider>();
@@ -54,7 +54,7 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 			} else if (plugin instanceof Function){
 				valuables.add((Function) plugin);
 			} else {
-				throw new Exception ("This entry (id=" + plugin.getID() + ") is not metadata that can be logged with a tree");
+				throw new IllegalArgumentException ("This entry (id=" + plugin.getID() + ") is not metadata that can be logged with a tree");
 			}
 		}
 	}

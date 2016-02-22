@@ -30,7 +30,7 @@ public class RegressionGibbsPrecisionOperator extends Operator {
     private Gamma prior;
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     //if (!(prior instanceof GammaDistribution))
         //      throw new RuntimeException("Precision prior must be Gamma");
         this.prior = priorInput.get();

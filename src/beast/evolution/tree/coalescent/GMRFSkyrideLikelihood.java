@@ -135,7 +135,7 @@ public class GMRFSkyrideLikelihood extends Coalescent /*OldAbstractCoalescentLik
     
     
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
 //    public GMRFSkyrideLikelihood(List<Tree> treeList, RealParameter popParameter, RealParameter groupParameter, RealParameter precParameter,
 //    		RealParameter lambda, RealParameter beta, RealParameter dMatrix,
 //	                             boolean timeAwareSmoothing, boolean rescaleByRootHeight) throws Exception {
@@ -204,7 +204,7 @@ public class GMRFSkyrideLikelihood extends Coalescent /*OldAbstractCoalescentLik
 	}
 
     @Override
-    public double calculateLogP() throws Exception {
+    public double calculateLogP() {
     	logP = getLogLikelihood();
     	return logP;
     }    

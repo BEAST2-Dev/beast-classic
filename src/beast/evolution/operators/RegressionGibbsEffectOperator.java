@@ -39,7 +39,7 @@ public class RegressionGibbsEffectOperator extends Operator {
     private double[][] precision = null;
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
         this.linearModel = linearModelInput.get();
         this.effect = effectInput.get();
         this.indicators = indicatorsInput.get();

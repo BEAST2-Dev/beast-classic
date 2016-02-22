@@ -20,7 +20,7 @@ public class GeneralizedLinearModel extends Distribution implements Function {
     public Input<List<RealParameter>> designMatrixInput = new Input<List<RealParameter>>("dependentParam", "description here", new ArrayList<RealParameter>());
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
         this.dependentParam = dependentParamInput.get();
 
         if (dependentParam != null) {

@@ -27,7 +27,7 @@ public class AlignmentFromTraitMap extends Alignment {
 	}
 
 	@Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
     	traitMap = traitInput.get();
     	patternIndex = new int[0];
         counts = new ArrayList<List<Integer>>();
@@ -36,7 +36,7 @@ public class AlignmentFromTraitMap extends Alignment {
     	}
     	m_dataType = userDataTypeInput.get();
         if (!(m_dataType instanceof ContinuousDataType)) {
-        	throw new Exception("Data type must be a ContinuousDataType, not " + m_dataType.getClass().getName());
+        	throw new IllegalArgumentException("Data type must be a ContinuousDataType, not " + m_dataType.getClass().getName());
         }
 
         taxaNames = new ArrayList<String>();

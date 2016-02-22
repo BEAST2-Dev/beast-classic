@@ -12,7 +12,7 @@ public class LinearRegression extends GeneralizedLinearModel {
 	public Input<RealParameter> scaleDesignInput = new Input<RealParameter>("scaleDesign", "description here");
 
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 		super.initAndValidate();
 		this.logTransform = logTransformInput.get();
 		
