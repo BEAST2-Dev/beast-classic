@@ -52,7 +52,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 	}
 	
 	@Override
-	int matches(Alignment alignment) {
+	protected int matches(Alignment alignment) {
 		for (BEASTInterface output : alignment.getOutputs()) {
 			if (output instanceof beast.continuous.SampledMultivariateTraitLikelihood) {
 				return 10;

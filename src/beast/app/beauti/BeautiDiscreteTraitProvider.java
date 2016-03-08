@@ -63,7 +63,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 	}
 	
 	@Override
-	int matches(Alignment alignment) {
+	protected int matches(Alignment alignment) {
 		for (BEASTInterface output : alignment.getOutputs()) {
 			if (output instanceof AncestralStateTreeLikelihood) {
 				return 10;
