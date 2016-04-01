@@ -18,6 +18,7 @@
 package beast.evolution.substitutionmodel;
 
 import beast.core.BEASTObject;
+import beast.core.Description;
 import beast.core.Input;
 import beast.core.Loggable;
 import beast.evolution.datatype.UserDataType;
@@ -27,6 +28,7 @@ import java.io.PrintStream;
 /**
  * @author Tim Vaughan <tgvaughan@gmail.com>
  */
+@Description("SVS General Substitution Model Logger")
 public class SVSGeneralSubstitutionModelLogger extends BEASTObject implements Loggable{
 
     public Input<SVSGeneralSubstitutionModel> modelInput = new Input<>(

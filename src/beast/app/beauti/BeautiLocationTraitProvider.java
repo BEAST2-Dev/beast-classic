@@ -13,6 +13,7 @@ import beast.app.beauti.BeautiDoc;
 import beast.app.beauti.PartitionContext;
 import beast.continuous.SampledMultivariateTraitLikelihood;
 import beast.core.BEASTInterface;
+import beast.core.Description;
 import beast.core.State;
 import beast.core.StateNode;
 import beast.evolution.alignment.Alignment;
@@ -20,6 +21,7 @@ import beast.evolution.tree.Tree;
 
 
 
+@Description("Beauti Location Trait Provider")
 public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 
 	@Override

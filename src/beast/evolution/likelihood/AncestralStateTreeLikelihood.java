@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import beagle.Beagle;
+import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.IntegerParameter;
@@ -25,6 +26,7 @@ import beast.util.Randomizer;
 /**
  * @author Marc A. Suchard
  */
+@Description("Ancestral State Tree Likelihood")
 public class AncestralStateTreeLikelihood extends TreeLikelihood implements TreeTraitProvider {
     public static final String STATES_KEY = "states";
 

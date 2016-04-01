@@ -5,6 +5,7 @@ package beast.evolution.substitutionmodel;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
+import beast.core.Description;
 import beast.core.Function;
 import beast.core.Input;
 import beast.core.Input.Validate;
@@ -24,6 +25,7 @@ import beast.inference.BayesianStochasticSearchVariableSelection;
  *
  *  * ported from beast1 - author: Marc Suchard
  */
+@Description("SVS General Substitution Model")
 public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implements BayesianStochasticSearchVariableSelection {
 
     public Input<BooleanParameter> indicator = new Input<BooleanParameter>("rateIndicator",

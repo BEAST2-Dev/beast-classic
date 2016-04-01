@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import beast.core.BEASTObject;
+import beast.core.Description;
 
 /**
  * An interface for objects that can provide TreeTraits (i.e., information about the nodes and
@@ -34,6 +35,7 @@ public interface TreeTraitProvider {
      * class or as a delegate. It is itself a TreeTraitProvider so can be instantiated and
      * passed as is.
      */
+    @Description("A Tree Trait Helper")
     public class Helper extends BEASTObject implements TreeTraitProvider {
 
         /**

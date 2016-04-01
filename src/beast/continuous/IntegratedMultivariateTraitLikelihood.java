@@ -29,6 +29,7 @@ package beast.continuous;
 import java.util.Arrays;
 import java.util.List;
 
+import beast.core.Description;
 import dr.evomodel.continuous.MissingTraits;
 import dr.math.distributions.WishartSufficientStatistics;
 import beast.core.Input;
@@ -44,6 +45,7 @@ import beast.math.matrixalgebra.SymmetricMatrix;
  *
  * @author Marc A. Suchard
  */
+@Description("Integrated Multivariate Trait Likelihood")
 public abstract class IntegratedMultivariateTraitLikelihood extends AbstractMultivariateTraitLikelihood {
     public Input<String> traitName = new Input<String>("traitName", "description here");
 //    public Input<MultivariateTraitTree> treeModel = new Input<MultivariateTraitTree>("treeModel", "description here");

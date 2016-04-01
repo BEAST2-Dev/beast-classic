@@ -13,7 +13,7 @@ import beast.core.parameter.RealParameter;
 import beast.core.util.Log;
 
 
-@Description("...")
+@Description("A Generalized Linear Model")
 public class GeneralizedLinearModel extends Distribution implements Function {
     public Input<RealParameter> dependentParamInput = new Input<RealParameter>("dependentParam", "description here");
     public Input<List<RealParameter>> independentParamInput = new Input<List<RealParameter>>("dependentParam", "description here", new ArrayList<RealParameter>());

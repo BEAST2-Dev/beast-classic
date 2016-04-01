@@ -25,6 +25,7 @@
 
 package beast.continuous;
 
+import beast.core.Description;
 import dr.math.distributions.MultivariateNormalDistribution;
 import dr.math.distributions.WishartSufficientStatistics;
 
@@ -42,6 +43,7 @@ import beast.evolution.tree.TreeInterface;
  *
  * @author Marc A. Suchard
  */
+@Description("Fully Conjugate Multivariate TraitLikelihood")
 public class FullyConjugateMultivariateTraitLikelihood extends IntegratedMultivariateTraitLikelihood { // implements ConjugateWishartStatisticsProvider {
 
     public FullyConjugateMultivariateTraitLikelihood(String traitName,

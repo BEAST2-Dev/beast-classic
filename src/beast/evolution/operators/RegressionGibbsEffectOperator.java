@@ -14,7 +14,7 @@ import beast.math.matrixalgebra.SymmetricMatrix;
 /**
  * @author Marc Suchard
  */
-@Description("...")
+@Description("Regression Gibbs Effect Operator")
 public class RegressionGibbsEffectOperator extends Operator {
     public Input<LinearRegression> linearModelInput = new Input<LinearRegression>("linearModel", "description here");
     public Input<RealParameter> effectInput = new Input<RealParameter>("effect", "description here");

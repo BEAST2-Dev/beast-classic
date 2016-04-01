@@ -32,6 +32,7 @@ package beast.evolution.operators;
 //import dr.geo.GeoSpatialCollectionModel;
 //import dr.inference.distribution.MultivariateDistributionLikelihood;
 
+import beast.core.Description;
 import dr.math.distributions.MultivariateDistribution;
 //import dr.math.distributions.MultivariateNormalDistribution;
 
@@ -58,6 +59,7 @@ import beast.util.Randomizer;
 /**
  * @author Marc Suchard
  */
+@Description("A Trait Gibbs Operator")
 public class TraitGibbsOperator extends Operator {
 	public Input<Tree> treeInput = new Input<Tree>("tree", "", Validate.REQUIRED);
 	public Input<RealParameter> precisionParamInput = new Input<RealParameter>("precisionMatrix",

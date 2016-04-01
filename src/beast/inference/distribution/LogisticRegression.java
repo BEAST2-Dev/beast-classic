@@ -4,7 +4,7 @@ package beast.inference.distribution;
 import beast.core.*;
 
 
-@Description("...")
+@Description("A Logistic Regression Model")
 public class LogisticRegression extends GeneralizedLinearModel {
 
 	@Override

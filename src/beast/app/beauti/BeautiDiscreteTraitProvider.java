@@ -30,7 +30,7 @@ import beast.math.distributions.Prior;
 
 
 
-@Description("")
+@Description("Beauti Discrete Trait Provider")
 public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 
 	@Override

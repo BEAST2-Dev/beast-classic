@@ -28,6 +28,7 @@ package beast.evolution.operators;
 
 
 import beast.continuous.AbstractMultivariateTraitLikelihood;
+import beast.core.Description;
 import beast.core.Input;
 import beast.core.Operator;
 import beast.core.Input.Validate;
@@ -43,6 +44,7 @@ import beast.math.matrixalgebra.SymmetricMatrix;
 /**
  * @author Marc Suchard
  */
+@Description("Precision Matrix Gibbs Operator")
 public class PrecisionMatrixGibbsOperator extends Operator {
 
 	public Input<Tree> treeInput = new Input<Tree>("tree", "", Validate.REQUIRED);

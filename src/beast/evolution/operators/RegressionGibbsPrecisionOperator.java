@@ -14,7 +14,7 @@ import beast.inference.distribution.*;
 /**
  * @author Marc Suchard
  */
-@Description("???")
+@Description("Regression Gibbs Precision Operator")
 public class RegressionGibbsPrecisionOperator extends Operator {
     public Input<LinearRegression> linearModelInput = new Input<LinearRegression>("linearModel", "description here");
     public Input<RealParameter> precisionInput = new Input<RealParameter>("precision", "description here");
