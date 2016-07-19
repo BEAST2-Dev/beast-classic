@@ -1,5 +1,29 @@
-package beast.evolution.operators;
+/*
+ * GMRFMultilocusSkyrideBlockUpdateOperator.java
+ *
+ * Copyright (c) 2002-2015 Alexei Drummond, Andrew Rambaut and Marc Suchard
+ *
+ * This file is part of BEAST.
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership and licensing.
+ *
+ * BEAST is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ *  BEAST is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with BEAST; if not, write to the
+ * Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ * Boston, MA  02110-1301  USA
+ */
 
+package beast.evolution.operators;
 
 import no.uib.cipr.matrix.*;
 
@@ -8,26 +32,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import beast.core.Description;
+import org.apache.commons.math.MathException;
+
 import beast.core.Input;
+import beast.core.Input.Validate;
 import beast.core.Operator;
 import beast.core.StateNode;
-import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
-import beast.evolution.tree.coalescent.GMRFSkyrideLikelihood;
+import beast.evolution.tree.coalescent.GMRFMultilocusSkyrideLikelihood;
 import beast.util.Randomizer;
-
-
 
 /* A Metropolis-Hastings operator to update the log population sizes and precision parameter jointly under a Gaussian Markov random field prior
  *
  * @author Erik Bloomquist
  * @author Marc Suchard
- * @version $Id: GMRFSkylineBlockUpdateOperator.java,v 1.5 2007/03/20 11:26:49 msuchard Exp $
+ * @author Mandev Gill
+ * @version $Id: GMRFMultilocusSkylineBlockUpdateOperator.java,v 1.5 2007/03/20 11:26:49 msuchard Exp $
  */
-@Description("A Metropolis-Hastings operator to update the log population sizes and precision parameter jointly under a Gaussian Markov random field prior")
-public class GMRFSkyrideBlockUpdateOperator extends Operator {
-	public Input<GMRFSkyrideLikelihood> GMRFSkyrideLikelihoodInput = new Input<GMRFSkyrideLikelihood>("likelihood","GMRF Multilocus Skyride Likelihood", Validate.REQUIRED);
+public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
+	public Input<GMRFMultilocusSkyrideLikelihood> GMRFSkyrideLikelihoodInput = new Input<GMRFMultilocusSkyrideLikelihood>("likelihood","GMRF Multilocus Skyride Likelihood", Validate.REQUIRED);
 	public Input<Double> scaleFactorInput = new Input<Double>("scaleFactor","scale factor: larger means more bold proposals", Validate.REQUIRED);
 	public Input<Integer> maxIterationsInput = new Input<Integer>("maxIterations","max number of iterations for proposal...", 200);
 	public Input<Double> stopValueInput = new Input<Double>("stopValue","",0.01);
@@ -44,14 +67,16 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
     private RealParameter precisionParameter;
     private RealParameter lambdaParameter;
 
-    GMRFSkyrideLikelihood gmrfField;
+    GMRFMultilocusSkyrideLikelihood gmrfField;
 
     private double[] zeros;
-    private boolean optimize = false;
 
-    @Override
+    public GMRFMultilocusSkyrideBlockUpdateOperator() {
+	}
+
+	@Override
     public void initAndValidate() {
-        gmrfField = GMRFSkyrideLikelihoodInput .get();
+        gmrfField = GMRFSkyrideLikelihoodInput.get();
         popSizeParameter = gmrfField.getPopSizeParameter();
         precisionParameter = gmrfField.getPrecisionParameter();
         lambdaParameter = gmrfField.getLambdaParameter();
@@ -62,11 +87,8 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 
         this.maxIterations = maxIterationsInput.get();
         this.stopValue = stopValueInput.get();
-//        setWeight(weight);
 
         zeros = new double[fieldLength];
-        
-        optimize = optimiseInput.get();
     }
 
     private double getNewLambda(double currentValue, double lambdaScale) {
@@ -165,67 +187,68 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 
         return returnValue;
     }
-
-    public DenseVector newtonRaphson(double[] data, DenseVector currentGamma, SymmTridiagMatrix proposedQ) throws Exception {
-        return newNewtonRaphson(data, currentGamma, proposedQ, maxIterations, stopValue);
+       
+    public DenseVector newtonRaphson(double[] data1, double[] data2, DenseVector currentGamma, SymmTridiagMatrix proposedQ) throws MathException {
+        return newNewtonRaphson(data1, data2, currentGamma, proposedQ, maxIterations, stopValue);
     }
 
-    public static DenseVector newNewtonRaphson(double[] data, DenseVector currentGamma, SymmTridiagMatrix proposedQ,
-                                               int maxIterations, double stopValue) throws Exception {
+    public static DenseVector newNewtonRaphson(double[] data1, double[] data2, DenseVector currentGamma, SymmTridiagMatrix proposedQ,
+                                               int maxIterations, double stopValue) throws MathException {
+
         DenseVector iterateGamma = currentGamma.copy();
         DenseVector tempValue = currentGamma.copy();
 
         int numberIterations = 0;
 
 
-        while (gradient(data, iterateGamma, proposedQ).norm(Vector.Norm.Two) > stopValue) {
-            try {
-                jacobian(data, iterateGamma, proposedQ).solve(gradient(data, iterateGamma, proposedQ), tempValue);
-            } catch (no.uib.cipr.matrix.MatrixNotSPDException e) {
-                Logger.getLogger("dr.evomodel.coalescent.operators.GMRFSkyrideBlockUpdateOperator").fine("Newton-Raphson F");
-                throw new Exception("");
+        while (gradient(data1, data2, iterateGamma, proposedQ).norm(Vector.Norm.Two) > stopValue) {
+           try {
+                jacobian(data2, iterateGamma, proposedQ).solve(gradient(data1, data2, iterateGamma, proposedQ), tempValue);
+           } catch (no.uib.cipr.matrix.MatrixNotSPDException e) {
+                Logger.getLogger("dr.evomodel.coalescent.operators.GMRFMultilocusSkyrideBlockUpdateOperator").fine("Newton-Raphson F");
+                throw new MathException("");
             } catch (no.uib.cipr.matrix.MatrixSingularException e) {
-                Logger.getLogger("dr.evomodel.coalescent.operators.GMRFSkyrideBlockUpdateOperator").fine("Newton-Raphson F");
+                Logger.getLogger("dr.evomodel.coalescent.operators.GMRFMultilocusSkyrideBlockUpdateOperator").fine("Newton-Raphson F");
+                throw new MathException("");
+            }     
 
-                throw new Exception("");
-            }
             iterateGamma.add(tempValue);
             numberIterations++;
 
             if (numberIterations > maxIterations) {
-                Logger.getLogger("dr.evomodel.coalescent.operators.GMRFSkyrideBlockUpdateOperator").fine("Newton-Raphson F");
-                throw new Exception("Newton Raphson algorithm did not converge within " + maxIterations + " step to a norm less than " + stopValue + "\n" +
+                Logger.getLogger("dr.evomodel.coalescent.operators.GMRFMultilocusSkyrideBlockUpdateOperator").fine("Newton-Raphson F");
+                throw new MathException("Newton Raphson algorithm did not converge within " + maxIterations + " step to a norm less than " + stopValue + "\n" +
                         "Try starting BEAST with a more accurate initial tree.");
             }
         }
 
-        Logger.getLogger("dr.evomodel.coalescent.operators.GMRFSkyrideBlockUpdateOperator").fine("Newton-Raphson S");
+        Logger.getLogger("dr.evomodel.coalescent.operators.GMRFMultilocusSkyrideBlockUpdateOperator").fine("Newton-Raphson S");
         return iterateGamma;
 
     }
 
-    private static DenseVector gradient(double[] data, DenseVector value, SymmTridiagMatrix Q) {
+    private static DenseVector gradient(double[] data1, double[] data2, DenseVector value, SymmTridiagMatrix Q) {
 
         DenseVector returnValue = new DenseVector(value.size());
         Q.mult(value, returnValue);
         for (int i = 0; i < value.size(); i++) {
-            returnValue.set(i, -returnValue.get(i) - 1 + data[i] * Math.exp(-value.get(i)));
+            returnValue.set(i, -returnValue.get(i) - data1[i] + data2[i] * Math.exp(-value.get(i)));
         }
         return returnValue;
     }
 
 
-    private static SPDTridiagMatrix jacobian(double[] data, DenseVector value, SymmTridiagMatrix Q) {
+    private static SPDTridiagMatrix jacobian(double[] data2, DenseVector value, SymmTridiagMatrix Q) {
         SPDTridiagMatrix jacobian = new SPDTridiagMatrix(Q, true);
         for (int i = 0, n = value.size(); i < n; i++) {
-            jacobian.set(i, i, jacobian.get(i, i) + Math.exp(-value.get(i)) * data[i]);
+            jacobian.set(i, i, jacobian.get(i, i) + Math.exp(-value.get(i)) * data2[i]);
         }
         return jacobian;
     }
 
     @Override
     public double proposal() {
-    	try {
+
         double currentPrecision = precisionParameter.getValue(0);
         double proposedPrecision = this.getNewPrecision(currentPrecision, scaleFactor);
 
@@ -233,18 +256,21 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
         double proposedLambda = this.getNewLambda(currentLambda, lambdaScaleFactor);
 
         precisionParameter.setValue(0, proposedPrecision);
-        if (lambdaParameter.isEstimatedInput.get()) {
-        	lambdaParameter.setValue(0, proposedLambda);
-        }
+        lambdaParameter.setValue(0, proposedLambda);
 
-        DenseVector currentGamma = GMRFSkyrideLikelihood.newDenseVector(gmrfField.getPopSizeParameter());
+        Double [] Values = gmrfField.getPopSizeParameter().getValues();
+        double [] values = new double[Values.length];
+        for (int i = 0; i < values.length; i++) {
+        	values[i] = Values[i];
+        }
+        DenseVector currentGamma = new DenseVector(values);
         DenseVector proposedGamma;
 
         SymmTridiagMatrix currentQ = gmrfField.getStoredScaledWeightMatrix(currentPrecision, currentLambda);
         SymmTridiagMatrix proposedQ = gmrfField.getScaledWeightMatrix(proposedPrecision, proposedLambda);
 
-
         double[] wNative = gmrfField.getSufficientStatistics();
+        double[] numCoalEv = gmrfField.getNumCoalEvents();
 
         UpperSPDBandMatrix forwardQW = new UpperSPDBandMatrix(proposedQ, 1);
         UpperSPDBandMatrix backwardQW = new UpperSPDBandMatrix(currentQ, 1);
@@ -256,14 +282,20 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
         DenseVector diagonal2 = new DenseVector(fieldLength);
         DenseVector diagonal3 = new DenseVector(fieldLength);
 
-        DenseVector modeForward = newtonRaphson(wNative, currentGamma, proposedQ.copy());
-
+        DenseVector modeForward;
+		try {
+			modeForward = newtonRaphson(numCoalEv, wNative, currentGamma, proposedQ.copy());
+		} catch (MathException e) {
+			return Double.NEGATIVE_INFINITY;
+		}
+       
         for (int i = 0; i < fieldLength; i++) {
             diagonal1.set(i, wNative[i] * Math.exp(-modeForward.get(i)));
             diagonal2.set(i, modeForward.get(i) + 1);
 
             forwardQW.set(i, i, diagonal1.get(i) + forwardQW.get(i, i));
-            diagonal1.set(i, diagonal1.get(i) * diagonal2.get(i) - 1);
+            //diagonal1.set(i, diagonal1.get(i) * diagonal2.get(i) - 1);
+            diagonal1.set(i, diagonal1.get(i) * diagonal2.get(i) - numCoalEv[i]);
         }
 
         forwardCholesky.factor(forwardQW.copy());
@@ -277,9 +309,22 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 
         proposedGamma = getMultiNormal(stand_norm, forwardMean, forwardCholesky);
 
+        /*
+        double hRatio = 0;
+        for (int i = 0; i < fieldLength; i++) {
+            diagonal1.set(i, proposedGamma.get(i) - forwardMean.get(i));
+        }
+        diagonal3.zero();
+        forwardQW.mult(diagonal1, diagonal3);
+
+        hRatio -= logGeneralizedDeterminant(forwardCholesky.getU() ) - 0.5 * diagonal1.dot(diagonal3);
+        */
 
         for (int i = 0; i < fieldLength; i++)
             popSizeParameter.setValue(i, proposedGamma.get(i));
+
+        //((Parameter.Abstract) popSizeParameter).fireParameterChangedEvent();
+
 
         double hRatio = 0;
 
@@ -287,14 +332,20 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
         diagonal2.zero();
         diagonal3.zero();
 
-        DenseVector modeBackward = newtonRaphson(wNative, proposedGamma, currentQ.copy());
+        DenseVector modeBackward;
+		try {
+			modeBackward = newtonRaphson(numCoalEv, wNative, proposedGamma, currentQ.copy());
+		} catch (MathException e) {
+			return Double.NEGATIVE_INFINITY;
+		}
 
         for (int i = 0; i < fieldLength; i++) {
             diagonal1.set(i, wNative[i] * Math.exp(-modeBackward.get(i)));
             diagonal2.set(i, modeBackward.get(i) + 1);
 
             backwardQW.set(i, i, diagonal1.get(i) + backwardQW.get(i, i));
-            diagonal1.set(i, diagonal1.get(i) * diagonal2.get(i) - 1);
+            //diagonal1.set(i, diagonal1.get(i) * diagonal2.get(i) - 1);
+            diagonal1.set(i, diagonal1.get(i) * diagonal2.get(i) - numCoalEv[i]);
         }
 
         backwardCholesky.factor(backwardQW.copy());
@@ -307,16 +358,10 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 
         backwardQW.mult(diagonal1, diagonal3);
 
-        // Removed 0.5 * 2
         hRatio += logGeneralizedDeterminant(backwardCholesky.getU()) - 0.5 * diagonal1.dot(diagonal3);
         hRatio -= logGeneralizedDeterminant(forwardCholesky.getU() ) - 0.5 * stand_norm.dot(stand_norm);
 
-
-        return hRatio;
-    	} catch (Exception e) {
-    		System.err.print('.');
-			return Double.NEGATIVE_INFINITY;
-		}
+       return hRatio;
     }
 
     //MCMCOperator INTERFACE
@@ -363,17 +408,17 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
         return 0.30;
     }
 
-    @Override
     public final String getPerformanceSuggestion() {
+
         double prob = m_nNrAccepted / (m_nNrAccepted + m_nNrRejected + 0.0);
         double targetProb = getTargetAcceptanceProbability();
-        final DecimalFormat formatter = new DecimalFormat("#.###");
 
         double ratio = prob / targetProb;
         if (ratio > 2.0) ratio = 2.0;
         if (ratio < 0.5) ratio = 0.5;
-        double sf = scaleFactor * ratio;
-
+        double sf = scaleFactor * ratio;        
+        
+        final DecimalFormat formatter = new DecimalFormat("#.###");
         if (prob < getMinimumGoodAcceptanceLevel()) {
             return "Try setting scaleFactor to about " + formatter.format(sf);
         } else if (prob > getMaximumGoodAcceptanceLevel()) {
@@ -381,23 +426,14 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
         } else return "";
     }
 
-    @Override
-    public void optimize(double logAlpha) {
-    	if (optimize) {
-	        double fDelta = calcDelta(logAlpha);
-	        fDelta += Math.log(1.0 / scaleFactor - 1.0);
-	        scaleFactor = 1.0 / (Math.exp(fDelta) + 1.0);
-    	}
-    }
 
     @Override
     public List<StateNode> listStateNodes() {
-    	List<StateNode> list = new ArrayList<StateNode>();
-        list.add(precisionParameter);
-        if (lambdaParameter.isEstimatedInput.get()) {
-        	list.add(lambdaParameter);
-        }
-        list.add(popSizeParameter);
-    	return list;
+    	List<StateNode> stateNodes = new ArrayList<>();
+    	stateNodes.add(popSizeParameter);
+    	stateNodes.add(precisionParameter);
+    	stateNodes.add(lambdaParameter);
+    	return stateNodes;
     }
 }
+
