@@ -8,10 +8,10 @@
 	</description>
 
 	<!-- set global properties for this build -->
-	<property name="srcBEAST_CLASSIC" location="src" />
-	<property name="buildBEAST_CLASSIC" location="build" />
-	<property name="libBEAST_CLASSIC" location="lib" />
-	<property name="release_dir" value="release" />
+	<property name="srcBEAST_CLASSIC" location="../beast-classic/src" />
+	<property name="buildBEAST_CLASSIC" location="../beast-classic/build" />
+	<property name="libBEAST_CLASSIC" location="../beast-classic/lib" />
+	<property name="release_dir" value="../beast-classic/release" />
 	<property name="distBEAST_CLASSIC" location="${buildBEAST_CLASSIC}/dist" />
 	<property name="beast2path" location="../beast2" />
 	<property name="libBeast2" location="${beast2path}/lib" />
