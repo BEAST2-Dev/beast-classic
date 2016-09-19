@@ -26,7 +26,7 @@ import beast.inference.BayesianStochasticSearchVariableSelection;
  *  * ported from beast1 - author: Marc Suchard
  */
 @Description("SVS General Substitution Model")
-public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implements BayesianStochasticSearchVariableSelection {
+public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implements BayesianStochasticSearchVariableSelection {
 
     public Input<BooleanParameter> indicator = new Input<BooleanParameter>("rateIndicator",
             "rates to indicate the presence or absence of transition matrix entries", Validate.REQUIRED);
@@ -65,12 +65,12 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
         	Log.warning.println("WARNING: eigenSystemClass is DefautlEigneSystem, which may cause trouble with asymtric analysis. "
         			+ "You may want to consider eigensystem='beast.evolution.substitutionmodel.RobustEigenSystem' instead.");
         }
-        try {
+        //try {
 			eigenSystem = createEigenSystem();
-		} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException
-				| InvocationTargetException e) {
-			throw new IllegalArgumentException(e);
-		}
+		//} catch (SecurityException | ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException
+		//		| InvocationTargetException e) {
+		//	throw new IllegalArgumentException(e);
+		//}
         
 //        if (robust.get()){
 //            eigenSystem = new RobustEigenSystem(m_nStates);
@@ -83,6 +83,7 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
         storedRelativeRates = new double[ratesInput.get().getDimension()];
 
         rateIndicator = indicator.get();
+        super.initAndValidate();
     }
 
 
@@ -106,62 +107,64 @@ public class SVSGeneralSubstitutionModel extends GeneralSubstitutionModel implem
     // Loggable IMPLEMENTATION
     // **************************************************************
 
-    @Override
-    public void getTransitionProbabilities(Node node, double fStartTime, double fEndTime, double fRate, double[] matrix) {
-        double distance = (fStartTime - fEndTime) * fRate;
-
-        int i, j, k;
-        double temp;
-
-        // this must be synchronized to avoid being called simultaneously by
-        // two different likelihood threads - AJD
-        synchronized (this) {
-            if (updateMatrix) {
-                setupRelativeRates();
-                setupRateMatrix();
-                try{
-                    eigenDecomposition = eigenSystem.decomposeMatrix(rateMatrix);
-                }catch(Exception e){
-                    updateMatrix = false;
-                    Arrays.fill(matrix, 0);
-                    return;
-
-                }
-                updateMatrix = false;
-            }
-        }
-
-        // is the following really necessary?
-        // implemented a pool of iexp matrices to support multiple threads
-        // without creating a new matrix each call. - AJD
-        // a quick timing experiment shows no difference - RRB
-        double[] iexp = new double[nrOfStates * nrOfStates];
-        // Eigen vectors
-        double[] Evec = eigenDecomposition.getEigenVectors();
-        // inverse Eigen vectors
-        double[] Ievc = eigenDecomposition.getInverseEigenVectors();
-        // Eigen values
-        double[] Eval = eigenDecomposition.getEigenValues();
-        for (i = 0; i < nrOfStates; i++) {
-            temp = Math.exp(distance * Eval[i]);
-            for (j = 0; j < nrOfStates; j++) {
-                iexp[i * nrOfStates + j] = Ievc[i * nrOfStates + j] * temp;
-            }
-        }
-
-        int u = 0;
-        for (i = 0; i < nrOfStates; i++) {
-            for (j = 0; j < nrOfStates; j++) {
-                temp = 0.0;
-                for (k = 0; k < nrOfStates; k++) {
-                    temp += Evec[i * nrOfStates + k] * iexp[k * nrOfStates + j];
-                }
-
-                matrix[u] = Math.abs(temp);
-                u++;
-            }
-        }
-    } // getTransitionProbabilities
+//    @Override
+//    public void getTransitionProbabilities(Node node, double fStartTime, double fEndTime, double fRate, double[] matrix) {
+//        double distance = (fStartTime - fEndTime) * fRate;
+//
+//        int i, j, k;
+//        double temp;
+//
+//        // this must be synchronized to avoid being called simultaneously by
+//        // two different likelihood threads - AJD
+//        synchronized (this) {
+//            if (updateMatrix) {
+//                setupRelativeRates();
+//                setupRateMatrix();
+//                try{
+//                    eigenDecomposition = eigenSystem.decomposeMatrix(rateMatrix);
+//                }catch(Exception e){
+//                    updateMatrix = false;
+//                    Arrays.fill(matrix, 0);
+//                    return;
+//
+//                }
+//                updateMatrix = false;
+//            }
+//        }
+//
+//        // is the following really necessary?
+//        // implemented a pool of iexp matrices to support multiple threads
+//        // without creating a new matrix each call. - AJD
+//        // a quick timing experiment shows no difference - RRB
+//        double[] iexp = new double[nrOfStates * nrOfStates];
+//        // Eigen vectors
+//        double[] Evec = eigenDecomposition.getEigenVectors();
+//        // inverse Eigen vectors
+//        double[] Ievc = eigenDecomposition.getInverseEigenVectors();
+//        // Eigen values
+//        double[] Eval = eigenDecomposition.getEigenValues();
+//        for (i = 0; i < nrOfStates; i++) {
+//            temp = Math.exp(distance * Eval[i]);
+//            for (j = 0; j < nrOfStates; j++) {
+//                iexp[i * nrOfStates + j] = Ievc[i * nrOfStates + j] * temp;
+//            }
+//        }
+//
+//        int u = 0;
+//        for (i = 0; i < nrOfStates; i++) {
+//            for (j = 0; j < nrOfStates; j++) {
+//                temp = 0.0;
+//                for (k = 0; k < nrOfStates; k++) {
+//                    temp += Evec[i * nrOfStates + k] * iexp[k * nrOfStates + j];
+//                }
+//
+//                matrix[u] = Math.abs(temp);
+//                u++;
+//            }
+//        }
+//        int h = 3;
+//        h++;
+//    } // getTransitionProbabilities
 
 
     private double[] probability = null;
