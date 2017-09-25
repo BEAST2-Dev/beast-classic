@@ -5,6 +5,7 @@ package beast.continuous;
 
 
 
+
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +40,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     //public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
     
     public Input<RealParameter> deltaParameterInput = new Input<RealParameter>("deltaParameter", "");
-    public Input<List<Integer>> missingIndicesInput = new Input<List<Integer>>("missingIndices", "");
+    //public Input<List<Integer>> missingIndicesInput = new Input<List<Integer>>("missingIndices", "", new ArrayList<>());
     public Input<Boolean> cacheBranchesInput = new Input<Boolean>("cacheBranches", "", false);
     public Input<Boolean> scaleByTimeInput = new Input<Boolean>("scaleByTime", "", false);
     public Input<Boolean> integrateInput = new Input<Boolean>("integrate", "", false);
@@ -90,7 +91,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
         this.traitParameter = traitParameterInput.get();        
         this.useTreeLength = useTreeLengthInput.get();
 
-        this.missingIndices = missingIndicesInput.get();
+        //this.missingIndices = missingIndicesInput.get();
 
         this.deltaParameter = deltaParameterInput.get();
 
@@ -822,7 +823,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     ContinuousSubstitutionModel diffusionModel = null;
     String traitName = null;
     RealParameter traitParameter;
-    List<Integer> missingIndices;
+    // List<Integer> missingIndices;
 
     protected double logLikelihood;
     protected double maxLogLikelihood = Double.NEGATIVE_INFINITY;
