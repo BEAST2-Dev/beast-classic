@@ -517,11 +517,13 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 
             // This is an external leaf
 
-        	if (beagle != null) {
-                /*((AbstractLikelihoodCore)*/ getStates(nodeNum, reconstructedStates[nodeNum]);
-        	} else {
-            /*((AbstractLikelihoodCore)*/ likelihoodCore.getNodeStates(nodeNum, reconstructedStates[nodeNum]);
-        	}
+        	getStates(nodeNum, reconstructedStates[nodeNum]);
+//        	if (beagle != null) {
+//                /*((AbstractLikelihoodCore)*/ getStates(nodeNum, reconstructedStates[nodeNum]);
+//        	} else {
+//            /*((AbstractLikelihoodCore)*/ likelihoodCore.getNodeStates(nodeNum, reconstructedStates[nodeNum]);
+//        		}
+//        	}
 
             // Check for ambiguity codes and sample them
 
