@@ -34,7 +34,7 @@
 		<fileset dir="${libBeast2}" includes="beagle.jar"/>
 		<fileset dir="${libBeast2}" includes="jam.jar"/>
 		<fileset dir="${libBeast2}" includes="colt.jar"/>
-		<fileset dir="${libBeast2}" includes="antlr-runtime-4.5.jar"/>
+		<fileset dir="${libBeast2}" includes="antlr-runtime-4.7.jar"/>
 		<fileset dir="${libBEAST_CLASSIC}" includes="mtj.jar"/>
         <pathelement path="${beast2classpath}"/>
         <pathelement path="${BEASTLabsclasspath}"/>
