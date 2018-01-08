@@ -135,41 +135,27 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         	substitutionModel = (SubstitutionModel.Base) m_siteModel.substModelInput.get();
             int nStateCount = dataInput.get().getMaxStateCount();
             probabilities = new double[(nStateCount + 1) * (nStateCount + 1)];
-            
-            int tipCount = treeModel.getLeafNodeCount();
-            tipStates = new int[tipCount][];
+        }
 
-            for (int k = 0; k < tipCount; k++) {
-            	int[] states = new int[patternCount];
-                for (int i = 0; i < patternCount; i++) {
-                    states[i] = dataInput.get().getPattern(k, i);
-                }
-                tipStates[k] = states;
+        int tipCount = treeModel.getLeafNodeCount();
+        tipStates = new int[tipCount][];
+
+        for (int k = 0; k < tipCount; k++) {
+        	int[] states = new int[patternCount];
+            for (int i = 0; i < patternCount; i++) {
+                states[i] = dataInput.get().getPattern(k, i);
             }
+            tipStates[k] = states;
         }
         
         if (m_siteModel.getCategoryCount() > 1)
             throw new RuntimeException("Reconstruction not implemented for multiple categories yet.");
-
-        
         
         
         // stuff for dealing with ambiguities in tips
         if (!m_useAmbiguities.get() && leafTriatsInput.get().size() == 0) {
         	return;
         }
-		if (tipStates == null) {
-            int tipCount = treeInput.get().getLeafNodeCount();
-            tipStates = new int[tipCount][];
-
-            for (int k = 0; k < tipCount; k++) {
-            	int[] states = new int[patternCount];
-                for (int i = 0; i < patternCount; i++) {
-                    states[i] = dataInput.get().getPattern(k, i);
-                }
-                tipStates[k] = states;
-            }
-		}
 		traitDimension = tipStates[0].length;
 
 		leafNr = new int[leafTriatsInput.get().size()];
