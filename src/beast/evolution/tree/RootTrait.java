@@ -54,7 +54,7 @@ public class RootTrait extends CalculationNode implements Function, Loggable {
 	}
 
 	@Override
-	public void log(int nSample, PrintStream out) {
+	public void log(long nSample, PrintStream out) {
 		for (int i = 0; i < dim; i++) {
 			out.append(getArrayValue(i) + "\t");
 		}

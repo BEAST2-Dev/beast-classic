@@ -65,7 +65,7 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 	}
 
 	@Override
-	public void log(int nSample, PrintStream out) {
+	public void log(long nSample, PrintStream out) {
 		// make sure we get the current version of the inputs
         Tree tree = (Tree) m_tree.get().getCurrent();
         List<TreeTrait<?>> treeTraits = new ArrayList<TreeTrait<?>>();

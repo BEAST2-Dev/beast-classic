@@ -95,7 +95,7 @@ public class SVSGeneralSubstitutionModelLogger extends BEASTObject implements Lo
     }
 
     @Override
-    public void log(int nSample, PrintStream out) {
+    public void log(long nSample, PrintStream out) {
         int count = 0;
         for (int i=0; i<model.getStateCount(); i++) {
             for (int j=model.isSymmetricInput.get() ? i+1 : 0; j<model.getStateCount(); j++) {
