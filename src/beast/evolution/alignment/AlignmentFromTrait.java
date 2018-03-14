@@ -10,7 +10,7 @@ import beast.core.Input.Validate;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.datatype.DataType;
 import beast.evolution.tree.TraitSet;
-import beast.util.AddOnManager;
+import beast.util.PackageManager;
 
 
 
@@ -40,7 +40,7 @@ public class AlignmentFromTrait extends Alignment {
 	                throw new IllegalArgumentException("data type + '" + dataTypeInput.get() + "' cannot be found. " +
 	                        "Choose one of " + Arrays.toString(types.toArray(new String[0])));
 	            }
-	            List<String> sDataTypes = AddOnManager.find(beast.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
+	            List<String> sDataTypes = PackageManager.find(beast.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
 	            for (String sDataType : sDataTypes) {
 	                DataType dataType = null;
 					try {

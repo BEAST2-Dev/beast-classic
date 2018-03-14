@@ -542,7 +542,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     }
     
     @Override
-    public void log(int nSample, PrintStream out) {
+    public void log(long nSample, PrintStream out) {
     	out.print(logP + "\t" + getLogDataLikelihood() + "\t");
     }
     
