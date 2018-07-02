@@ -2,6 +2,8 @@ package beast.evolution.likelihood;
 
 
 
+import java.io.PrintStream;
+import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -11,6 +13,7 @@ import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.IntegerParameter;
+import beast.evolution.alignment.Alignment;
 import beast.evolution.datatype.DataType;
 import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.TreeLikelihood;
@@ -22,6 +25,7 @@ import beast.evolution.tree.TreeInterface;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitProvider;
 import beast.util.Randomizer;
+import beast.util.PackageManager.UpdateStatus;
 
 /**
  * @author Marc A. Suchard
@@ -140,13 +144,34 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         int tipCount = treeModel.getLeafNodeCount();
         tipStates = new int[tipCount][];
 
-        for (int k = 0; k < tipCount; k++) {
-        	int[] states = new int[patternCount];
-            for (int i = 0; i < patternCount; i++) {
-                states[i] = dataInput.get().getPattern(k, i);
+        Alignment data = dataInput.get();
+        for (Node node : treeInput.get().getExternalNodes()) {
+            String taxon = node.getID();
+            int taxonIndex = data.getTaxonIndex(taxon);
+            if (taxonIndex == -1) {
+            	if (taxon.startsWith("'") || taxon.startsWith("\"")) {
+                    taxonIndex = data.getTaxonIndex(taxon.substring(1, taxon.length() - 1));
+                }
+                if (taxonIndex == -1) {
+                	throw new RuntimeException("Could not find sequence " + taxon + " in the alignment");
+                }
             }
-            tipStates[k] = states;
-        }
+            tipStates[node.getNr()] = new int[patternCount];
+            if (!m_useAmbiguities.get()) {
+            	likelihoodCore.getNodeStates(node.getNr(), tipStates[node.getNr()]);
+            } else {
+            	int [] states = tipStates[node.getNr()];
+	            for (int i = 0; i < patternCount; i++) {
+	                int code = data.getPattern(taxonIndex, i);
+	                int[] statesForCode = data.getDataType().getStatesForCode(code);
+	                if (statesForCode.length==1)
+	                    states[i] = statesForCode[0];
+	                else
+	                    states[i] = code; // Causes ambiguous states to be ignored.
+	            }
+
+            }
+    	}
         
         if (m_siteModel.getCategoryCount() > 1)
             throw new RuntimeException("Reconstruction not implemented for multiple categories yet.");
@@ -196,6 +221,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 		for (int i = 0; i < tipStates.length; i++) {
 			System.arraycopy(tipStates[i], 0, storedTipStates[i], 0, traitDimension);
 		}
+
 
     }
 
@@ -465,12 +491,12 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 //
 //				}
 //
-
+                
             	if (beagle != null) {
             		getPartials(node.getNr(), partialLikelihood);
             		getTransitionMatrix(nodeNum, probabilities);
             	} else {
-                    likelihoodCore.getNodePartials(nodeNum, partialLikelihood);
+                    likelihoodCore.getNodePartials(node.getNr(), partialLikelihood);
                     /*((AbstractLikelihoodCore)*/ likelihoodCore.getNodeMatrix(nodeNum, 0, probabilities);
             	}
 
@@ -534,6 +560,16 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
             }
         }
     }
+    
+    
+    @Override
+    public void log(final long sample, final PrintStream out) {
+    	// useful when logging on a fixed tree in an AncestralTreeLikelihood that is logged, but not part of the posterior
+    	hasDirt = Tree.IS_FILTHY;
+    	calculateLogP();
+        out.print(getCurrentLogP() + "\t");
+    }
+
 
     protected DataType dataType;
     private int[][] reconstructedStates;
