@@ -1,18 +1,24 @@
 package beast.evolution.tree.coalescent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import beast.core.*;
+import beast.core.Citation;
+import beast.core.Description;
+import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Tree;
 import no.uib.cipr.matrix.DenseVector;
 import no.uib.cipr.matrix.SymmTridiagMatrix;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-@Description("...")
+
+@Description("A generalization of the GMRF model that allows for the analysis of multilocus sequence data.")
+@Citation(value = "Gill, M. S., Lemey, P., Faria, N. R., Rambaut, A., Shapiro, B., & Suchard, M. A. (2012). \n" +
+        "Improving Bayesian population dynamics inference: a coalescent-based model for multiple loci. \n" +
+        "Molecular biology and evolution, 30(3), 713-724.",
+        year = 2012, firstAuthorSurname = "Gill", DOI="10.1093/molbev/mss265")
 public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 	public Input<List<Tree>> treesInput = new Input<>("trees", "? ? ? ?", new ArrayList<>());
 	public Input<RealParameter> betaInput = new Input<>("beta","? ? ? ?");

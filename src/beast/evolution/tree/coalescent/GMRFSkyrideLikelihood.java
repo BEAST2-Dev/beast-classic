@@ -27,15 +27,6 @@ package beast.evolution.tree.coalescent;
 
 
 
-import no.uib.cipr.matrix.DenseVector;
-import no.uib.cipr.matrix.NotConvergedException;
-import no.uib.cipr.matrix.SymmTridiagEVD;
-import no.uib.cipr.matrix.SymmTridiagMatrix;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import beast.app.util.Utils;
 import beast.core.Citation;
 import beast.core.Description;
 import beast.core.Input;
@@ -44,10 +35,13 @@ import beast.core.parameter.RealParameter;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeDistribution;
-import beast.evolution.tree.coalescent.Coalescent;
-import beast.evolution.tree.coalescent.IntervalType;
-import beast.evolution.tree.coalescent.TreeIntervals;
-import beast.util.HeapSort;
+import no.uib.cipr.matrix.DenseVector;
+import no.uib.cipr.matrix.NotConvergedException;
+import no.uib.cipr.matrix.SymmTridiagEVD;
+import no.uib.cipr.matrix.SymmTridiagMatrix;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 
@@ -61,7 +55,10 @@ import beast.util.HeapSort;
  * @version $Id: GMRFSkylineLikelihood.java,v 1.3 2007/03/20 22:40:04 msuchard Exp $
  */
 @Description("A likelihood function for a Gaussian Markov random field on a log population size trajectory")
-@Citation("Minin, Bloomquist and Suchard (2008) Molecular Biology and Evolution, 25, 1459-1471")
+@Citation(value = "Minin, V. N., Bloomquist, E. W., & Suchard, M. A. (2008).\n" +
+        "Smooth skyride through a rough skyline: Bayesian coalescent-based inference of population dynamics.\n" +
+        "Molecular biology and evolution, 25(7), 1459-1471.",
+        year = 2008, firstAuthorSurname = "Minin", DOI="10.1093/molbev/msn090")
 public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalescentLikelihood*/  {
     public Input<RealParameter> groupParameterInput = new Input<RealParameter>("groupSizes","",Validate.REQUIRED);
     public Input<RealParameter> popSizeParameterInput = new Input<RealParameter>("populationSizes","",Validate.REQUIRED);
