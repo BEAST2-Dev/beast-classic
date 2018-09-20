@@ -134,12 +134,7 @@ W2P7D54=54.0 <!-- newest sample -->
 				<populationSizes id="skyrideLogPopSize" dimension="32" value="6.29156913955832"  spec='parameter.RealParameter'/>
 				<groupSizes id="skyrideGroupSize" dimension="32" spec='parameter.RealParameter' value='1'/>
 				<precisionParameter id="skyridePrecision" value="1.0" lower="0.0" spec='parameter.RealParameter'/>
-<!--
 		        <tree idref="Tree.t:x"/>
--->
-				<treeIntervals spec='TreeIntervals' id='TreeIntervals'>
-				     <tree idref="Tree.t:x"/>
-				</treeIntervals>
 			</distribution>
 
         </distribution>
