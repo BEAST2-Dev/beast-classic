@@ -54,7 +54,7 @@ public class AncestralSequenceLogger extends AncestralStateTreeLikelihood implem
 	    	siteStates[i] = patternstates[dataInput.get().getPatternIndex(i)];
 	    }
 	    String seq = dataType.encodingToString(siteStates);
-	    buf.append("[&" + tagInput.get() + "=\"" + seq.substring(0,10) + "\"]");	    
+	    buf.append("[&" + tagInput.get() + "=\"" + seq + "\"]");	    
 
 	    buf.append(':');
         buf.append(node.getLength());
@@ -86,7 +86,7 @@ Simply add a logger to the XML that looks similar to this:
 		branchRateModel="@branchRates.c:data
 		tree="@Tree.t:data" 
 		tag="seq"
-		"/>
+		/>
 </logger>
 ```
 
