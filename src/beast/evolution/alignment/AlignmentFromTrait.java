@@ -10,6 +10,7 @@ import beast.core.Input.Validate;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.datatype.DataType;
 import beast.evolution.tree.TraitSet;
+import beast.util.BEASTClassLoader;
 import beast.util.PackageManager;
 
 
@@ -44,7 +45,7 @@ public class AlignmentFromTrait extends Alignment {
 	            for (String sDataType : sDataTypes) {
 	                DataType dataType = null;
 					try {
-						dataType = (DataType) Class.forName(sDataType).newInstance();
+						dataType = (DataType) BEASTClassLoader.forName(sDataType).newInstance();
 					} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 						throw new IllegalArgumentException(e);
 					}

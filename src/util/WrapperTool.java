@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import beast.util.BEASTClassLoader;
+
 /** tool for porting BEAST 1 classes to BEAST 2 by wrapping them in a Plugin **/
 public class WrapperTool {
 
@@ -30,7 +32,7 @@ public class WrapperTool {
 		String shortClass = className.substring(className.lastIndexOf('.') + 1);
 		Set<String> constructorArgs = new HashSet<String>();
 		try {
-			Class<?> c = Class.forName(className);
+			Class<?> c = BEASTClassLoader.forName(className);
 			Constructor[] allConstructors = c.getDeclaredConstructors();
 			Constructor constructorWithMostArguments = allConstructors[0];
 			int nrOfArgs = constructorWithMostArguments.getParameterTypes().length;

@@ -495,12 +495,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
             		getPartials(node.getNr(), partialLikelihood);
             		getTransitionMatrix(nodeNum, probabilities);
             	} else {
-                    if (node.getLeft().isLeaf() && node.getLeft().getID().equals("xd973") || node.getRight().isLeaf() && node.getRight().getID().equals("xd973")) {
-                    	likelihoodCore.getNodePartials(node.getNr(), partialLikelihood);
-                    } else {
-                        likelihoodCore.getNodePartials(node.getNr(), partialLikelihood);
-
-                    }
+                    likelihoodCore.getNodePartials(node.getNr(), partialLikelihood);
                     /*((AbstractLikelihoodCore)*/ likelihoodCore.getNodeMatrix(nodeNum, 0, probabilities);
             	}
 
