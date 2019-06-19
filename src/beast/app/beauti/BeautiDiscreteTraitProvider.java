@@ -34,7 +34,7 @@ import beast.math.distributions.Prior;
 public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 
 	@Override
-	protected List<BEASTInterface> getAlignments(BeautiDoc doc) {
+	public List<BEASTInterface> getAlignments(BeautiDoc doc) {
 		try {
             List<String> trees = new ArrayList<String>();
             doc.scrubAll(true, false);

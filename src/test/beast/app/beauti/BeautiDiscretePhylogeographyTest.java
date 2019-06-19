@@ -97,12 +97,12 @@ public class BeautiDiscretePhylogeographyTest extends BeautiBase {
 			// 3. Fix clock rate
 			warning("3. Fix clock rate");
 			f.selectTab("Clock Model");
-			beautiFrame.menuItemWithPath("Mode", "Automatic set clock rate").click();
+//			beautiFrame.menuItemWithPath("Mode", "Automatic set clock rate").click();
 			beautiFrame.textBox("clock.rate").setText("0.004");
 			beautiFrame.checkBox("clock.rate.isEstimated").click();
 			printBeautiState(f);
 
-			beautiFrame.menuItemWithPath("Mode").click();
+//			beautiFrame.menuItemWithPath("Mode").click();
 			screenshotTaker.saveComponentAsPng(beauti.frame, PREFIX + "clockmodel.png");
 
 			// 4. Set tree prior
