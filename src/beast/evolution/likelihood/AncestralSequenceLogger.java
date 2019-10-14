@@ -60,9 +60,12 @@ public class AncestralSequenceLogger extends AncestralStateTreeLikelihood implem
 	    if (logIndividualInput.get()) {
 	    	buf.append("[&");
 	    	for (int k = 0; k < seq.length(); k++) {
-	    		buf.append((k > 0 ? "," : "") + tagInput.get() + k + "=\"" + seq.charAt(k));
+	    		buf.append((k > 0 ? "," : "") + tagInput.get()
+	    		+ (k < 10 ? "0":"")
+	    		+ (k < 100 ? "0":"")
+	    		+ k + "=\"" + seq.charAt(k) + "\"");
 	    	}
-	    	buf.append("\"]");
+	    	buf.append("]");
 	    	
 	    } else {
 	    	buf.append("[&" + tagInput.get() + "=\"" + seq + "\"]");
