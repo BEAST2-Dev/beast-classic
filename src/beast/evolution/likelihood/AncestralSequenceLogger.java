@@ -4,6 +4,7 @@ import java.io.PrintStream;
 
 import beast.core.Description;
 import beast.core.Function;
+import beast.core.Input;
 import beast.core.Loggable;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -11,6 +12,8 @@ import beast.evolution.tree.TreeInterface;
 
 @Description("Reconstructs sequences at internal nodes and logs them in NEXUS format")
 public class AncestralSequenceLogger extends AncestralStateTreeLikelihood implements Function, Loggable {
+	final public Input<Boolean> logIndividualInput = new Input<>("logIndividualSites", "if true, tree log gets one entry for every site, "
+			+ "if false complete sequence is logged", false);
 	
 	
 	int [] siteStates;
@@ -54,7 +57,16 @@ public class AncestralSequenceLogger extends AncestralStateTreeLikelihood implem
 	    	siteStates[i] = patternstates[dataInput.get().getPatternIndex(i)];
 	    }
 	    String seq = dataType.encodingToString(siteStates);
-	    buf.append("[&" + tagInput.get() + "=\"" + seq + "\"]");	    
+	    if (logIndividualInput.get()) {
+	    	buf.append("[&");
+	    	for (int k = 0; k < seq.length(); k++) {
+	    		buf.append((k > 0 ? "," : "") + tagInput.get() + k + "=\"" + seq.charAt(k));
+	    	}
+	    	buf.append("\"]");
+	    	
+	    } else {
+	    	buf.append("[&" + tagInput.get() + "=\"" + seq + "\"]");
+	    }
 
 	    buf.append(':');
         buf.append(node.getLength());
