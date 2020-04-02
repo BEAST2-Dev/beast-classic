@@ -2,8 +2,6 @@ package beast.evolution.substitutionmodel;
 
 
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 import beast.core.Description;
 import beast.core.Function;
@@ -12,8 +10,6 @@ import beast.core.Input.Validate;
 import beast.core.parameter.BooleanParameter;
 import beast.core.parameter.Parameter;
 import beast.core.util.Log;
-import beast.evolution.substitutionmodel.GeneralSubstitutionModel;
-import beast.evolution.tree.Node;
 import beast.inference.BayesianStochasticSearchVariableSelection;
 
 
