@@ -19,10 +19,10 @@ public abstract class GlmModel extends CalculationNode implements Loggable {
     public Input<RealParameter> errorInput = new Input<>("error", "time variant error term in the GLM model for the rates");
     public Input<RealParameter> constantErrorInput = new Input<>("constantError", "time invariant error term in the GLM model for the rates");
     
-    public int nrIntervals;
-    public int verticalEntries;
+//    public int nrIntervals;
+//    public int verticalEntries;
     
-	public abstract double[] getRates(int i);
+	public abstract double[] getRates();
 	
 	public boolean isDirty(){
 		for (int i = 0; i < scalerInput.get().getDimension(); i++)
@@ -50,10 +50,10 @@ public abstract class GlmModel extends CalculationNode implements Loggable {
 		return false;
 	}
 
-	public void setNrIntervals(int i){
-		nrIntervals = i;
-		verticalEntries = covariatesInput.get().get(0).getDimension()/nrIntervals;
-	}
+//	public void setNrIntervals(int i){
+//		nrIntervals = i;
+////		verticalEntries = covariatesInput.get().get(0).getDimension()/nrIntervals;
+//	}
 	
 
 }

@@ -1,6 +1,7 @@
 package beast.evolution.substitutionmodel;
 
 
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +15,6 @@ import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.core.Loggable;
-import beast.core.parameter.RealParameter;
 import beast.evolution.tree.TraitSet;
 
 
@@ -28,8 +28,8 @@ public class GLM extends CalculationNode implements Loggable {
 	public Input<GlmModel> NeGLMInput = new Input<>(
 			"NeGLM", "input of migration GLM model", Validate.REQUIRED);
     
-    public Input<RealParameter> rateShiftsInput = new Input<>(
-    		"rateShifts", "input of timings of rate shifts relative to the most recent sample", Validate.OPTIONAL);    
+//    public Input<RealParameter> rateShiftsInput = new Input<>(
+//    		"rateShifts", "input of timings of rate shifts relative to the most recent sample", Validate.OPTIONAL);    
      
 	public Input<Double> maxRateInput = new Input<>(
 			"maxRate", "maximum rate used for integration", Double.POSITIVE_INFINITY);
@@ -43,8 +43,8 @@ public class GLM extends CalculationNode implements Loggable {
     		"types", "input of the different types, can be helpful for multilocus data", Validate.XOR, dimensionInput);
 
         
-    double [] intTimes;
-	int firstlargerzero;
+//    double [] intTimes;
+//	int firstlargerzero;
 	
 	public GLM(){
     	typesInput.setRule(Input.Validate.REQUIRED);		
@@ -90,41 +90,41 @@ public class GLM extends CalculationNode implements Loggable {
             throw new IllegalArgumentException("dimension is not -1 (undefined) and smaller " +
             		"than the number of different traits");    	
     	// if there are rate shifts as an input, use the stepwise glm model otherwise the constant
-    	if (rateShiftsInput.get() != null){
-	    	intTimes = new double[(int) rateShiftsInput.get().getDimension()];
-	    	intTimes[0] = rateShiftsInput.get().getArrayValue(0);
-	    	for (int i = 1; i < rateShiftsInput.get().getDimension(); i++){
-	    		if (rateShiftsInput.get().getArrayValue(i-1)>=0){
-	    			intTimes[i] = rateShiftsInput.get().getArrayValue(i) - rateShiftsInput.get().getArrayValue(i-1); 
-	    		}else{
-	    			intTimes[i] = rateShiftsInput.get().getArrayValue(i);
-	    		}
-	    			
-	    	}
-	    }else{
-	    	intTimes = new double[1];
-	    	intTimes[0] = Double.POSITIVE_INFINITY;
-    	}
+//    	if (rateShiftsInput.get() != null){
+//	    	intTimes = new double[(int) rateShiftsInput.get().getDimension()];
+//	    	intTimes[0] = rateShiftsInput.get().getArrayValue(0);
+//	    	for (int i = 1; i < rateShiftsInput.get().getDimension(); i++){
+//	    		if (rateShiftsInput.get().getArrayValue(i-1)>=0){
+//	    			intTimes[i] = rateShiftsInput.get().getArrayValue(i) - rateShiftsInput.get().getArrayValue(i-1); 
+//	    		}else{
+//	    			intTimes[i] = rateShiftsInput.get().getArrayValue(i);
+//	    		}
+//	    			
+//	    	}
+//	    }else{
+//	    	intTimes = new double[1];
+//	    	intTimes[0] = Double.POSITIVE_INFINITY;
+//    	}
     	
     	// check which rateshiftInput is the first above 0
-    	firstlargerzero = intTimes.length-1;
-    	for (int i = 0 ; i < intTimes.length; i++){
-    		if (intTimes[i] >  0){
-    			firstlargerzero = i;
-				break;
-    		}
-    	}
+//    	firstlargerzero = 0;
+//    	for (int i = 0 ; i < intTimes.length; i++){
+//    		if (intTimes[i] >  0){
+//    			firstlargerzero = i;
+//				break;
+//    		}
+//    	}
     	
     	String[] splittedTypes = typesInput.get().split("\\s+");
 
     	// check which rateshiftInput is the first above 0
-    	firstlargerzero = intTimes.length-1;
-    	for (int i = 0 ; i < intTimes.length; i++){
-    		if (intTimes[i] >  0){
-    			firstlargerzero = i;
-				break;
-    		}
-    	}
+//    	firstlargerzero = intTimes.length-1;
+//    	for (int i = 0 ; i < intTimes.length; i++){
+//    		if (intTimes[i] >  0){
+//    			firstlargerzero = i;
+//				break;
+//    		}
+//    	}
     	
 		dimensionInput.set(splittedTypes.length);
     	
@@ -136,24 +136,24 @@ public class GLM extends CalculationNode implements Loggable {
 			reverseTraitToType.put(i, splittedTypes[i]);
 		
 		// set the number of intervals for the GLM models
-		migrationGLMInput.get().setNrIntervals(rateShiftsInput.get().getDimension());
-		NeGLMInput.get().setNrIntervals(rateShiftsInput.get().getDimension());
+//		migrationGLMInput.get().setNrIntervals(rateShiftsInput.get().getDimension());
+//		NeGLMInput.get().setNrIntervals(rateShiftsInput.get().getDimension());
     }
 
     /**
      * Returns the time to the next interval.
      */
-    public double getInterval(int i) {
-    	if (i >= rateShiftsInput.get().getDimension()-firstlargerzero){
-     		return Double.POSITIVE_INFINITY;
-     	}else{
-			return intTimes[i+firstlargerzero];
-     	}
-    }   
+//    public double getInterval(int i) {
+//    	if (i >= rateShiftsInput.get().getDimension()-firstlargerzero){
+//     		return Double.POSITIVE_INFINITY;
+//     	}else{
+//			return intTimes[i+firstlargerzero];
+//     	}
+//    }   
 
-    public double[] getIntervals() {
-    	return intTimes;
-    }
+//    public double[] getIntervals() {
+//    	return intTimes;
+//    }
     
     public boolean intervalIsDirty(int i){
 		if(NeGLMInput.get().isDirty())
@@ -166,13 +166,13 @@ public class GLM extends CalculationNode implements Loggable {
 
     
     public double[] getCoalescentRate(int i){
-		int intervalNr;
-    	if (i >= rateShiftsInput.get().getDimension()-firstlargerzero)
-    		intervalNr = rateShiftsInput.get().getDimension()-1;
-    	else
-    		intervalNr = i + firstlargerzero;
+//		int intervalNr;
+//    	if (i >= rateShiftsInput.get().getDimension()-firstlargerzero)
+//    		intervalNr = rateShiftsInput.get().getDimension()-1;
+//    	else
+//    		intervalNr = i + firstlargerzero;
 
-    	double[] Ne = NeGLMInput.get().getRates(intervalNr);
+    	double[] Ne = NeGLMInput.get().getRates();
 		double[] coal = new double[Ne.length];
 		for (int j = 0; j < Ne.length; j++){
 			coal[j] = FastMath.min(1/Ne[j],maxRateInput.get());
@@ -184,20 +184,20 @@ public class GLM extends CalculationNode implements Loggable {
     /** returns GLM matrix for interval i 
      * with all zero diagonal 
      * **/
-    public double [] getRateMatrix(int i){
-		int intervalNr;
-    	if (i >= rateShiftsInput.get().getDimension()-firstlargerzero)
-    		intervalNr = rateShiftsInput.get().getDimension()-1;
-    	else
-    		intervalNr = i + firstlargerzero;
+    public double [] getRateMatrix(){
+//		int intervalNr;
+//    	if (i >= rateShiftsInput.get().getDimension()-firstlargerzero)
+//    		intervalNr = rateShiftsInput.get().getDimension()-1;
+//    	else
+//    		intervalNr = i + firstlargerzero;
 
     	int n = dimensionInput.get();
     	double[] m = new double[n * (n-1)];
-		double[] mig = migrationGLMInput.get().getRates(intervalNr);
-		double[] Ne = NeGLMInput.get().getRates(intervalNr);
+		double[] mig = migrationGLMInput.get().getRates();
+		double[] Ne = NeGLMInput.get().getRates();
 		
 		int c = 0;
-		for (int a = 0; a < dimensionInput.get(); a++){
+		for (int a = 0; a < dimensionInput.get(); a++) {
 			for (int b = 0; b < dimensionInput.get(); b++){
 				if (a!=b){
 					m[c] = FastMath.min( 
@@ -211,43 +211,43 @@ public class GLM extends CalculationNode implements Loggable {
     }
 	
 	public Double[] getAllCoalescentRate() {
-		Double[] coal = new Double[NeGLMInput.get().nrIntervals*NeGLMInput.get().verticalEntries];
+    	double[] Ne = NeGLMInput.get().getRates();
+		Double[] coal = new Double[Ne.length];
 		
-		for (int i = 0; i < intTimes.length; i++){
-	    	double[] Ne = NeGLMInput.get().getRates(i);
+		//for (int i = 0; i < intTimes.length; i++){
 	    	for (int j = 0; j < Ne.length; j++)
-	    		coal[i*NeGLMInput.get().verticalEntries + j] = 1/Ne[j];
-		}
+	    		coal[j] = 1/Ne[j];
+		//}
 		return coal;
 	}
 
 	public Double[] getAllBackwardsMigration() {
-		Double[] mig = new Double[migrationGLMInput.get().nrIntervals*migrationGLMInput.get().verticalEntries];
+    	double[] m = migrationGLMInput.get().getRates();
+		Double[] mig = new Double[m.length];
 		
-		for (int i = 0; i < intTimes.length; i++){
-	    	double[] m = migrationGLMInput.get().getRates(i);
+		//for (int i = 0; i < intTimes.length; i++){
 	    	for (int j = 0; j < m.length; j++)
-	    		mig[i*migrationGLMInput.get().verticalEntries + j] = m[j];
-		}
+	    		mig[j] = m[j];
+		//}
 		return mig;
 	}
 
 	@Override
 	public void init(PrintStream out) {
 		for (int j = 0; j < dimensionInput.get(); j++){
-			for (int i = 0; i < intTimes.length; i++){
-				out.print(String.format("Ne.%d.%d\t", j,i));
-			}			
+			//for (int i = 0; i < intTimes.length; i++){
+				out.print(String.format("Ne.%d.%d\t", j));
+			//}			
 		}
 	}
 
 	@Override
 	public void log(long sample, PrintStream out) {
 		for (int j = 0; j < dimensionInput.get(); j++){
-			for (int i = 0; i < intTimes.length; i++){
-		    	double[] Ne = NeGLMInput.get().getRates(i);
+			//for (int i = 0; i < intTimes.length; i++){
+		    	double[] Ne = NeGLMInput.get().getRates();
 				out.print(Ne[j] + "\t");
-			}			
+			//}			
 		}
 	}
 
@@ -264,7 +264,7 @@ public class GLM extends CalculationNode implements Loggable {
 //    }
 
 
-    public int getEpochCount() {
-    	return rateShiftsInput.get().getDimension();
-    }
+//    public int getEpochCount() {
+//    	return rateShiftsInput.get().getDimension();
+//    }
 }

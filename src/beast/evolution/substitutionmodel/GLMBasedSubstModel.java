@@ -34,7 +34,7 @@ public class GLMBasedSubstModel extends GeneralSubstitutionModel {
 	
 	@Override
 	protected void setupRelativeRates() {
-		relativeRates = glm.getRateMatrix(0);
+		relativeRates = glm.getRateMatrix();
 	}
 
 }
