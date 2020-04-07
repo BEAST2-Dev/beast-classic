@@ -2,56 +2,82 @@ package beast.evolution.substitutionmodel;
 
 import java.io.PrintStream;
 
-import beast.core.Input;
+import beast.core.Function;
 
 public class LogLinear extends GlmModel {
 
-	private int verticalEntries;
-	
-	@Override
-	public void initAndValidate() {
-		verticalEntries = covariatesInput.get().get(0).getDimension();
-		// set the dimension of the scalers, indicators and potentially the error term
-    	scalerInput.get().setDimension(covariatesInput.get().size());
-    	indicatorInput.get().setDimension(covariatesInput.get().size());
-    	
-    	if (errorInput.get()!=null)
-    		errorInput.get().setDimension(covariatesInput.get().get(0).getDimension());
-    	
-    	if (constantErrorInput.get()!=null)
-    		if (constantErrorInput.get().getDimension()<1)
-    			constantErrorInput.get().setDimension(verticalEntries);
-	}
-	
+	// number of entries in covariates
+	// should be #states * (#states-1)
+	private int entryCount;
 
 	@Override
-	public double[] getRates() {
-    	double[] logrates = new double[verticalEntries];
-    	
-    	for (int j = 0; j < logrates.length; j++)
-    		logrates[j] = 0;
-    	    	
-		for (int j = 0; j < covariatesInput.get().size(); j++){
-			if (indicatorInput.get().getArrayValue(j) > 0.0){
-				for (int k = 0; k < logrates.length; k++){
-					logrates[k] += scalerInput.get().getArrayValue(j)
-						*covariatesInput.get().get(j).getArrayValue(k);
-				}
+	public void initAndValidate() {
+		entryCount = covariatesInput.get().get(0).getDimension();
+		
+		int n = 1 + (int) Math.sqrt(entryCount);
+		if (entryCount != n * (n-1)) {
+			throw new IllegalArgumentException("Covariate has " + entryCount + " entries, but expected for "
+					+ n + " states to get n*(n-1)=" + n*(n-1) + " states");
+		}
+		
+		// make sure all covariates have same dimension
+		for (int i = 1; i < covariatesInput.get().size(); i++) {
+			if (covariatesInput.get().get(i).getDimension() != entryCount) {
+				throw new IllegalArgumentException("Covariates " + covariatesInput.get().get(0).getID() + " and " 
+						+ covariatesInput.get().get(i).getID() + " have different dimensions (" + 
+						entryCount + " and " + covariatesInput.get().get(i).getDimension() + ")");
 			}
 		}
 		
-    	if (errorInput.get()!=null)
-    		for (int k = 0; k < logrates.length; k++)
-    			logrates[k] += errorInput.get().getArrayValue(k);
-    	
-    	if (constantErrorInput.get()!=null)
-    		for (int k = 0; k < logrates.length; k++)
-    			logrates[k] += constantErrorInput.get().getArrayValue( k);
+		// set the dimension of the scalers, indicators and potentially the
+		// error term
+		scalerInput.get().setDimension(entryCount);
+		indicatorInput.get().setDimension(entryCount);
 
-    	double[] rates = new double[verticalEntries];
-   	
-		for (int k = 0; k < verticalEntries; k++){
-			rates[k] = clockInput.get().getArrayValue()*Math.exp(logrates[k]);				
+		if (errorInput.get() != null) {
+			errorInput.get().setDimension(1);
+		}
+
+		if (constantErrorInput.get() != null) {
+			if (constantErrorInput.get().getDimension() < 1) {
+				constantErrorInput.get().setDimension(entryCount);
+			}
+		}
+	}
+
+	@Override
+	public double[] getRates() {
+		double [] logrates = new double[entryCount];
+
+		for (int j = 0; j < logrates.length; j++)
+			logrates[j] = 0;
+
+		for (int j = 0; j < covariatesInput.get().size(); j++) {
+			if (indicatorInput.get().getValue(j)) {
+				Function covariate = covariatesInput.get().get(j);
+				for (int k = 0; k < logrates.length; k++) {
+					logrates[k] += scalerInput.get().getArrayValue(j) * covariate.getArrayValue(k);
+				}
+			}
+		}
+
+		if (errorInput.get() != null) {
+			for (int k = 0; k < logrates.length; k++) {
+				logrates[k] += errorInput.get().getArrayValue(k);
+			}
+		}
+
+		if (constantErrorInput.get() != null) {
+			for (int k = 0; k < logrates.length; k++) {
+				logrates[k] += constantErrorInput.get().getArrayValue(k);
+			}
+		}
+
+		double [] rates = new double[entryCount];
+
+		double clockRate = clockInput.get().getArrayValue();
+		for (int k = 0; k < entryCount; k++) {
+			rates[k] = clockRate * Math.exp(logrates[k]);
 		}
 
 		return rates;
@@ -59,24 +85,26 @@ public class LogLinear extends GlmModel {
 
 	@Override
 	public void init(PrintStream out) {
-		for (int i = 0 ; i < scalerInput.get().getDimension(); i++){
+		for (int i = 0; i < scalerInput.get().getDimension(); i++) {
 			out.print(String.format("%sscaler.%s\t", getID(), covariatesInput.get().get(i).getID()));
 		}
 	}
 
 	@Override
 	public void log(int sample, PrintStream out) {
-		for (int i = 0 ; i < scalerInput.get().getDimension(); i++){
-			if (indicatorInput.get().getArrayValue(i) > 0.5)
-				out.print(scalerInput.get().getArrayValue(i) +"\t");
-			else
+		for (int i = 0; i < scalerInput.get().getDimension(); i++) {
+			if (indicatorInput.get().getArrayValue(i) > 0.5) {
+				out.print(scalerInput.get().getArrayValue(i) + "\t");
+			} else {
 				out.print("0.0\t");
+			}
 		}
-		
+
 	}
 
 	@Override
 	public void close(PrintStream out) {
+		// nothing to do
 	}
 
 }

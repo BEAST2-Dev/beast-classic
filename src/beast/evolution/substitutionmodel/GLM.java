@@ -35,7 +35,7 @@ public class GLM extends CalculationNode implements Loggable {
 			"maxRate", "maximum rate used for integration", Double.POSITIVE_INFINITY);
 
     public Input<Integer> dimensionInput = new Input<>("dimension", "the number of different states." + 
-    		" if -1, it will use the number of different types ", -1);
+    		" if -1, it will use the number of different types ");
     
     public Input<TraitSet> typeTraitInput = new Input<>("typeTrait", "Type trait set.  Used only by BEAUti.");
     
@@ -86,7 +86,7 @@ public class GLM extends CalculationNode implements Loggable {
 
     	}
     	
-    	if (dimensionInput.get()>1 && dimensionInput.get()<traitToType.size())
+    	if (dimensionInput.get() != null && dimensionInput.get() < traitToType.size())
             throw new IllegalArgumentException("dimension is not -1 (undefined) and smaller " +
             		"than the number of different traits");    	
     	// if there are rate shifts as an input, use the stepwise glm model otherwise the constant
@@ -255,6 +255,10 @@ public class GLM extends CalculationNode implements Loggable {
 	public void close(PrintStream out) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public int getDimension() {
+		return dimensionInput.get();
 	}
 
 //    @Override
