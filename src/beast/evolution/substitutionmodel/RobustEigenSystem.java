@@ -14,7 +14,7 @@ import cern.colt.matrix.impl.DenseDoubleMatrix2D;
  *         Date: Sep 22, 2011
  *         Time: 2:30:18 PM
  */
-public class RobustEigenSystem implements EigenSystem{
+public class RobustEigenSystem implements EigenSystem {
 
     private final int stateCount;
 

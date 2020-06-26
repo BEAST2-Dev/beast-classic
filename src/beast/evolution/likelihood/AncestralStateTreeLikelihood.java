@@ -17,6 +17,7 @@ import beast.evolution.datatype.DataType;
 import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.TreeLikelihood;
 import beast.evolution.sitemodel.SiteModel;
+import beast.evolution.substitutionmodel.Frequencies;
 import beast.evolution.substitutionmodel.SubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -27,6 +28,7 @@ import beast.util.Randomizer;
 
 /**
  * @author Marc A. Suchard
+ * @author Alexei Drummond
  */
 @Description("Ancestral State Tree Likelihood")
 public class AncestralStateTreeLikelihood extends TreeLikelihood implements TreeTraitProvider {
@@ -450,6 +452,11 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 
                 double[] rootPartials = m_fRootPartials;
 
+                double[] rootFrequencies = substitutionModel.getFrequencies();
+                if (rootFrequenciesInput.get() != null) {
+                    rootFrequencies = rootFrequenciesInput.get().getFreqs();
+                }
+
                 // This is the root node
                 for (int j = 0; j < patternCount; j++) {
                 	if (beagle != null) {
@@ -457,9 +464,9 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
                 	} else {
                 		System.arraycopy(rootPartials, j * stateCount, conditionalProbabilities, 0, stateCount);
                 	}
-                    double[] frequencies = substitutionModel.getFrequencies();
+
                     for (int i = 0; i < stateCount; i++) {
-                        conditionalProbabilities[i] *= frequencies[i];
+                        conditionalProbabilities[i] *= rootFrequencies[i];
                     }
                     try {
                         state[j] = drawChoice(conditionalProbabilities);
@@ -470,8 +477,8 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
                     }
                     reconstructedStates[nodeNum][j] = state[j];
 
-                    //System.out.println("Pr(j) = " + frequencies[state[j]]);
-                    jointLogLikelihood += Math.log(frequencies[state[j]]);
+                    //System.out.println("Pr(j) = " + rootFrequencies[state[j]]);
+                    jointLogLikelihood += Math.log(rootFrequencies[state[j]]);
                 }
 
             } else {
