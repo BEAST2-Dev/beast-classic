@@ -275,6 +275,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     @Override
     protected boolean requiresRecalculation() {
     	likelihoodKnown = false;
+
     	boolean isDirty = super.requiresRecalculation();
     	if (!m_useAmbiguities.get()) {
     		return isDirty;
@@ -324,11 +325,10 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 
         if (!likelihoodKnown) {
         	try {
-        		calculateLogP();
+        		 calculateLogP();
         	} catch (Exception e) {
 				throw new RuntimeException(e.getMessage());
 			}
-            likelihoodKnown = true;
         }
 
         if (!areStatesRedrawn) {
@@ -342,6 +342,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         jointLogLikelihood = 0;
         TreeInterface tree = treeInput.get();
         traverseSample(tree, tree.getRoot(), null);
+        
         areStatesRedrawn = true;
     }
 
@@ -352,6 +353,8 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
     public double calculateLogP() {
         areStatesRedrawn = false;
         double marginalLogLikelihood = super.calculateLogP();
+        likelihoodKnown = true;
+
         if (returnMarginalLogLikelihood) {
             return logP;
         }
