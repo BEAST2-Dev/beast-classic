@@ -24,6 +24,14 @@ public class TraitDialog extends JPanel {
 	private JTextField txtTraitname;
 	JComboBox comboBox;
 	String tree;
+	public String getTree() {
+		return tree;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 	String name;
 	
 	public TraitDialog(BeautiDoc doc, List<String> trees) {
