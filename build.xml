@@ -30,6 +30,7 @@
 	<path id="classpath">
         <pathelement path="${buildBEAST_CLASSIC}"/>
 		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
+		<fileset dir="${libBeast2}" includes="commons-math3-3.1.1.jar"/>
 		<fileset dir="${libBeast2}" includes="fest.jar"/>
 		<fileset dir="${libBeast2}" includes="beagle.jar"/>
 		<fileset dir="${libBeast2}" includes="jam.jar"/>
