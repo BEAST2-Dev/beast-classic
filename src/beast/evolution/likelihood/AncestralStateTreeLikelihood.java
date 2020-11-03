@@ -560,9 +560,13 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 	            	} else {
 	                /*((AbstractLikelihoodCore) */likelihoodCore.getNodeMatrix(nodeNum, 0, probabilities);
 	            	}
-	                if (dataType.isAmbiguousState(thisState)) {
-	
-	                    System.arraycopy(probabilities, parentIndex, conditionalProbabilities, 0, stateCount);
+	                if (dataType.isAmbiguousCode(thisState)) {
+		                    
+	                    boolean [] stateSet = dataType.getStateSet(thisState);
+	                    for (int i = 0; i < stateCount; i++) {
+	                        conditionalProbabilities[i] =  stateSet[i] ? probabilities[parentIndex + i] : 0;
+	                    }
+	                    
 	                    reconstructedStates[nodeNum][j] = drawChoice(conditionalProbabilities);
 	                }
 	
