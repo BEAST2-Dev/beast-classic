@@ -7,7 +7,6 @@ import java.util.List;
 import beast.core.Description;
 import beast.core.Input;
 import beast.core.Input.Validate;
-import beast.evolution.alignment.Alignment;
 import beast.evolution.datatype.DataType;
 import beast.evolution.tree.TraitSet;
 import beast.util.BEASTClassLoader;
@@ -37,9 +36,9 @@ public class AlignmentFromTrait extends Alignment {
 	    	if (userDataTypeInput.get() != null) {
 	            m_dataType = userDataTypeInput.get();
 	        } else {
-	            if (types.indexOf(dataTypeInput.get()) < 0) {
+	            if (types.get(dataTypeInput.get()) == null) {
 	                throw new IllegalArgumentException("data type + '" + dataTypeInput.get() + "' cannot be found. " +
-	                        "Choose one of " + Arrays.toString(types.toArray(new String[0])));
+	                        "Choose one of " + Arrays.toString(types.keySet().toArray(new String[0])));
 	            }
 	            List<String> sDataTypes = PackageManager.find(beast.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
 	            for (String sDataType : sDataTypes) {
@@ -72,7 +71,7 @@ public class AlignmentFromTrait extends Alignment {
 	        	List<Integer> iStates = m_dataType.string2state(sValue);
 	        	counts.add(iStates);
 	        }
-	        stateCounts = new ArrayList<Integer>();
+	        stateCounts = new ArrayList<>();
 	        for (String s : taxaNames) {
 	        	stateCounts.add(m_dataType.getStateCount());
 	        }
