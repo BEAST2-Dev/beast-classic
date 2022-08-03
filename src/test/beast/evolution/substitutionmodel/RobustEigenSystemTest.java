@@ -7,8 +7,8 @@ import org.junit.Test;
 import beast.base.evolution.substitutionmodel.DefaultEigenSystem;
 import beast.base.evolution.substitutionmodel.EigenDecomposition;
 import beast.base.evolution.substitutionmodel.EigenSystem;
-import beast.evolution.substitutionmodel.RobustEigenSystem;
 import beast.base.util.Randomizer;
+import beastclassic.evolution.substitutionmodel.RobustEigenSystem;
 import junit.framework.TestCase;
 
 public class RobustEigenSystemTest extends TestCase {
