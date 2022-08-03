@@ -10,10 +10,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import beast.core.*;
-import beast.core.Input.Validate;
-
-
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.CalculationNode;
 import dr.math.distributions.MultivariateDistribution;
 
 

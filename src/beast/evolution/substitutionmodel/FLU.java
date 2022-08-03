@@ -1,8 +1,9 @@
 package beast.evolution.substitutionmodel;
 
-import beast.core.Description;
-import beast.evolution.datatype.Aminoacid;
-import beast.evolution.datatype.DataType;
+import beast.base.core.Description;
+import beast.base.evolution.datatype.Aminoacid;
+import beast.base.evolution.datatype.DataType;
+import beast.base.evolution.substitutionmodel.EmpiricalSubstitutionModel;
 
 
 
@@ -24,6 +25,7 @@ public class FLU extends EmpiricalSubstitutionModel {
     // The rates below are specified assuming that the amino acids are in this order:
     // ARNDCQEGHILKMFPSTWYV  
     @Override
+	public
     double[][] getEmpiricalRates() {
  
         double[][] rate = new double[20][20];
@@ -141,7 +143,7 @@ public class FLU extends EmpiricalSubstitutionModel {
         return rate;
     }
     
-    double[] getEmpiricalFrequencies() {
+    public double[] getEmpiricalFrequencies() {
 
         double[] f = new double[20];
         f[0] = 0.0470718; // A

@@ -1,9 +1,11 @@
 package beast.evolution.substitutionmodel;
 
 
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Input.Validate;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.evolution.substitutionmodel.GeneralSubstitutionModel;
+import beastlabs.evolution.substitutionmodel.ComplexColtEigenSystem;
 
 @Description("Subst model where the rates are determined by a generalised linear model (GLM)")
 public class GLMBasedSubstModel extends GeneralSubstitutionModel {
@@ -35,7 +37,7 @@ public class GLMBasedSubstModel extends GeneralSubstitutionModel {
 	
 	
 	@Override
-	protected void setupRelativeRates() {
+	public void setupRelativeRates() {
 		relativeRates = glm.getRateMatrix();
 	}
 

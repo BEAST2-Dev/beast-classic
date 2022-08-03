@@ -1,14 +1,14 @@
 package beast.evolution.operators;
 
 
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Operator;
-import beast.core.parameter.RealParameter;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.inference.Operator;
+import beast.base.inference.parameter.RealParameter;
 import beast.inference.distribution.LinearRegression;
 import dr.math.distributions.MultivariateDistribution;
 import dr.math.distributions.MultivariateNormalDistribution;
-import beast.math.matrixalgebra.SymmetricMatrix;
+import beast.base.math.matrixalgebra.SymmetricMatrix;
 
 
 /**

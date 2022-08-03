@@ -1,10 +1,10 @@
 package beast.evolution.likelihood;
 
-import beast.core.CalculationNode;
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.parameter.IntegerParameter;
+import beast.base.inference.CalculationNode;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.IntegerParameter;
 
 @Description("For associating a taxon with its parameter")
 public class LeafTrait extends CalculationNode {

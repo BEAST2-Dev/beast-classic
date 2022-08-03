@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import beast.core.BEASTObject;
-import beast.core.Description;
+import beast.base.core.BEASTObject;
+import beast.base.core.Description;
 
 /**
  * An interface for objects that can provide TreeTraits (i.e., information about the nodes and

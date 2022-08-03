@@ -1,9 +1,13 @@
 package dr.math.distributions;
 
 
-import beast.core.Description;
-import beast.math.matrixalgebra.*;
-import beast.util.Randomizer;
+import beast.base.core.Description;
+import beast.base.math.matrixalgebra.CholeskyDecomposition;
+import beast.base.math.matrixalgebra.IllegalDimension;
+import beast.base.math.matrixalgebra.Matrix;
+import beast.base.math.matrixalgebra.SymmetricMatrix;
+import beast.base.math.matrixalgebra.Vector;
+import beast.base.util.Randomizer;
 
 /**
  * @author Marc Suchard

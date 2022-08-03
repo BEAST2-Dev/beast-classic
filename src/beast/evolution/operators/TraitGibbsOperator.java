@@ -32,7 +32,7 @@ package beast.evolution.operators;
 //import dr.geo.GeoSpatialCollectionModel;
 //import dr.inference.distribution.MultivariateDistributionLikelihood;
 
-import beast.core.Description;
+import beast.base.core.Description;
 import dr.math.distributions.MultivariateDistribution;
 //import dr.math.distributions.MultivariateNormalDistribution;
 
@@ -42,17 +42,17 @@ import java.util.List;
 import java.util.Map;
 
 import beast.continuous.SampledMultivariateTraitLikelihood;
-import beast.core.Input;
-import beast.core.Operator;
-import beast.core.Input.Validate;
-import beast.core.parameter.RealParameter;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeTraitMap;
+import beast.base.core.Input;
+import beast.base.inference.Operator;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
 import beast.geo.GeoSpatialDistribution;
 import beast.math.distributions.MultivariateNormalDistribution;
-import beast.math.matrixalgebra.SymmetricMatrix;
-import beast.util.Randomizer;
+import beast.base.math.matrixalgebra.SymmetricMatrix;
+import beast.base.util.Randomizer;
 
 
 

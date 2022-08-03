@@ -3,12 +3,12 @@ package beast.evolution.substitutionmodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import beast.core.CalculationNode;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.Loggable;
-import beast.core.parameter.BooleanParameter;
-import beast.core.parameter.RealParameter;
+import beast.base.inference.CalculationNode;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.core.Loggable;
+import beast.base.inference.parameter.BooleanParameter;
+import beast.base.inference.parameter.RealParameter;
 
 public abstract class GlmModel extends CalculationNode implements Loggable {
 	

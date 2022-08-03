@@ -25,7 +25,7 @@
 
 package dr.math;
 
-import beast.core.Description;
+import beast.base.core.Description;
 
 
 /**

@@ -3,9 +3,14 @@ package beast.evolution.tree;
 
 import java.io.PrintStream;
 
-import beast.core.*;
-import beast.core.Input.Validate;
-import beast.core.parameter.RealParameter;
+import beast.base.core.Description;
+import beast.base.core.Function;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.core.Loggable;
+import beast.base.evolution.tree.TreeInterface;
+import beast.base.inference.CalculationNode;
+import beast.base.inference.parameter.RealParameter;
 
 
 @Description("A logger for the type of the tree root")

@@ -24,20 +24,20 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import beast.app.beauti.BeautiDoc;
-import beast.app.beauti.GuessPatternDialog;
-import beast.app.draw.ListInputEditor;
-import beast.app.draw.SmallLabel;
+import beastfx.app.inputeditor.BeautiDoc;
+import beastfx.app.inputeditor.GuessPatternDialog;
+import beastfx.app.inputeditor.ListInputEditor;
+import beastfx.app.inputeditor.SmallLabel;
 import beast.continuous.SampledMultivariateTraitLikelihood;
-import beast.core.BEASTInterface;
-import beast.core.BEASTObject;
-import beast.core.Input;
-import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.AlignmentFromTraitMap;
-import beast.evolution.alignment.TaxonSet;
-import beast.evolution.tree.Tree;
-import beast.evolution.tree.TreeInterface;
 import beast.evolution.tree.TreeTraitMap;
+import beast.base.core.BEASTInterface;
+import beast.base.core.BEASTObject;
+import beast.base.core.Input;
+import beast.base.evolution.alignment.Alignment;
+import beast.base.evolution.alignment.TaxonSet;
+import beast.base.evolution.tree.Tree;
+import beast.base.evolution.tree.TreeInterface;
 
 
 

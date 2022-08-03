@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import beast.util.BEASTClassLoader;
+import beast.pkgmgmt.BEASTClassLoader;
 
 /** tool for porting BEAST 1 classes to BEAST 2 by wrapping them in a Plugin **/
 public class WrapperTool {

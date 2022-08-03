@@ -1,6 +1,7 @@
 package beast.inference.distribution;
 
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,9 +9,13 @@ import java.util.logging.Logger;
 
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.SingularValueDecomposition;
-import beast.core.*;
-import beast.core.parameter.RealParameter;
-import beast.core.util.Log;
+import beast.base.inference.Distribution;
+import beast.base.inference.State;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.core.Description;
+import beast.base.core.Function;
+import beast.base.core.Input;
+import beast.base.core.Log;
 
 
 @Description("A Generalized Linear Model")

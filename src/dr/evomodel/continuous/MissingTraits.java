@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import beast.continuous.IntegratedMultivariateTraitLikelihood;
-import beast.evolution.tree.TreeInterface;
+import beast.base.evolution.tree.TreeInterface;
 
 /**
  * @author Marc A. Suchard

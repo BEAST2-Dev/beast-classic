@@ -25,16 +25,16 @@
 
 package beast.continuous;
 
-import beast.core.Description;
+import beast.base.core.Description;
 import dr.math.distributions.MultivariateNormalDistribution;
 import dr.math.distributions.WishartSufficientStatistics;
 
 import java.util.List;
 
-import beast.core.parameter.RealParameter;
-import beast.evolution.branchratemodel.BranchRateModel;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.TreeInterface;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.evolution.branchratemodel.BranchRateModel;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.TreeInterface;
 
 /**
  * Integrated multivariate trait likelihood that assumes a fully-conjugate prior on the root.

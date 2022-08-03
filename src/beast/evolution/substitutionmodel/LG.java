@@ -25,10 +25,11 @@
 
 package beast.evolution.substitutionmodel;
 
-import beast.core.Citation;
-import beast.core.Description;
-import beast.evolution.datatype.Aminoacid;
-import beast.evolution.datatype.DataType;
+import beast.base.core.Citation;
+import beast.base.core.Description;
+import beast.base.evolution.datatype.Aminoacid;
+import beast.base.evolution.datatype.DataType;
+import beast.base.evolution.substitutionmodel.EmpiricalSubstitutionModel;
 
 
 
@@ -45,7 +46,7 @@ public class LG extends EmpiricalSubstitutionModel {
 	// The rates below are specified assuming that the amino acids are in this order:
 	// ARNDCQEGHILKMFPSTWYV
     @Override
-    double[][] getEmpiricalRates() {
+    public double[][] getEmpiricalRates() {
 
 		int n = 20;
 		

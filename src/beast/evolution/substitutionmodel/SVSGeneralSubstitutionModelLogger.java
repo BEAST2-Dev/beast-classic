@@ -17,11 +17,11 @@
 
 package beast.evolution.substitutionmodel;
 
-import beast.core.BEASTObject;
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Loggable;
-import beast.evolution.datatype.UserDataType;
+import beast.base.core.BEASTObject;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Loggable;
+import beast.base.evolution.datatype.UserDataType;
 
 import java.io.PrintStream;
 

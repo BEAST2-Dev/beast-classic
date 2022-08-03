@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.PrintStream;
 
-import beast.core.Description;
-import beast.core.Function;
-import beast.core.Input;
-import beast.core.Loggable;
-import beast.core.StateNode;
-import beast.core.BEASTObject;
-import beast.core.Input.Validate;
-import beast.core.parameter.Parameter;
-import beast.evolution.branchratemodel.BranchRateModel;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
+import beast.base.core.Description;
+import beast.base.core.Function;
+import beast.base.core.Input;
+import beast.base.core.Loggable;
+import beast.base.inference.StateNode;
+import beast.base.core.BEASTObject;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.Parameter;
+import beast.base.evolution.branchratemodel.BranchRateModel;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
 
 
 
@@ -133,7 +133,7 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 			}
 			buf.append(")");
 		} else {
-			buf.append(node.labelNr + 1);
+			buf.append(node.getNr() + 1);
 		}
 		buf.append("[&");
 		
@@ -145,7 +145,7 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 				buf.append("={");
 				int k = 0;
 				for (Parameter<?> parameter : parameters) {
-					buf.append(parameter.getArrayValue(node.labelNr));
+					buf.append(parameter.getArrayValue(node.getNr()));
 					k++;
 					if (k < parameters.size()) {
 						buf.append(',');
@@ -157,7 +157,7 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 			if (parameters.size() > 0) {
 				for (Parameter<?> parameter : parameters) {
 					buf.append(parameter.getID()).append('=');
-					buf.append(parameter.getArrayValue(node.labelNr));
+					buf.append(parameter.getArrayValue(node.getNr()));
 					buf.append(',');
 				}
 			}
@@ -165,7 +165,7 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 		if (treeTraits.size() > 0) {
 			for (TreeTrait<?> trait : treeTraits) {
 				buf.append(trait.getTraitName()).append('=');
-				buf.append(trait.getTraitString(node.m_tree, node));
+				buf.append(trait.getTraitString(node.getTree(), node));
 				buf.append(',');
 			}
 		}

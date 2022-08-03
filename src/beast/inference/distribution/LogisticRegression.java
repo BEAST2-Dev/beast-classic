@@ -1,8 +1,6 @@
 package beast.inference.distribution;
 
-
-import beast.core.*;
-
+import beast.base.core.Description;
 
 @Description("A Logistic Regression Model")
 public class LogisticRegression extends GeneralizedLinearModel {

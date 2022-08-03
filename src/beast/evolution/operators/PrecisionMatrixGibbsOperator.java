@@ -28,18 +28,18 @@ package beast.evolution.operators;
 
 
 import beast.continuous.AbstractMultivariateTraitLikelihood;
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Operator;
-import beast.core.Input.Validate;
-import beast.core.parameter.RealParameter;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
-import beast.evolution.tree.TreeInterface;
 import beast.evolution.tree.TreeTraitMap;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.inference.Operator;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
+import beast.base.evolution.tree.TreeInterface;
 import beast.math.distributions.WishartDistribution;
-import beast.math.matrixalgebra.IllegalDimension;
-import beast.math.matrixalgebra.SymmetricMatrix;
+import beast.base.math.matrixalgebra.IllegalDimension;
+import beast.base.math.matrixalgebra.SymmetricMatrix;
 
 /**
  * @author Marc Suchard

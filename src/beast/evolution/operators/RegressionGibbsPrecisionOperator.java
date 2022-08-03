@@ -2,12 +2,12 @@ package beast.evolution.operators;
 
 
 
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Operator;
-import beast.core.parameter.RealParameter;
-import beast.math.distributions.Gamma;
-import beast.util.Randomizer;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.inference.Operator;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.inference.distribution.Gamma;
+import beast.base.util.Randomizer;
 import beast.inference.distribution.*;
 
 
@@ -52,8 +52,8 @@ public class RegressionGibbsPrecisionOperator extends Operator {
         double[] xBeta = linearModel.getXBeta();
 
         
-        double alpha = prior.alphaInput.get().getValue();
-        double beta= prior.alphaInput.get().getValue();        
+        double alpha = prior.alphaInput.get().getArrayValue();
+        double beta= prior.alphaInput.get().getArrayValue();        
         final double priorMean = alpha * beta; // prior.mean();
         final double priorVariance = alpha * beta * beta; // prior.variance();
 

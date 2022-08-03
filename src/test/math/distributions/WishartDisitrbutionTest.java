@@ -6,7 +6,7 @@ import org.apache.commons.math.distribution.GammaDistribution;
 import org.apache.commons.math.distribution.GammaDistributionImpl;
 import org.junit.Test;
 
-import beast.core.parameter.RealParameter;
+import beast.base.inference.parameter.RealParameter;
 import beast.math.distributions.WishartDistribution;
 
 

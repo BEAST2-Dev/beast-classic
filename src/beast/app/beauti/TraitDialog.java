@@ -12,7 +12,7 @@ import java.awt.GridBagConstraints;
 import javax.swing.JComboBox;
 import javax.swing.border.EmptyBorder;
 
-import beast.app.beauti.BeautiDoc;
+import beastfx.app.inputeditor.BeautiDoc;
 
 
 import java.awt.Insets;

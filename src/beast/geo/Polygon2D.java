@@ -17,8 +17,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import beast.core.Description;
-import beast.evolution.tree.Node;
+import beast.base.core.Description;
+import beast.base.evolution.tree.Node;
 
 
 
@@ -345,8 +345,8 @@ public class Polygon2D {
 
         int[] indicesX = new int[x.length];
         int[] indicesY = new int[y.length];
-        beast.util.HeapSort.sort(x, indicesX);
-        beast.util.HeapSort.sort(y, indicesY);
+        beast.base.util.HeapSort.sort(x, indicesX);
+        beast.base.util.HeapSort.sort(y, indicesY);
 
         double[][] returnArray = new double[2][2];
         returnArray[0][0] = x[indicesX[0]];

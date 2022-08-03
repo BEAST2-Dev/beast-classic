@@ -2,12 +2,12 @@ package beast.evolution.speciation;
 
 import java.util.Set;
 
-import beast.core.Input;
-import beast.core.parameter.RealParameter;
-import beast.evolution.alignment.Taxon;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
-import beast.evolution.tree.TreeDistribution;
+import beast.base.core.Input;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.evolution.alignment.Taxon;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
+import beast.base.evolution.tree.TreeDistribution;
 
 /**
  * Beginning of tree prior for birth-death + serial sampling + extant sample proportion. More Tanja magic...

@@ -8,23 +8,23 @@ import java.util.Arrays;
 import java.util.List;
 
 import beagle.Beagle;
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.parameter.IntegerParameter;
-import beast.evolution.alignment.Alignment;
-import beast.evolution.datatype.DataType;
-import beast.evolution.datatype.UserDataType;
-import beast.evolution.likelihood.TreeLikelihood;
-import beast.evolution.sitemodel.SiteModel;
-import beast.evolution.substitutionmodel.Frequencies;
-import beast.evolution.substitutionmodel.SubstitutionModel;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
-import beast.evolution.tree.TreeInterface;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.IntegerParameter;
+import beast.base.evolution.alignment.Alignment;
+import beast.base.evolution.datatype.DataType;
+import beast.base.evolution.datatype.UserDataType;
+import beast.base.evolution.likelihood.TreeLikelihood;
+import beast.base.evolution.sitemodel.SiteModel;
+import beast.base.evolution.substitutionmodel.Frequencies;
+import beast.base.evolution.substitutionmodel.SubstitutionModel;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
+import beast.base.evolution.tree.TreeInterface;
+import beast.base.util.Randomizer;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitProvider;
-import beast.util.Randomizer;
 
 /**
  * @author Marc A. Suchard
@@ -344,6 +344,12 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
         traverseSample(tree, tree.getRoot(), null);
         
         areStatesRedrawn = true;
+        
+//        System.err.println("logP=" + logP);
+//        for (int i = 0; i < reconstructedStates.length; i++) {
+//        	System.err.print(reconstructedStates[i][0] + ", ");
+//        }
+//        System.err.println();
     }
 
 //    private boolean checkConditioning = true;
@@ -404,7 +410,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
             double max = measure[0];
             int choice = 0;
             for (int i = 1; i < measure.length; i++) {
-                if (measure[i] > max) {
+                if ((measure[i] - max)/(measure[i] + max) > 1e-10) {
                     max = measure[i];
                     choice = i;
                 }
@@ -423,11 +429,11 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 	public void getPartials(int number, double[] partials) {
         int cumulativeBufferIndex = Beagle.NONE;
         /* No need to rescale partials */
-        beagle.beagle.getPartials(beagle.partialBufferHelper.getOffsetIndex(number), cumulativeBufferIndex, partials);
+        beagle.getBeagle().getPartials(beagle.getPartialBufferHelper().getOffsetIndex(number), cumulativeBufferIndex, partials);
 	}
 
 	public void getTransitionMatrix(int matrixNum, double[] probabilities) {
-		beagle.beagle.getTransitionMatrix(beagle.matrixBufferHelper.getOffsetIndex(matrixNum), probabilities);
+		beagle.getBeagle().getTransitionMatrix(beagle.getMatrixBufferHelper().getOffsetIndex(matrixNum), probabilities);
 	}
     
     /**

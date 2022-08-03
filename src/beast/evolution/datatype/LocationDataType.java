@@ -1,6 +1,6 @@
 package beast.evolution.datatype;
 
-import beast.core.Description;
+import beast.base.core.Description;
 
 @Description("Datatype for representing geographic locations in 2 dimension, latitude x longitude")
 public class LocationDataType extends ContinuousDataType {

@@ -1,8 +1,8 @@
 package beast.evolution.substitutionmodel;
 
-import beast.evolution.substitutionmodel.EigenDecomposition;
-import beast.evolution.substitutionmodel.EigenSystem;
-import beast.math.matrixalgebra.RobustEigenDecomposition;
+import beast.base.evolution.substitutionmodel.EigenDecomposition;
+import beast.base.evolution.substitutionmodel.EigenSystem;
+import beast.base.math.matrixalgebra.RobustEigenDecomposition;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.DoubleMatrix1D;
 import cern.colt.matrix.linalg.Algebra;

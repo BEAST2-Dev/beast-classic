@@ -1,13 +1,13 @@
 package beast.evolution.operators;
 
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.parameter.RealParameter;
-import beast.evolution.operators.RealRandomWalkOperator;
-import beast.evolution.tree.Node;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.inference.operator.RealRandomWalkOperator;
+import beast.base.evolution.tree.Node;
+import beast.base.util.Randomizer;
 import beast.evolution.tree.TreeTraitMap;
-import beast.util.Randomizer;
 
 @Description("Random walk opeartor root of a tree trait")
 public class RootTraitRandowWalkOperator extends RealRandomWalkOperator {
@@ -30,7 +30,7 @@ public class RootTraitRandowWalkOperator extends RealRandomWalkOperator {
 	@Override
 	public double proposal() {
 
-		RealParameter param = parameterInput.get(this);
+		RealParameter param = parameterInput.get();
 		Node root = map.treeInput.get().getRoot();
 		int rootOffset = map.getTraitNr(root);
 		int i = rootOffset * param.getMinorDimension1() + Randomizer.nextInt(param.getMinorDimension1());

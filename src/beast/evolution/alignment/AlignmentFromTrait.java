@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.evolution.datatype.DataType;
-import beast.evolution.tree.TraitSet;
-import beast.util.BEASTClassLoader;
-import beast.util.PackageManager;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.evolution.alignment.Alignment;
+import beast.base.evolution.datatype.DataType;
+import beast.base.evolution.tree.TraitSet;
+import beast.pkgmgmt.BEASTClassLoader;
+import beast.pkgmgmt.PackageManager;
 
 
 
@@ -40,7 +41,7 @@ public class AlignmentFromTrait extends Alignment {
 	                throw new IllegalArgumentException("data type + '" + dataTypeInput.get() + "' cannot be found. " +
 	                        "Choose one of " + Arrays.toString(types.keySet().toArray(new String[0])));
 	            }
-	            List<String> sDataTypes = PackageManager.find(beast.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
+	            List<String> sDataTypes = PackageManager.find(beast.base.evolution.datatype.DataType.class, IMPLEMENTATION_DIR);
 	            for (String sDataType : sDataTypes) {
 	                DataType dataType = null;
 					try {
@@ -55,7 +56,7 @@ public class AlignmentFromTrait extends Alignment {
 	            }
 	        }
 
-	        taxaNames = traitSet.taxaInput.get().taxaNames;
+	        taxaNames = traitSet.taxaInput.get().asStringList();
 	        
 	        if (traitSet.traitsInput.get() == null || traitSet.traitsInput.get().matches("^\\s*$")) {
 	        	// prevent initialisation when in beauti

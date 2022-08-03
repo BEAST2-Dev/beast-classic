@@ -2,8 +2,8 @@ package beast.evolution.tree;
 
 
 
-import beast.evolution.tree.Node;
-import beast.evolution.tree.TreeInterface;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.TreeInterface;
 
 /**
  * @author Andrew Rambaut

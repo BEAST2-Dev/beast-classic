@@ -1,12 +1,15 @@
 package beast.evolution.tree.coalescent;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.parameter.RealParameter;
+import beast.base.core.BEASTInterface;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.evolution.tree.coalescent.ExponentialGrowth;
+import beast.base.inference.parameter.RealParameter;
 
 @Description("A demographic model of constant population size followed by exponential growth.")
 public class Expansion extends ExponentialGrowth {
@@ -16,9 +19,9 @@ public class Expansion extends ExponentialGrowth {
 	@Override
 	public List<String> getParameterIds() {
 		List<String> ids = new ArrayList<>();
-		ids.add(popSizeParameterInput.get().getID());
-		ids.add(growthRateParameterInput.get().getID());
-		ids.add(ancestralPopulationProportionInput.get().getID());
+		ids.add(((BEASTInterface)popSizeParameterInput.get()).getID());
+		ids.add(((BEASTInterface)growthRateParameterInput.get()).getID());
+		ids.add(((BEASTInterface)ancestralPopulationProportionInput.get()).getID());
         return ids;
 	}
 

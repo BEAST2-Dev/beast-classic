@@ -2,13 +2,13 @@ package beast.evolution.likelihood;
 
 import java.io.PrintStream;
 
-import beast.core.Description;
-import beast.core.Function;
-import beast.core.Input;
-import beast.core.Loggable;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
-import beast.evolution.tree.TreeInterface;
+import beast.base.core.Description;
+import beast.base.core.Function;
+import beast.base.core.Input;
+import beast.base.core.Loggable;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
+import beast.base.evolution.tree.TreeInterface;
 
 @Description("Reconstructs sequences at internal nodes and logs them in NEXUS format")
 public class AncestralSequenceLogger extends AncestralStateTreeLikelihood implements Function, Loggable {
@@ -141,7 +141,7 @@ There is an optional flag on `AncestralSequenceLogger`:
 Though the BEAST analysis typically estimates the tree, so topologies change through the MCMC analysis, it may be useful to do the reconstruction on a fixed tree. You can specify a tree in Newick format and add the following fragment to the XML, just before the closing beast tag `</beast>`, but after the closing run tag `</run>`:
 
 ```XML
-<tree spec='beast.util.TreeParser' id='NewickTree' 
+<tree spec='beast.base.evolution.tree.TreeParser' id='NewickTree' 
   taxa='@data' IsLabelledNewick="true" 
   newick="((your,(tree,goes)),here)"/>
 ```

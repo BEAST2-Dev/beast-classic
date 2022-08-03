@@ -8,16 +8,16 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 
-import beast.app.beauti.BeautiAlignmentProvider;
-import beast.app.beauti.BeautiDoc;
-import beast.app.beauti.PartitionContext;
+import beastfx.app.inputeditor.BeautiAlignmentProvider;
+import beastfx.app.inputeditor.BeautiDoc;
+import beast.base.parser.PartitionContext;
 import beast.continuous.SampledMultivariateTraitLikelihood;
-import beast.core.BEASTInterface;
-import beast.core.Description;
-import beast.core.State;
-import beast.core.StateNode;
-import beast.evolution.alignment.Alignment;
-import beast.evolution.tree.Tree;
+import beast.base.core.BEASTInterface;
+import beast.base.core.Description;
+import beast.base.inference.State;
+import beast.base.inference.StateNode;
+import beast.base.evolution.alignment.Alignment;
+import beast.base.evolution.tree.Tree;
 
 
 
@@ -54,7 +54,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 	}
 	
 	@Override
-	protected int matches(Alignment alignment) {
+	public int matches(Alignment alignment) {
 		for (BEASTInterface output : alignment.getOutputs()) {
 			if (output instanceof beast.continuous.SampledMultivariateTraitLikelihood) {
 				return 10;
@@ -65,7 +65,7 @@ public class BeautiLocationTraitProvider extends BeautiAlignmentProvider {
 	
 	
 	@Override
-	void editAlignment(Alignment alignment, BeautiDoc doc) {
+	public void editAlignment(Alignment alignment, BeautiDoc doc) {
 		LocationInputEditor editor = new LocationInputEditor(doc);
 		SampledMultivariateTraitLikelihood likelihood = null;
 		for (BEASTInterface output : alignment.getOutputs()) {

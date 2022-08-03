@@ -29,13 +29,13 @@ package beast.math.distributions;
 import java.util.List;
 import java.util.Random;
 
-import beast.core.Distribution;
-import beast.core.Input;
-import beast.core.State;
-import beast.core.parameter.RealParameter;
-import beast.evolution.substitutionmodel.SubstitutionModel;
-import beast.evolution.tree.Tree;
-import beast.evolution.tree.TreeUtils;
+import beast.base.inference.Distribution;
+import beast.base.core.Input;
+import beast.base.inference.State;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.evolution.substitutionmodel.SubstitutionModel;
+import beast.base.evolution.tree.Tree;
+import beast.base.evolution.tree.TreeUtils;
 import dr.math.GammaFunction;
 
 /**

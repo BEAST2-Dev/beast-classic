@@ -10,21 +10,21 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Loggable;
-import beast.core.Input.Validate;
-import beast.core.parameter.RealParameter;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Loggable;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.evolution.branchratemodel.BranchRateModel;
 import beast.evolution.alignment.AlignmentFromTraitMap;
-import beast.evolution.branchratemodel.BranchRateModel;
 import beast.evolution.datatype.ContinuousDataType;
-import beast.evolution.likelihood.GenericTreeLikelihood;
-import beast.evolution.sitemodel.SiteModel;
+import beast.base.evolution.likelihood.GenericTreeLikelihood;
+import beast.base.evolution.sitemodel.SiteModel;
 import beast.evolution.substitutionmodel.ContinuousSubstitutionModel;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.TreeInterface;
 import beast.evolution.tree.TreeTrait;
 import beast.evolution.tree.TreeTraitMap;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.TreeInterface;
 
 
 /**

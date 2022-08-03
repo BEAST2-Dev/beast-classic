@@ -29,15 +29,15 @@ package beast.continuous;
 import java.util.Arrays;
 import java.util.List;
 
-import beast.core.Description;
+import beast.base.core.Description;
 import dr.evomodel.continuous.MissingTraits;
 import dr.math.distributions.WishartSufficientStatistics;
-import beast.core.Input;
-import beast.core.parameter.RealParameter;
-import beast.evolution.branchratemodel.BranchRateModel;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.TreeInterface;
-import beast.math.matrixalgebra.SymmetricMatrix;
+import beast.base.core.Input;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.evolution.branchratemodel.BranchRateModel;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.TreeInterface;
+import beast.base.math.matrixalgebra.SymmetricMatrix;
 
 /**
  * A multivariate trait likelihood that analytically integrates out the unobserved trait values at all internal

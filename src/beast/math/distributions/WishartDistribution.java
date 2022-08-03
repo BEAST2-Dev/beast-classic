@@ -3,18 +3,22 @@ package beast.math.distributions;
 import java.util.List;
 import java.util.Random;
 
-import beast.core.*;
-import beast.core.parameter.RealParameter;
-import beast.math.matrixalgebra.Matrix;
+import beast.base.core.Description;
+import beast.base.core.Function;
+import beast.base.core.Input;
+import beast.base.inference.Distribution;
+import beast.base.inference.State;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.math.matrixalgebra.Matrix;
 
 
 
 
 @Description("WishartDistribution ported from BEAST1")
 public class WishartDistribution extends Distribution {
-    public Input<Double> df = new Input<Double>("df", "description here");
-    public Input<RealParameter> scaleMatrix = new Input<RealParameter>("scaleMatrix", "description here");
-    public Input<Function> argInput = new Input<Function>("arg", "argument of distribution");
+    public Input<Double> df = new Input<>("df", "description here");
+    public Input<RealParameter> scaleMatrix = new Input<>("scaleMatrix", "description here");
+    public Input<Function> argInput = new Input<>("arg", "argument of distribution");
 
     dr.math.distributions.WishartDistribution wishartdistribution;
     Function arg;

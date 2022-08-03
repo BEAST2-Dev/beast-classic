@@ -2,9 +2,9 @@ package beast.evolution.datatype;
 
 import java.util.List;
 
-import beast.core.Description;
-import beast.core.BEASTObject;
-import beast.evolution.datatype.DataType;
+import beast.base.core.Description;
+import beast.base.core.BEASTObject;
+import beast.base.evolution.datatype.DataType;
 
 
 

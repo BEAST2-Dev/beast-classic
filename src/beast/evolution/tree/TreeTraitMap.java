@@ -2,15 +2,15 @@ package beast.evolution.tree;
 
 import java.util.List;
 
-import beast.core.CalculationNode;
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.parameter.RealParameter;
-import beast.core.util.Log;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.TreeInterface;
-import beast.util.Randomizer;
+import beast.base.inference.CalculationNode;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.core.Log;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.TreeInterface;
+import beast.base.util.Randomizer;
 
 @Description("Maps nodes in a tree to entries of a parameter")
 public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]> {

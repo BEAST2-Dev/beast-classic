@@ -1,12 +1,12 @@
 package beast.evolution.operators;
 
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.Operator;
-import beast.core.Input.Validate;
-import beast.core.parameter.BooleanParameter;
-import beast.core.parameter.RealParameter;
-import beast.util.Randomizer;
+import beast.base.core.Description;
+import beast.base.core.Input;
+import beast.base.inference.Operator;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.BooleanParameter;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.util.Randomizer;
 
 /**
  * @author dkuh004
@@ -40,7 +40,7 @@ public class BitFlipBSSVSOperator extends Operator {
     @Override
     public double proposal() {
 
-        final BooleanParameter p = indicator.get(this);
+        final BooleanParameter p = indicator.get();
 
         final int dim = p.getDimension();
 
@@ -72,7 +72,7 @@ public class BitFlipBSSVSOperator extends Operator {
             rand *= -1;
         }
 
-        RealParameter rates = rateParameter.get(this);
+        RealParameter rates = rateParameter.get();
         if (rates != null) {
             final double scale = Math.exp((rand) * scaleFactor);
             logq += Math.log(scale);

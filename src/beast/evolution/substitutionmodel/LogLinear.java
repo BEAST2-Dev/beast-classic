@@ -2,7 +2,7 @@ package beast.evolution.substitutionmodel;
 
 import java.io.PrintStream;
 
-import beast.core.Function;
+import beast.base.core.Function;
 
 public class LogLinear extends GlmModel {
 
@@ -91,7 +91,7 @@ public class LogLinear extends GlmModel {
 	}
 
 	@Override
-	public void log(int sample, PrintStream out) {
+	public void log(long sample, PrintStream out) {
 		for (int i = 0; i < scalerInput.get().getDimension(); i++) {
 			if (indicatorInput.get().getArrayValue(i) > 0.5) {
 				out.print(scalerInput.get().getArrayValue(i) + "\t");

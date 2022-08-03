@@ -8,25 +8,25 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.border.EmptyBorder;
 
-import beast.app.beauti.BeautiAlignmentProvider;
-import beast.app.beauti.BeautiDoc;
-import beast.app.beauti.PartitionContext;
-import beast.core.BEASTInterface;
-import beast.core.Description;
-import beast.core.State;
-import beast.core.StateNode;
-import beast.core.parameter.Parameter;
-import beast.core.parameter.RealParameter;
-import beast.evolution.alignment.Alignment;
+import beastfx.app.inputeditor.BeautiAlignmentProvider;
+import beastfx.app.inputeditor.BeautiDoc;
+import beast.base.core.BEASTInterface;
+import beast.base.core.Description;
+import beast.base.inference.State;
+import beast.base.inference.StateNode;
+import beast.base.inference.parameter.Parameter;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.parser.PartitionContext;
+import beast.base.evolution.alignment.Alignment;
+import beast.base.evolution.datatype.UserDataType;
 import beast.evolution.alignment.AlignmentFromTrait;
-import beast.evolution.datatype.UserDataType;
 import beast.evolution.likelihood.AncestralStateTreeLikelihood;
-import beast.evolution.sitemodel.SiteModel;
+import beast.base.evolution.sitemodel.SiteModel;
 import beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel;
-import beast.evolution.tree.Tree;
-import beast.math.distributions.ParametricDistribution;
-import beast.math.distributions.Poisson;
-import beast.math.distributions.Prior;
+import beast.base.evolution.tree.Tree;
+import beast.base.inference.distribution.ParametricDistribution;
+import beast.base.inference.distribution.Poisson;
+import beast.base.inference.distribution.Prior;
 
 
 
@@ -63,7 +63,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 	}
 	
 	@Override
-	protected int matches(Alignment alignment) {
+	public int matches(Alignment alignment) {
 		for (BEASTInterface output : alignment.getOutputs()) {
 			if (output instanceof AncestralStateTreeLikelihood) {
 				return 10;
@@ -74,7 +74,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 	
 	
 	@Override
-	void editAlignment(Alignment alignment, BeautiDoc doc) {
+	public void editAlignment(Alignment alignment, BeautiDoc doc) {
 		TraitInputEditor editor = new TraitInputEditor(doc);
 		AncestralStateTreeLikelihood likelihood = null;
 		for (BEASTInterface output : alignment.getOutputs()) {

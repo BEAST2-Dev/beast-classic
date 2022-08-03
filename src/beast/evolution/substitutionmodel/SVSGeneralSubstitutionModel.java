@@ -3,14 +3,16 @@ package beast.evolution.substitutionmodel;
 
 
 
-import beast.core.Description;
-import beast.core.Function;
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.parameter.BooleanParameter;
-import beast.core.parameter.Parameter;
-import beast.core.util.Log;
+import beast.base.core.Description;
+import beast.base.core.Function;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.parameter.BooleanParameter;
+import beast.base.inference.parameter.Parameter;
+import beast.base.core.Log;
+import beast.base.evolution.substitutionmodel.DefaultEigenSystem;
 import beast.inference.BayesianStochasticSearchVariableSelection;
+import beastlabs.evolution.substitutionmodel.ComplexSubstitutionModel;
 
 
 
@@ -166,7 +168,7 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
     private double[] probability = null;
 
     @Override
-    protected void setupRelativeRates() {
+    public void setupRelativeRates() {
 
         Function rates = this.ratesInput.get();
         for (int i = 0; i < relativeRates.length; i++) {
@@ -176,7 +178,7 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
 
     /** sets up rate matrix **/
     @Override
-    protected void setupRateMatrix() {
+    public void setupRateMatrix() {
     	if (!isSymmetricInput.get()) {
     		super.setupRateMatrix();
     		return;

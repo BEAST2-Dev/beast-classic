@@ -34,13 +34,13 @@ import java.util.logging.Logger;
 
 import org.apache.commons.math.MathException;
 
-import beast.core.Input;
-import beast.core.Input.Validate;
-import beast.core.Operator;
-import beast.core.StateNode;
-import beast.core.parameter.RealParameter;
+import beast.base.core.Input;
+import beast.base.core.Input.Validate;
+import beast.base.inference.Operator;
+import beast.base.inference.StateNode;
+import beast.base.inference.parameter.RealParameter;
 import beast.evolution.tree.coalescent.GMRFMultilocusSkyrideLikelihood;
-import beast.util.Randomizer;
+import beast.base.util.Randomizer;
 
 /* A Metropolis-Hastings operator to update the log population sizes and precision parameter jointly under a Gaussian Markov random field prior
  *

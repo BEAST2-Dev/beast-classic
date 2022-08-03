@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import beast.evolution.substitutionmodel.DefaultEigenSystem;
-import beast.evolution.substitutionmodel.EigenDecomposition;
-import beast.evolution.substitutionmodel.EigenSystem;
+import beast.base.evolution.substitutionmodel.DefaultEigenSystem;
+import beast.base.evolution.substitutionmodel.EigenDecomposition;
+import beast.base.evolution.substitutionmodel.EigenSystem;
 import beast.evolution.substitutionmodel.RobustEigenSystem;
-import beast.util.Randomizer;
+import beast.base.util.Randomizer;
 import junit.framework.TestCase;
 
 public class RobustEigenSystemTest extends TestCase {
