@@ -78,7 +78,7 @@
 		<mkdir dir="${buildBEAST_CLASSIC}" />
 
 		<!-- Compile the java code from ${srcBEAST_CLASSIC} into ${buildBEAST_CLASSIC} /bin -->
-		<javac srcdir="${srcBEAST_CLASSIC}" destdir="${buildBEAST_CLASSIC}" classpathref="classpath" 
+		<javac target="1.8" srcdir="${srcBEAST_CLASSIC}" destdir="${buildBEAST_CLASSIC}" classpathref="classpath" 
 		       fork="true"
 		       memoryinitialsize="256m"
 		       memorymaximumsize="256m"

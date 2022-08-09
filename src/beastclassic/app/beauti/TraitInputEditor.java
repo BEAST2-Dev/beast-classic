@@ -1,10 +1,6 @@
 package beastclassic.app.beauti;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EventObject;
@@ -12,30 +8,33 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-
 import beastfx.app.inputeditor.BeautiDoc;
 import beastfx.app.inputeditor.GuessPatternDialog;
 import beastfx.app.inputeditor.ListInputEditor;
 import beastfx.app.inputeditor.SmallLabel;
+import beastfx.app.inputeditor.TaxonSetInputEditor.TaxonMap;
+import beastfx.app.util.FXUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import beast.base.core.BEASTInterface;
 import beast.base.core.BEASTObject;
 import beast.base.core.Input;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.alignment.TaxonSet;
 import beast.base.evolution.datatype.UserDataType;
+import beastclassic.app.beauti.LocationInputEditor.LocationMap;
 import beastclassic.evolution.alignment.AlignmentFromTrait;
 import beastclassic.evolution.likelihood.AncestralStateTreeLikelihood;
 import beast.base.evolution.tree.TraitSet;
@@ -58,11 +57,36 @@ public class TraitInputEditor extends ListInputEditor {
 	AncestralStateTreeLikelihood likelihood;
 	TreeInterface tree;
     TraitSet traitSet;
-    JTextField traitEntry;
-    JComboBox relativeToComboBox;
+    TextField traitEntry;
+    //ComboBox relativeToComboBox;
     List<String> sTaxa;
-    Object[][] tableData;
-    JTable table;
+    // Object[][] tableData;
+    
+    public class LocationMap {
+		String taxon;
+    	String trait;
+
+    	LocationMap(String taxon, String trait) {
+    		this.taxon = taxon;
+    		this.trait = trait;
+    	}
+    	
+    	public String getTaxon() {
+			return taxon;
+		}
+		public void setTaxon(String taxon) {
+			this.taxon = taxon;
+		}
+		public String getTrait() {
+			return trait;
+		}
+		public void setTrait(String trait) {
+			this.trait = trait;
+		}
+    }
+    
+    TableView<LocationMap> table;
+    ObservableList<LocationMap> taxonMapping;    
     UserDataType dataType;
 
     //String m_sPattern = ".*(\\d\\d\\d\\d).*";
@@ -131,18 +155,15 @@ public class TraitInputEditor extends ListInputEditor {
             
             dataType = (UserDataType)traitData.userDataTypeInput.get();
 
-            Box box = Box.createVerticalBox();
+            VBox box = FXUtils.newVBox();
 
-            JCheckBox useTipDates = new JCheckBox("Use traits", traitSet != null);
-            useTipDates.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JCheckBox checkBox = (JCheckBox) e.getSource();
+            CheckBox useTipDates = new CheckBox("Use traits");
+            useTipDates.setSelected(traitSet != null);
+            useTipDates.setOnAction(e -> {
                     try {
-                        Container comp = checkBox.getParent();
-                        comp.removeAll();
-                        if (checkBox.isSelected()) {
+                        Pane comp = (Pane) useTipDates.getParent();
+                        comp.getChildren().removeAll();
+                        if (useTipDates.isSelected()) {
                             if (traitSet == null) {
                                 traitSet = new TraitSet();
                                 String context = BeautiDoc.parsePartition(likelihood.getID());
@@ -151,28 +172,26 @@ public class TraitInputEditor extends ListInputEditor {
                                         "taxa", tree.getTaxonset(),
                                         "value", "");
                             }
-                            comp.add(checkBox);
-                            comp.add(createButtonBox());
-                            comp.add(createListBox());
+                            comp.getChildren().add(useTipDates);
+                            comp.getChildren().add(createButtonBox());
+                            comp.getChildren().add(createListBox());
                             validateInput();
                             m_input.setValue(traitSet, m_beastObject);
                         } else {
                             m_input.setValue(null, m_beastObject);
-                            comp.add(checkBox);
+                            comp.getChildren().add(useTipDates);
                         }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
-
-                }
             });
             //box.add(useTipDates);
 
             if (traitSet != null) {
-                box.add(createButtonBox());
-                box.add(createListBox());
+                box.getChildren().add(createButtonBox());
+                box.getChildren().add(createListBox());
             }
-            add(box);
+            getChildren().add(box);
             validateInput();
             // synchronise with table, useful when taxa have been deleted
             convertTableDataToDataType();
@@ -182,7 +201,7 @@ public class TraitInputEditor extends ListInputEditor {
 
 
 
-    private Component createListBox() {
+    private ScrollPane createListBox() {
     	try {
     		traitSet.taxaInput.get().initAndValidate();
     		
@@ -194,103 +213,146 @@ public class TraitInputEditor extends ListInputEditor {
             sTaxa = traitSet.taxaInput.get().asStringList();
 		}
         String[] columnData = new String[]{"Name", "Trait"};
-        tableData = new Object[sTaxa.size()][2];
+        taxonMapping = FXCollections.observableArrayList();
+        for (String s : sTaxa) {
+        	taxonMapping.add(new LocationMap(s, ""));
+        }
+        // tableData = new Object[sTaxa.size()][2];
         convertTraitToTableData();
+        
+        
+        
         // set up table.
         // special features: background shading of rows
         // custom editor allowing only Date column to be edited.
-        table = new JTable(tableData, columnData) {
-            private static final long serialVersionUID = 1L;
+//      for (Taxon taxonset2 : m_taxonset) {
+//      	if (taxonset2 instanceof TaxonSet) {
+//		        for (Taxon taxon : ((TaxonSet) taxonset2).taxonsetInput.get()) {
+//		            m_lineageset.add(taxon);
+//		            m_taxonMap.put(taxon.getID(), taxonset2.getID());
+//		            taxonMapping.add(new TaxonMap(taxon.getID(), taxonset2.getID()));
+//		        }
+//      	}
+//      }
 
-            // method that induces table row shading
-            @Override
-            public Component prepareRenderer(TableCellRenderer renderer, int Index_row, int Index_col) {
-                Component comp = super.prepareRenderer(renderer, Index_row, Index_col);
-                //even index, selected or not selected
-                if (isCellSelected(Index_row, Index_col)) {
-                    comp.setBackground(Color.lightGray);
-                } else if (Index_row % 2 == 0 && !isCellSelected(Index_row, Index_col)) {
-                    comp.setBackground(new Color(237, 243, 255));
-                } else {
-                    comp.setBackground(Color.white);
-                }
-                return comp;
-            }
-        };
+      // set up table.
+      // special features: background shading of rows
+      // custom editor allowing only Date column to be edited.
+      table = new TableView<>();        
+      table.setPrefWidth(1024);
+      table.setEditable(true);
+      table.setItems(taxonMapping);
 
-        // set up editor that makes sure only doubles are accepted as entry
-        // and only the Date column is editable.
-        table.setDefaultEditor(Object.class, new TableCellEditor() {
-            JTextField m_textField = new JTextField();
-            int m_iRow
-                    ,
-                    m_iCol;
+      TableColumn<LocationMap, String> col1 = new TableColumn<>("Taxon");
+      col1.setPrefWidth(500);
+      col1.setEditable(false);
+      col1.setCellValueFactory(
+      	    new PropertyValueFactory<LocationMap,String>("Taxon")
+      	);
+      table.getColumns().add(col1);        
 
-            @Override
-            public boolean stopCellEditing() {
-                table.removeEditor();
-                String sText = m_textField.getText();
-                if (sText == "") {
-                	return false;
-                }
-                tableData[m_iRow][m_iCol] = sText;
-                convertTableDataToTrait();
-                convertTraitToTableData();
-                validateInput();
-                return true;
-            }
-
-            @Override
-            public boolean isCellEditable(EventObject anEvent) {
-                return table.getSelectedColumn() == 1;
-            }
-
-
-            @Override
-            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int iRow, int iCol) {
-                if (!isSelected) {
-                    return null;
-                }
-                m_iRow = iRow;
-                m_iCol = iCol;
-                m_textField.setText((String) value);
-                return m_textField;
-            }
-
-            @Override
-            public boolean shouldSelectCell(EventObject anEvent) {
-                return false;
-            }
-
-            @Override
-            public void removeCellEditorListener(CellEditorListener l) {
-            }
-
-            @Override
-            public Object getCellEditorValue() {
-                return null;
-            }
-
-            @Override
-            public void cancelCellEditing() {
-            }
-
-            @Override
-            public void addCellEditorListener(CellEditorListener l) {
-            }
-
-        });
-        table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        table.setRowHeight(24);
-        JScrollPane scrollPane = new JScrollPane(table);
+      TableColumn<LocationMap, String> col2 = new TableColumn<>("Trait");
+      col2.setPrefWidth(500);
+      col2.setEditable(false);
+      col2.setCellValueFactory(
+      	    new PropertyValueFactory<LocationMap,String>("Trait")
+      	);
+      table.getColumns().add(col2);        
+        
+        
+        
+//        table = new JTable(tableData, columnData) {
+//            private static final long serialVersionUID = 1L;
+//
+//            // method that induces table row shading
+//            @Override
+//            public Component prepareRenderer(TableCellRenderer renderer, int Index_row, int Index_col) {
+//                Component comp = super.prepareRenderer(renderer, Index_row, Index_col);
+//                //even index, selected or not selected
+//                if (isCellSelected(Index_row, Index_col)) {
+//                    comp.setBackground(Color.lightGray);
+//                } else if (Index_row % 2 == 0 && !isCellSelected(Index_row, Index_col)) {
+//                    comp.setBackground(new Color(237, 243, 255));
+//                } else {
+//                    comp.setBackground(Color.white);
+//                }
+//                return comp;
+//            }
+//        };
+//
+//        // set up editor that makes sure only doubles are accepted as entry
+//        // and only the Date column is editable.
+//        table.setDefaultEditor(Object.class, new TableCellEditor() {
+//            JTextField m_textField = new JTextField();
+//            int m_iRow
+//                    ,
+//                    m_iCol;
+//
+//            @Override
+//            public boolean stopCellEditing() {
+//                table.removeEditor();
+//                String sText = m_textField.getText();
+//                if (sText == "") {
+//                	return false;
+//                }
+//                tableData[m_iRow][m_iCol] = sText;
+//                convertTableDataToTrait();
+//                convertTraitToTableData();
+//                validateInput();
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean isCellEditable(EventObject anEvent) {
+//                return table.getSelectedColumn() == 1;
+//            }
+//
+//
+//            @Override
+//            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int iRow, int iCol) {
+//                if (!isSelected) {
+//                    return null;
+//                }
+//                m_iRow = iRow;
+//                m_iCol = iCol;
+//                m_textField.setText((String) value);
+//                return m_textField;
+//            }
+//
+//            @Override
+//            public boolean shouldSelectCell(EventObject anEvent) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void removeCellEditorListener(CellEditorListener l) {
+//            }
+//
+//            @Override
+//            public Object getCellEditorValue() {
+//                return null;
+//            }
+//
+//            @Override
+//            public void cancelCellEditing() {
+//            }
+//
+//            @Override
+//            public void addCellEditorListener(CellEditorListener l) {
+//            }
+//
+//        });
+//        table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+//        table.setRowHeight(24);
+        ScrollPane scrollPane = new ScrollPane(table);
         return scrollPane;
     } // createListBox
 
     /* synchronise table with data from traitSet Plugin */
     private void convertTraitToTableData() {
-        for (int i = 0; i < tableData.length; i++) {
-            tableData[i][0] = sTaxa.get(i);
-            tableData[i][1] = "";
+        for (int i = 0; i < taxonMapping.size(); i++) {
+        	taxonMapping.get(i).taxon = sTaxa.get(i);
+        	taxonMapping.get(i).trait = "";
         }
         String trait = traitSet.traitsInput.get();
         if (trait.trim().length() == 0) {
@@ -313,15 +375,16 @@ public class TraitInputEditor extends ListInputEditor {
             	System.err.println(sTaxonID);
 //                throw new Exception("Trait (" + sTaxonID + ") is not a known taxon. Spelling error perhaps?");
             } else {
-	            tableData[iTaxon][0] = sTaxonID;
-	            tableData[iTaxon][1] = value;
+            	taxonMapping.get(iTaxon).taxon = sTaxonID;
+            	taxonMapping.get(iTaxon).trait = value;
             }
         }
 
         if (table != null) {
-            for (int i = 0; i < tableData.length; i++) {
-                table.setValueAt(tableData[i][1], i, 1);
-            }
+            table.refresh();
+//            for (int i = 0; i < tableData.length; i++) {
+//                table.setValueAt(tableData[i][1], i, 1);
+//            }
         }
     } // convertTraitToTableData
 
@@ -331,9 +394,9 @@ public class TraitInputEditor extends ListInputEditor {
     private void convertTableDataToTrait() {
         String sTrait = "";
         //Set<String> values = new HashSet<String>(); 
-        for (int i = 0; i < tableData.length; i++) {
-            sTrait += sTaxa.get(i) + "=" + tableData[i][1];
-            if (i < tableData.length - 1) {
+        for (int i = 0; i < taxonMapping.size(); i++) {
+            sTrait += taxonMapping.get(i).taxon + "=" + taxonMapping.get(i).trait;
+            if (i < taxonMapping.size() - 1) {
                 sTrait += ",\n";
             }
         }
@@ -347,9 +410,9 @@ public class TraitInputEditor extends ListInputEditor {
 
     private void convertTableDataToDataType() {
         List<String> values = new ArrayList<String>(); 
-        for (int i = 0; i < tableData.length; i++) {
-        	if (tableData[i][1].toString().trim().length() > 0 && !values.contains(tableData[i][1].toString())) {
-        		values.add(tableData[i][1].toString());
+        for (int i = 0; i < taxonMapping.size(); i++) {
+        	if (taxonMapping.get(i).trait.trim().length() > 0 && !values.contains(taxonMapping.get(i).trait)) {
+        		values.add(taxonMapping.get(i).trait);
         	}
         }
         Collections.sort(values);
@@ -377,49 +440,45 @@ public class TraitInputEditor extends ListInputEditor {
     /**
      * create box with comboboxes for selection units and trait name *
      */
-    private Box createButtonBox() {
-        Box buttonBox = Box.createHorizontalBox();
+    private HBox createButtonBox() {
+        HBox buttonBox = FXUtils.newHBox();
 
-        JLabel label = new JLabel("Trait: ");
+        Label label = new Label("Trait: ");
         //label.setMaximumSize(new Dimension(1024, 20));
-        buttonBox.add(label);
+        buttonBox.getChildren().add(label);
 
-        traitEntry = new JTextField(traitSet.traitNameInput.get());
-        traitEntry.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {update();}
-			@Override
-			public void insertUpdate(DocumentEvent e) {update();}
-			@Override
-			public void changedUpdate(DocumentEvent e) {update();}
-			void update() {
-				try {
-					traitSet.traitNameInput.setValue(traitEntry.getText(), traitSet);
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}
-		});
-        traitEntry.setColumns(12);
-        buttonBox.add(traitEntry);
-        buttonBox.add(Box.createHorizontalGlue());
-
-        JButton guessButton = new JButton("Guess");
-        guessButton.setName("guess");
-        guessButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            	guess();
-            }
+        traitEntry = new TextField(traitSet.traitNameInput.get());
+        traitEntry.setOnKeyReleased(e->{
+			try {
+				traitSet.traitNameInput.setValue(traitEntry.getText(), traitSet);
+			} catch (Exception ex) {
+				// TODO: handle exception
+			}        	
         });
-        buttonBox.add(guessButton);
+//        traitEntry.getDocument().addDocumentListener(new DocumentListener() {
+//			
+//			@Override
+//			public void removeUpdate(DocumentEvent e) {update();}
+//			@Override
+//			public void insertUpdate(DocumentEvent e) {update();}
+//			@Override
+//			public void changedUpdate(DocumentEvent e) {update();}
+//			void update() {
+//			}
+//		});
+        //traitEntry.setColumns(12);
+        traitEntry.setMinWidth(12*15);
+        buttonBox.getChildren().add(traitEntry);
+        //buttonBox.add(Box.createHorizontalGlue());
+
+        Button guessButton = new Button("Guess");
+        guessButton.setId("guess");
+        guessButton.setOnAction(e->guess());
+        buttonBox.getChildren().add(guessButton);
 
 
-        JButton clearButton = new JButton("Clear");
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        Button clearButton = new Button("Clear");
+        clearButton.setOnAction(e-> {
                 try {
                     traitSet.traitsInput.setValue("", traitSet);
                     convertTableDataToDataType();
@@ -427,13 +486,12 @@ public class TraitInputEditor extends ListInputEditor {
                     // TODO: handle exception
                 }
                 refreshPanel();
-            }
-        });
-        buttonBox.add(clearButton);
+            });
+        buttonBox.getChildren().add(clearButton);
 
-        m_validateLabel = new SmallLabel("x", Color.orange);
+        m_validateLabel = new SmallLabel("x", "orange");
         m_validateLabel.setVisible(false);
-        buttonBox.add(m_validateLabel);
+        buttonBox.getChildren().add(m_validateLabel);
         
         return buttonBox;
     } // createButtonBox
@@ -481,14 +539,14 @@ public class TraitInputEditor extends ListInputEditor {
 	@Override
 	public void validateInput() {
 		// check all values are specified
-		if (tableData == null) {
+		if (taxonMapping == null) {
 			return;
 		}
-        for (int i = 0; i < tableData.length; i++) {
-        	if (tableData[i][1].toString().trim().length() == 0) {
+        for (int i = 0; i < taxonMapping.size(); i++) {
+        	if (taxonMapping.get(i).trait.trim().length() == 0) {
         		m_validateLabel.setVisible(true);
-        		m_validateLabel.setToolTipText("trait for " + tableData[i][0] + " needs to be specified");
-        		m_validateLabel.repaint();
+        		m_validateLabel.setTooltip("trait for " + taxonMapping.get(i).taxon + " needs to be specified");
+        		// m_validateLabel.repaint();
         		return;
         	}
         }
