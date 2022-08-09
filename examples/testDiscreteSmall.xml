@@ -1,5 +1,5 @@
 <beast version='2.0'
-       namespace='beast.evolution.alignment:beast.core:beast.evolution.tree:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.tree.coalescent:beast.core.parameter'>
+       namespace='beast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.parameter'>
 
 	<data dataType="nucleotide" id="alignment" name="alignment">
 		<sequence id="1976.609_CY005917_A/Mall/ALB/31/1976_5.NA" taxon="NA">
@@ -18,16 +18,16 @@
 			ATGGAGAGAATAGTGCTTCTTCTTGCAATAATCGGTCTTGTTAAAAGTGATCAGATTTGCATTGGTTACCATGCAAACAACTCGACAGAGCAGGTTGACACAATAATGGAAAAGAACGTTACTGTTACACATGCTCAAGACATACTGGAGAAGACACACAACGGGAAGCTCTGCAACCCAGATGGAGTGAAGCCTCTAATTTTGAAAGATTGTAGTGTAGCTGGATGGCTCCTCGGAAACCCAATGTGTGACGAATTTATCAATGTGCCGGAATGGTCTTACATAGTGGAGAAGGCCAGTCCAGCCAATGGCCTCTGTTACCCAGGGGATTTCAATGACTATGAAGAACTGAAACACCTATTGAGCAGAATAAACCATTTTGAGAAAATTCAGATCATCCCCAAAAGTTCTTGGTCCGATCATGGAGCCTCATCAGGGGTGAGCTCAGCATGTTCCTATCTGGGGAAGCCCTCCTTTTTCAGAAATGTGGTATGGCTTATCAAAAAGAATAATACATACCCACCAATAAAGGTGAGCTACAACAATACCAACCAAGAAGATCTTTTGGTACTGTGGGGGATTCACCATCCCAATGATGAGGCAGAGCAGATAAAGATCTATCAAAACCCAACCACCTATATTTCCGTTGGAACATCAACACTAAACCAGAGATTGGTACCAAAAATAGCTACTAGATCCAAAGTAAACGGGCAAAGTGGAAGAATGGAGTTCTTCTGGACAATTTTAAAGCCGAATGATGCTATCAATTTCGATAGTAATGGAAATTTCATTGCTCCAGAATATGCATACAAAATTGTCAAGAAAGGGGACTCAGCGATTATGAAAAGTGAATTGGAATATGGCAACTGCAACACCAAGTGTCAAACTCCAATGGGGGCGATAAATTCTAGTATGCCATTCCACAACATACACCCTCTCACCGTCGGGGAATGCCCCAAATATGTGAAATCAAACAGATTAGTCCTCGCGACTGGACTCAGAAATGCCCCTCAAAGAGAGGGAGGAAGAAAAAAGAGAGGACTATTTGGAGCCATAGCAGGGTTTATAGAGGGAGGATGGCAGGGAATGGTAGATGGTTGGTATGGGTACCACCATAGCAATGAGCAGGGGAGTGGATACGCTGCAGACAAAGAATCCACTCAAAAGGCAATAGATGGAGTCACCAATAAGGTCAACTCGATCATTGACAAAATGAACACTCAGTTTGAGGCCGTTGGAAGGGAATTTAATAACTTAGAAAGGAGAATAGAAAATTTAAACAAGAAGATGGAGGACGGATTCCTAGATGTCTGGACTTATAACGCTGAACTTCTGGTTCTCATGGAAAATGAGAGAACTCTAGACTTTCATGACTCAAATGTCAAGAACCTTTACGAAAAGGTCCGACTACAGCTTAGGGATAATGCAAAGGAGCTGGGTAACGGTTGTTTCGAGTTCTATCACAAATGTGATAATGAATGTATGGAAAGTGTAAAAAACGGAACGTATGACTACCCGCAGTATTCAGAAGAAGCAAGACTAAACAGAGAGGAAATAAGTGGAGTAAAATTGGAATCAATGGGAACTTACCAAATACTGTCAATTTATTCAACAGTGGCGAGTTCCCTAGCATTGGCAATCATGGTAGCTGGTCTATCTTTATGGATGTGCTCCAATGGATCGTTACAATGCAGAATT
 		</sequence>
 	</data>
-	<trait spec='beast.evolution.tree.TraitSet' traitname='date' units='year' id='tipDates' value='
+	<trait spec='beast.base.evolution.tree.TraitSet' traitname='date' units='year' id='tipDates' value='
 		NA = 1976.0,
 		A_chicken_Fujian_1042_2005 = 2005.0,
 		A_duck_HongKong_821_2002 = 2002.0,
 		A_chicken_Guangdong_174_2004 = 2004.0,
 		A_chicken_Hebei_326_2005 = 2005.0'>
-		<taxa spec='beast.evolution.alignment.TaxonSet' alignment='@alignment'/>
+		<taxa spec='beast.base.evolution.alignment.TaxonSet' alignment='@alignment'/>
 	</trait>
 	
-	<userDataType spec='beast.evolution.datatype.UserDataType' id='location' 
+	<userDataType spec='beast.base.evolution.datatype.UserDataType' id='location' 
 		states='3'
 		codelength='-1'
 		codeMap='
@@ -40,9 +40,9 @@
 	    <distribution spec='AncestralStateTreeLikelihood' useJava="false" id="NP.traitedtreeLikelihood" data='@NP.locations' tree="@NP.tree" siteModel="@geoSiteModel" tag="location"/>
 -->
 
-    <distribution spec='AncestralStateTreeLikelihood' useJava="false" id="traitedtreeLikelihood" tag="location" useAmbiguities='false'> 
-		<leaftrait parameter='@trait(A_chicken_Fujian_1042_2005)' taxon='A_chicken_Fujian_1042_2005' spec='LeafTrait'/>
-    	<data spec="AlignmentFromTrait" userDataType="@location">
+    <distribution spec='beastclassic.evolution.likelihood.AncestralStateTreeLikelihood' useJava="false" id="traitedtreeLikelihood" tag="location" useAmbiguities='false'> 
+		<leaftrait parameter='@trait(A_chicken_Fujian_1042_2005)' taxon='A_chicken_Fujian_1042_2005' spec='beastclassic.evolution.likelihood.LeafTrait'/>
+    	<data spec="beastclassic.evolution.alignment.AlignmentFromTrait" userDataType="@location">
 			<traitSet id='traitset' spec='TraitSet'  
 			 traitname='discrete' value="
 						NA = Hebei,
@@ -50,12 +50,12 @@
 						A_duck_HongKong_821_2002 = HongKong,
 						A_chicken_Guangdong_174_2004 = Guangdong,
 						A_chicken_Hebei_326_2005 = Hebei">
-				<taxa spec='beast.evolution.alignment.TaxonSet' alignment='@alignment'/>
+				<taxa spec='beast.base.evolution.alignment.TaxonSet' alignment='@alignment'/>
 			</traitSet>
 		</data>
         <tree idref="tree"/>
         <siteModel spec='SiteModel' id="geoSiteModel" gammaCategoryCount='1'>
-            <substModel spec="SVSGeneralSubstitutionModel" id="svs" rateIndicator='@rateIndicator'>        
+            <substModel spec="beastclassic.evolution.substitutionmodel.SVSGeneralSubstitutionModel" id="svs" rateIndicator='@rateIndicator'>        
             <!--substModel spec="GeneralSubstitutionModel"-->        
                 <frequencies id='freqs' spec='Frequencies'>
                         <frequencies id='frequencies' spec='parameter.RealParameter' value='.33 .33 .34'/>
@@ -64,7 +64,7 @@
             </substModel>
             <!--mutationRate idref="geoMutationRate"/-->
         </siteModel>
-		<branchRateModel id="StrictClockModel" spec="beast.evolution.branchratemodel.StrictClockModel">
+		<branchRateModel id="StrictClockModel" spec="beast.base.evolution.branchratemodel.StrictClockModel">
 			<parameter id="geoclock.rate" name="clock.rate" value="1.0"/>
 		</branchRateModel>
     </distribution>
@@ -81,8 +81,8 @@
 				<input name ="frequencies" id='seq.freqs' spec='Frequencies' data="@alignment"/>
 			</substModel>
 		</siteModel>
-		<branchRateModel spec='beast.evolution.branchratemodel.UCRelaxedClockModel' id="branchRates">
-			<distr id='lognormal' spec="beast.math.distributions.LogNormalDistributionModel" meanInRealSpace="true">
+		<branchRateModel spec='beast.base.evolution.branchratemodel.UCRelaxedClockModel' id="branchRates">
+			<distr id='lognormal' spec="beast.base.inference.distribution.LogNormalDistributionModel" meanInRealSpace="true">
 				<parameter name='M' id='ucld.mean' value="1." lower="0.0" upper="Infinity"/>
 				<parameter name='S' id='ucld.stdev' value="0.33333" lower="0.0" upper="Infinity"/>
 			</distr>
@@ -93,7 +93,7 @@
    
  
 	<!-- b/(d+s) -->
-	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="actualGeoRates" expression="relativeGeoRates rateIndicator *"> 
+	<RPNcalculator spec="beast.base.inference.util.RPNcalculator" id="actualGeoRates" expression="relativeGeoRates rateIndicator *"> 
 		<parameter idref="relativeGeoRates"/>
 		<parameter idref="rateIndicator"/>
     </RPNcalculator>
@@ -101,7 +101,7 @@
 <!--
 	<ParameterCumSum spec="beast.core.util.ParameterCumSum" id="nonZeroRates" arg="@rateIndicator"/> 
 -->
-    <tree spec='beast.util.ClusterTree' id='tree' clusterType='upgma' trait="@tipDates">
+    <tree spec='beast.base.evolution.tree.ClusterTree' id='tree' clusterType='upgma' trait="@tipDates">
         <input name='taxa' idref='alignment'/>
     </tree>
 		
@@ -134,31 +134,31 @@
 			<distribution spec='CompoundDistribution' id='prior'>
 <!--
 				<distribution id="transitionMatrixWellConnected" spec="beast.math.distributions.TransitionMatrixPrior" substitutionModel="@svs" rateIndicator="@rateIndicator"/>
-				<distribution  x="@nonZeroRates" id="nonZeroRatePrior" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.Poisson' id='nonZeroRatePrior_Poi' mean="0.693" offset="3.0"/>
+				<distribution  x="@nonZeroRates" id="nonZeroRatePrior" spec='beast.base.inference.distribution.Prior'>
+					<distr spec='beast.base.inference.distribution.Poisson' id='nonZeroRatePrior_Poi' mean="0.693" offset="3.0"/>
 				</distribution>
 -->
-				<distribution  x="@popSize" id="popSizePrior" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.OneOnX' id='popSizePrior_OneOnX'/>
+				<distribution  x="@popSize" id="popSizePrior" spec='beast.base.inference.distribution.Prior'>
+					<distr spec='beast.base.inference.distribution.OneOnX' id='popSizePrior_OneOnX'/>
 				</distribution>
-				<distribution  x="@ucld.mean" id="ucld.meanPrior" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.Exponential' id='ucld.meanPrior_Exp' mean="1." offset="0.0"/>
+				<distribution  x="@ucld.mean" id="ucld.meanPrior" spec='beast.base.inference.distribution.Prior'>
+					<distr spec='beast.base.inference.distribution.Exponential' id='ucld.meanPrior_Exp' mean="1." offset="0.0"/>
 				</distribution>
-				<distribution  x="@ucld.stdev" id="ucld.stdevPrior" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.Exponential' id='ucld.stdevPrior_Exp' mean="0.333333333333" offset="0.0"/>
+				<distribution  x="@ucld.stdev" id="ucld.stdevPrior" spec='beast.base.inference.distribution.Prior'>
+					<distr spec='beast.base.inference.distribution.Exponential' id='ucld.stdevPrior_Exp' mean="0.333333333333" offset="0.0"/>
 				</distribution>
-				<distribution  id='kappaPrior' x="@hky.kappa" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.LogNormalDistributionModel' M="1." S="1.25" offset="0.0" meanInRealSpace="false"/>
+				<distribution  id='kappaPrior' x="@hky.kappa" spec='beast.base.inference.distribution.Prior'>
+					<distr spec='beast.base.inference.distribution.LogNormalDistributionModel' M="1." S="1.25" offset="0.0" meanInRealSpace="false"/>
 				</distribution>
-				<distribution  id='geoclockPrior' x="@geoclock.rate" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.Gamma' alpha="0.001" beta="1000." offset="0.0"/>
+				<distribution  id='geoclockPrior' x="@geoclock.rate" spec='beast.base.inference.distribution.Prior'>
+					<distr spec='beast.base.inference.distribution.Gamma' alpha="0.001" beta="1000." offset="0.0"/>
 				</distribution>
-				<distribution  id='discreteTraitPrior' x="@relativeGeoRates" spec='beast.math.distributions.Prior'>
-					<distr spec='beast.math.distributions.Gamma' alpha="1." beta="1." offset="0.0"/>
+				<distribution  id='discreteTraitPrior' x="@relativeGeoRates" spec='beast.base.inference.distribution.Prior'>
+					<distr spec='beast.base.inference.distribution.Gamma' alpha="1." beta="1." offset="0.0"/>
 				</distribution>
 				<distribution spec='CompoundDistribution' id='coalescentLikelihood'>
 					<distribution id="coalescent" spec="Coalescent">
-						<treeIntervals spec='TreeIntervals' id='TreeIntervals'>
+						<treeIntervals spec="beast.base.evolution.tree.TreeIntervals" id="beast.base.evolution.tree.TreeIntervals">
 							 <tree idref="tree"/>
 						</treeIntervals>
 						<populationModel spec="ConstantPopulation" id='ConstantPopulation' popSize='@popSize'/>
@@ -172,7 +172,7 @@
 <!--
 	    <operator id="UniformOperator.chicken_trait" spec="UniformOperator" parameter="@trait(A_chicken_Fujian_1042_2005)" weight="30.0"/>
 -->
-	    <operator id="IntegerOperator.blackbird_Hunan" spec="GeneralIntegerOperator" parameter="@trait(A_chicken_Fujian_1042_2005)" weight="30.0">
+	    <operator id="IntegerOperator.blackbird_Hunan" spec="beastclassic.evolution.operators.GeneralIntegerOperator" parameter="@trait(A_chicken_Fujian_1042_2005)" weight="30.0">
 			<index id='chicken_indices' spec='parameter.IntegerParameter' value='0 2'/>
 		</operator>
 
@@ -186,7 +186,7 @@
 		<operator id='ucldStdevScaler' spec='ScaleOperator' parameter="@ucld.stdev" scaleFactor="0.75" weight="3"/>		
 
 	 	<operator id='geoMuScaler' spec='ScaleOperator' scaleFactor="0.9" weight="3" parameter="@geoclock.rate"/>  
-		<operator spec="BitFlipBSSVSOperator" id="BSSVSoperator" indicator="@rateIndicator" mu="@geoclock.rate" weight="30"/>
+		<operator spec="beastclassic.evolution.operators.BitFlipBSSVSOperator" id="BSSVSoperator" indicator="@rateIndicator" mu="@geoclock.rate" weight="30"/>
 	
         <operator spec='Uniform' weight="20" tree="@tree"/>
         <operator id='treeScaler' spec='ScaleOperator' scaleFactor="0.75" weight="1.0" rootOnly='true' tree="@tree"/>
@@ -209,7 +209,7 @@
             <log idref="prior"/>
             <log idref="coalescentLikelihood"/>
             <log idref="traitedtreeLikelihood"/>
-            <log spec='beast.evolution.tree.TreeHeightLogger' tree='@tree'/>
+            <log spec='beast.base.evolution.tree.TreeHeightLogger' tree='@tree'/>
             <log idref="popSize"/>
             <log idref="hky.kappa"/>							
 			<log idref="ucld.mean"/>
@@ -231,7 +231,7 @@
         </logger>
         
 		<logger logEvery="10000" fileName="testPhylogeo_H5N1_4taxa_$(seed).trees" mode="tree">
-			<log spec='TreeWithTraitLogger' tree='@tree'>
+			<log spec='beastclassic.evolution.tree.TreeWithTraitLogger' tree='@tree'>
 				<metadata idref="posterior"/>
 				<metadata idref="traitedtreeLikelihood"/>
 				<metadata idref="branchRates"/>
@@ -249,7 +249,7 @@
             <log idref="traitedtreeLikelihood"/>
             <log idref="geoclock.rate"/>
 <!--            <log idref="nonZeroRates"/>-->
-            <log spec='beast.evolution.tree.TreeHeightLogger' tree='@tree'/>
+            <log spec='beast.base.evolution.tree.TreeHeightLogger' tree='@tree'/>
 							
             <log idref="hky.kappa"/>
 			<log idref="ucld.mean"/>

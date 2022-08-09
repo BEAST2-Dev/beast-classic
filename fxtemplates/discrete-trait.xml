@@ -1,10 +1,10 @@
 <beast version='2.0'
-       namespace='beast.app.beauti:beast.core:beast.evolution.branchratemodel:beast.evolution.speciation:beast.evolution.Tree.t:coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution:beast.math.distributions'>
+       namespace='beast.app.beauti:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.branchratemodel:beast.base.evolution.speciation:beast.evolution.Tree.t:coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.evolution:beast.base.inference.distribution'>
 
 
 <mergewith point='aux-partitions-panels'>
-		<alignmentProvider id="Add Continuous Geography" spec='beast.app.beauti.BeautiLocationTraitProvider' template='@LocationTrait'/>
-		<alignmentProvider id="Add Discrete Trait" spec='beast.app.beauti.BeautiDiscreteTraitProvider' template='@DiscreteTrait'/>
+		<alignmentProvider id="Add Continuous Geography" spec='beastclassic.app.beauti.BeautiLocationTraitProvider' template='@LocationTrait'/>
+		<alignmentProvider id="Add Discrete Trait" spec='beastclassic.app.beauti.BeautiDiscreteTraitProvider' template='@DiscreteTrait'/>
 <!--
 		<panel spec='BeautiPanelConfig' panelname="Discrete Trait" tiptext="Discrete Trait details"
             path='distribution/distribution[id="prior"]/distribution[id="discrete-trait"]/distribution'
@@ -16,22 +16,22 @@
 
 <mergewith point='aux-partitiontemplate'>
 -->
-        <subtemplate id='DiscreteTrait' class='beast.evolution.alignment.AlignmentFromTrait' mainid='$(n)'
+        <subtemplate id='DiscreteTrait' class='beastclassic.evolution.alignment.AlignmentFromTrait' mainid='$(n)'
 suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.rates,
 				beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.rateIndicator,
 				beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.eigenSystem,
 				beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.frequencies'>
 <![CDATA[
         <!--distribution spec="CompoundDistribution" id="discrete-trait.$(n)" ignore="true"-->
-			<distribution id="traitedtreeLikelihood.$(n)" spec='AncestralStateTreeLikelihood' useJava="true" tag="location" tree='@Tree.t:$(n)'> 
-				<data spec="beast.evolution.alignment.AlignmentFromTrait" id='$(n)'>
-					<userDataType spec='beast.evolution.datatype.UserDataType' id='traitDataType.$(n)' 
+			<distribution id="traitedtreeLikelihood.$(n)" spec='beastclassic.evolution.likelihood.AncestralStateTreeLikelihood' useJava="true" tag="location" tree='@Tree.t:$(n)'> 
+				<data spec="beast.base.evolution.alignment.AlignmentFromTrait" id='$(n)'>
+					<userDataType spec='beast.base.evolution.datatype.UserDataType' id='traitDataType.$(n)' 
 						states='4'
 						codelength='-1'
 						codeMap='A = 0, B = 1, C = 2, D = 3, ? = 0 1 2 3, - = 0 1 2 3'/>
 <!--
-					<traitSet id='traitset.$(n)' spec='beast.evolution.tree.TraitSet' traitname='discrete' value="">
-						<taxa spec='beast.evolution.alignment.TaxonSet' alignment='@$(n)'/>
+					<traitSet id='traitset.$(n)' spec='beast.base.evolution.tree.TraitSet' traitname='discrete' value="">
+						<taxa spec='beast.base.evolution.alignment.TaxonSet' alignment='@$(n)'/>
 
 					</traitSet>
 -->
@@ -40,7 +40,7 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 				        <proportionInvariant spec='parameter.RealParameter' id='proportionInvariant.s:$(n)' value='0.0' lower='0' upper='1' estimate='false'/>
 				        <mutationRate        spec='parameter.RealParameter' id='mutationRate.s:$(n)' value='1.0'        estimate='false'/>
 				        <shape               spec='parameter.RealParameter' id='gammaShape.s:$(n)' value='1.0'         estimate='false'/>
-					<substModel spec="SVSGeneralSubstitutionModel" id="svs.s:$(n)">
+					<substModel spec="beastclassic.evolution.substitutionmodel.SVSGeneralSubstitutionModel" id="svs.s:$(n)">
 						<rateIndicator id='rateIndicator.s:$(n)' spec='parameter.BooleanParameter' value='true' dimension='6'/>
 					    <frequencies id='traitfreqs.s:$(n)' spec='Frequencies'>
 					            <frequencies id='traitfrequencies.s:$(n)' spec='parameter.RealParameter' value='.25 .25 .25 .25'/>
@@ -48,36 +48,36 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 					    <rates id='relativeGeoRates.s:$(n)' spec='parameter.RealParameter' value='1.' dimension='6'/>
 					</substModel>
 				</siteModel>
-				<branchRateModel id="StrictClockModel.c:$(n)" spec="beast.evolution.branchratemodel.StrictClockModel">
+				<branchRateModel id="StrictClockModel.c:$(n)" spec="beast.base.evolution.branchratemodel.StrictClockModel">
 					<parameter id="traitClockRate.c:$(n)" name="clock.rate" value="1.0"/>
 				</branchRateModel>
 			</distribution>
         <!--/distribution-->
 
 		<logger id='treeWithTraitLogger.$(n)' logEvery="10000" fileName="$(n)_tree_with_trait.trees" mode="tree">
-			<log id="treeWithTraitLoggerItem.t:$(n)" spec='beast.evolution.tree.TreeWithTraitLogger' tree='@Tree.t:$(n)'>
+			<log id="treeWithTraitLoggerItem.t:$(n)" spec='beast.base.evolution.tree.TreeWithTraitLogger' tree='@Tree.t:$(n)'>
 				<metadata idref="posterior"/>
 				<metadata idref="traitedtreeLikelihood.$(n)"/>
 			</log>
 		</logger>
 
-		<ParameterCumSum spec="beast.core.util.Sum" id="nonZeroRates.s:$(n)" arg="@rateIndicator.s:$(n)"/> 
+		<ParameterCumSum spec="beast.base.evolution.Sum" id="nonZeroRates.s:$(n)" arg="@rateIndicator.s:$(n)"/> 
 
 
-		<distribution  id='geoclockPrior.c:$(n)' x="@traitClockRate.c:$(n)" spec='beast.math.distributions.Prior'>
-			<distr spec='beast.math.distributions.Gamma' offset="0.0">
+		<distribution  id='geoclockPrior.c:$(n)' x="@traitClockRate.c:$(n)" spec='beast.base.inference.distribution.Prior'>
+			<distr spec='beast.base.inference.distribution.Gamma' offset="0.0">
 				<alpha spec='parameter.RealParameter' estimate='false' value='0.001'/>
 				<beta spec='parameter.RealParameter' estimate='false' value='1000.0'/>
 			</distr>
 		</distribution>
-		<distribution  id='relativeGeoRatesPrior.s:$(n)' x="@relativeGeoRates.s:$(n)" spec='beast.math.distributions.Prior'>
-			<distr spec='beast.math.distributions.Gamma' offset="0.0">
+		<distribution  id='relativeGeoRatesPrior.s:$(n)' x="@relativeGeoRates.s:$(n)" spec='beast.base.inference.distribution.Prior'>
+			<distr spec='beast.base.inference.distribution.Gamma' offset="0.0">
 				<alpha spec='parameter.RealParameter' estimate='false' value='1.0'/>
 				<beta spec='parameter.RealParameter' estimate='false' value='1.0'/>
 			</distr>
 		</distribution>
-		<distribution  id="nonZeroRatePrior.s:$(n)" x="@nonZeroRates.s:$(n)"  spec='beast.math.distributions.Prior'>
-			<distr spec='beast.math.distributions.Poisson' offset="6.0">
+		<distribution  id="nonZeroRatePrior.s:$(n)" x="@nonZeroRates.s:$(n)"  spec='beast.base.inference.distribution.Prior'>
+			<distr spec='beast.base.inference.distribution.Poisson' offset="6.0">
 				<lambda spec='parameter.RealParameter' estimate='false' value='0.693'/>
 			</distr>
 		</distribution>
@@ -87,9 +87,9 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 		<operator id="indicatorFlip.s:$(n)" spec="BitFlipOperator" parameter="@rateIndicator.s:$(n)" weight="30"/>
 
 	 	<operator id='geoMuScaler.c:$(n)' spec='ScaleOperator' scaleFactor="0.9" weight="3" parameter="@traitClockRate.c:$(n)"/>  
-		<operator id="BSSVSoperator.c:$(n)" spec="BitFlipBSSVSOperator" indicator="@rateIndicator.s:$(n)" mu="@traitClockRate.c:$(n)" weight="30"/>
+		<operator id="BSSVSoperator.c:$(n)" spec="beastclassic.evolution.operators.BitFlipBSSVSOperator" indicator="@rateIndicator.s:$(n)" mu="@traitClockRate.c:$(n)" weight="30"/>
 
-		<log id='geoSubstModelLogger.s:$(n)' spec='SVSGeneralSubstitutionModelLogger' model="@svs.s:$(n)" dataType="@traitDataType.$(n)" useLocationNames="true"/>
+		<log id='geoSubstModelLogger.s:$(n)' spec='beastclassic.evolution.substitutionmodel.SVSGeneralSubstitutionModelLogger' model="@svs.s:$(n)" dataType="@traitDataType.$(n)" useLocationNames="true"/>
 ]]>
 
          <connect srcID='traitedtreeLikelihood.$(n)'              targetID='likelihood' inputName='distribution' if="isInitializing"/>
@@ -124,41 +124,41 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 	</subtemplate>
 
 
-        <subtemplate id='LocationTrait' class='beast.evolution.alignment.AlignmentFromTraitMap' mainid='$(n)'
+        <subtemplate id='LocationTrait' class='beastclassic.evolution.alignment.AlignmentFromTraitMap' mainid='$(n)'
 suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.frequencies,
 				beast.math.distributions.MultivariateNormalDistribution.arg'>
 <![CDATA[
-	<multivariateTraitLikelihood id="locationtreeLikelihood.$(n)" spec='beast.continuous.SampledMultivariateTraitLikelihood'
+	<multivariateTraitLikelihood id="locationtreeLikelihood.$(n)" spec='beastclassic.continuous.SampledMultivariateTraitLikelihood'
 		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@Tree.t:$(n)'>
 		<traitParameter id='location.$(n)' spec='parameter.RealParameter' value='0 0' minordimension='2'/>
-	    <data spec='beast.evolution.alignment.AlignmentFromTraitMap' id='$(n)'>
+	    <data spec='beastclasssic.evolution.alignment.AlignmentFromTraitMap' id='$(n)'>
 			<userDataType spec='beast.evolution.datatype.LocationDataType'/>
-			<traitMap id='traitmap.s:$(n)' spec='beast.evolution.tree.TreeTraitMap' tree='@Tree.t:$(n)' parameter='@location.$(n)' traitName='location' 
+			<traitMap id='traitmap.s:$(n)' spec='beastclassic.evolution.tree.TreeTraitMap' tree='@Tree.t:$(n)' parameter='@location.$(n)' traitName='location' 
 				randomizeupper="90 180" randomizelower="-90 -180">
 			</traitMap>
 		</data>
 		<siteModel spec='SiteModel' id="geoContSiteModel.s:$(n)">
-			<substModel id="diffusionModel.s:$(n)" spec='beast.continuous.MultivariateDiffusionModel'>
+			<substModel id="diffusionModel.s:$(n)" spec='beastclassic.continuous.MultivariateDiffusionModel'>
 				<precisionMatrix spec='parameter.RealParameter' id='precisionMatrix.s:$(n)' minordimension='2' estimate='true'>
 0.365 -1.78E-4
 -1.78E-4 5.16E-2
 				</precisionMatrix>
 			</substModel>
 		</siteModel>
-        <branchRateModel spec='beast.evolution.branchratemodel.StrictClockModel' id='StrictClock.c:$(n)'>
+        <branchRateModel spec='beast.base.evolution.branchratemodel.StrictClockModel' id='StrictClock.c:$(n)'>
             <clock.rate id='clockRate.c:$(n)' spec='parameter.RealParameter' value='1.0' estimate='false'/>
         </branchRateModel>
     </multivariateTraitLikelihood>
 
-	<distribution  id="precisionPrior.$(n)" spec='beast.math.distributions.WishartDistribution' df='2' arg='@precisionMatrix.s:$(n)'>
+	<distribution  id="precisionPrior.$(n)" spec='beastclassic.math.distributions.WishartDistribution' df='2' arg='@precisionMatrix.s:$(n)'>
 		<scaleMatrix spec='parameter.RealParameter' minordimension='2'>
 				1.0 0.0
 				0.0 1.0
 		</scaleMatrix>
 	</distribution>
 
-	<distribution id="rootPrior.$(n)" spec='beast.math.distributions.MultivariateNormalDistribution'>
-		<arg id='rootTrait.$(n)' spec='beast.evolution.tree.RootTrait' traitmap='@traitmap.s:$(n)'/>
+	<distribution id="rootPrior.$(n)" spec='beastclassic.math.distributions.MultivariateNormalDistribution'>
+		<arg id='rootTrait.$(n)' spec='beastclassic.evolution.tree.RootTrait' traitmap='@traitmap.s:$(n)'/>
 		<mean spec='parameter.RealParameter' value='0.0 0.0'/>
 		<precision spec='parameter.RealParameter' minordimension='2'>
 				0.001 0.0
@@ -166,27 +166,27 @@ suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.freq
 		</precision>
 	</distribution>
 
-    <log id='rateStat.$(n)' spec='beast.evolution.branchratemodel.RateStatistic' tree='@Tree.t:$(n)' treeLikelihood='@locationtreeLikelihood.$(n)'/>
+    <log id='rateStat.$(n)' spec='beast.base.evolution.RateStatistic' tree='@Tree.t:$(n)' treeLikelihood='@locationtreeLikelihood.$(n)'/>
 
 
 
 
-    <plugin id='ClockPrior.c:$(n)' spec='beast.math.distributions.Prior' x='@clockRate.c:$(n)'>
-        <distr spec="beast.math.distributions.Uniform" upper='Infinity'/>
+    <plugin id='ClockPrior.c:$(n)' spec='beast.base.inference.distribution.Prior' x='@clockRate.c:$(n)'>
+        <distr spec="beast.base.inference.distribution.Uniform" upper='Infinity'/>
     </plugin>
 
     <operator id='StrictClockRateScaler.c:$(n)' spec='ScaleOperator' scaleFactor="0.75" weight="3" parameter='@clockRate.c:$(n)'/>
 
-    <operator id='precisionGibbsOperator.s:$(n)' spec='PrecisionMatrixGibbsOperator' tree='@Tree.t:$(n)' parameter='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)'  weight="15"
+    <operator id='precisionGibbsOperator.s:$(n)' spec='beastclassic.evolution.operators.PrecisionMatrixGibbsOperator' tree='@Tree.t:$(n)' parameter='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)'  weight="15"
 		prior='@precisionPrior.$(n)'>
 	    <likelihood idref='locationtreeLikelihood.$(n)'/>
     </operator>
 
-    <operator id='traitGibbsOperator.$(n)' spec='TraitGibbsOperator' tree='@Tree.t:$(n)' precisionMatrix='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)' weight="50">
+    <operator id='traitGibbsOperator.$(n)' spec='beastclassic.evolution.operators.TraitGibbsOperator' tree='@Tree.t:$(n)' precisionMatrix='@precisionMatrix.s:$(n)' traitmap='@traitmap.s:$(n)' weight="50">
 		<likelihood idref='locationtreeLikelihood.$(n)'/>
     </operator>
 
-    <operator id='RootTraitRandowWalkOperator.$(n)' spec='RootTraitRandowWalkOperator' windowSize="10.0" weight="5" parameter='@location.$(n)' traitmap='@traitmap.s:$(n)' />
+    <operator id='RootTraitRandowWalkOperator.$(n)' spec='beastclassic.evolution.operators.RootTraitRandowWalkOperator' windowSize="10.0" weight="5" parameter='@location.$(n)' traitmap='@traitmap.s:$(n)' />
 
 
 ]]>

@@ -1,5 +1,5 @@
 <beast version='2.0'
-    namespace='beast.evolution.alignment:beast.core:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood'>
+    namespace='beast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree.coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood'>
 
     <data id="alignment" spec='AscertainedAlignment'>
 		<userDataType spec='beast.evolution.datatype.MutationDeathType' deathChar='0' extantCode='1'/>
@@ -33,9 +33,9 @@
 	<state>
 		<parameter name='stateNode' id='deathRate' lower="0.0" value="1.0"/>
 
-<!--		<stateNode id='tree' spec='beast.util.TreeParser' newick='(Ar:1.2587335224961815,((Dr:0.48328238018013014,An:0.48328238018013014):0.7573037533374662,(Ho:1.0658133023983523,Ca:1.0658133023983523):0.17477283111924424):0.018147388978585033)'>
+<!--		<stateNode id='tree' spec='beast.base.evolution.tree.TreeParser' newick='(Ar:1.2587335224961815,((Dr:0.48328238018013014,An:0.48328238018013014):0.7573037533374662,(Ho:1.0658133023983523,Ca:1.0658133023983523):0.17477283111924424):0.018147388978585033)'>
 (Ar:0.8884959699821183,((Dr:0.13514331794790563,An:0.13514331794790563):0.621722055422071,(Ho:0.7495724084782432,Ca:0.7495724084782432):0.007292964891733478):0.1316305966121416);'>-->
-		<stateNode id='tree' spec='beast.util.TreeParser' newick='(Ar:3,((Dr:1,An:1):1,(Ho:1,Ca:1):1):1);'>
+		<stateNode id='tree' spec='beast.base.evolution.tree.TreeParser' newick='(Ar:3,((Dr:1,An:1):1,(Ho:1,Ca:1):1):1);'>
 			<taxonset id='taxa' spec='TaxonSet' alignment='@alignment'/>
 		</stateNode>
 	</state>
@@ -74,7 +74,7 @@
             <log idref="posterior"/>
             <log idref="prior"/>
             <log idref="likelihood"/>
-            <log spec='beast.evolution.tree.TreeHeightLogger' tree='@tree'/>
+            <log spec='beast.base.evolution.tree.TreeHeightLogger' tree='@tree'/>
         </logger>
 
         <logger logEvery="10000" fileName="binaryDollo2.trees">

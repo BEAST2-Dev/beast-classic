@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood" version="2.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.alignment:beast.base.evolution.tree.coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood" version="2.0">
 
 
     <data id="x" name="alignment">
@@ -45,22 +45,22 @@
 
 
     
-<map name="Beta">beast.math.distributions.Beta</map>
-<map name="Exponential">beast.math.distributions.Exponential</map>
-<map name="InverseGamma">beast.math.distributions.InverseGamma</map>
-<map name="LogNormal">beast.math.distributions.LogNormalDistributionModel</map>
-<map name="Gamma">beast.math.distributions.Gamma</map>
-<map name="Uniform">beast.math.distributions.Uniform</map>
-<map name="prior">beast.math.distributions.Prior</map>
-<map name="LaplaceDistribution">beast.math.distributions.LaplaceDistribution</map>
-<map name="OneOnX">beast.math.distributions.OneOnX</map>
-<map name="Normal">beast.math.distributions.Normal</map>
+<map name="Beta">beast.base.inference.distribution.Beta</map>
+<map name="Exponential">beast.base.inference.distribution.Exponential</map>
+<map name="InverseGamma">beast.base.inference.distribution.InverseGamma</map>
+<map name="LogNormal">beast.base.inference.distribution.LogNormalDistributionModel</map>
+<map name="Gamma">beast.base.inference.distribution.Gamma</map>
+<map name="Uniform">beast.base.inference.distribution.Uniform</map>
+<map name="prior">beast.base.inference.distribution.Prior</map>
+<map name="LaplaceDistribution">beast.base.inference.distribution.LaplaceDistribution</map>
+<map name="OneOnX">beast.base.inference.distribution.OneOnX</map>
+<map name="Normal">beast.base.inference.distribution.Normal</map>
 
 
 <run chainLength="10000000" id="mcmc" spec="MCMC">
     <state id="state" storeEvery="5000">
         <tree id="Tree.t:x" name="stateNode">
-            <trait id="dateTrait.t:x" spec="beast.evolution.tree.TraitSet" traitname="date-forward">
+            <trait id="dateTrait.t:x" spec="beast.base.evolution.tree.TraitSet" traitname="date-forward">
 W2P1D0=0.0, <!-- oldest sample -->
 W2P12D0=0.0,
 W2P4D5=5.0,
@@ -109,8 +109,8 @@ W2P7D54=54.0 <!-- newest sample -->
 		<stateNode idref="skyridePrecision"/>
     </state>
 
-    <distribution id="posterior" spec="util.CompoundDistribution">
-        <distribution id="prior" spec="util.CompoundDistribution">
+    <distribution id="posterior" spec="beast.base.inference.CompoundDistribution">
+        <distribution id="prior" spec="beast.base.inference.CompoundDistribution">
             <prior id="ClockPrior.c:x" name="distribution" x="@clockRate.c:x">
                 <Uniform id="Uniform.01" name="distr"/>
             </prior>
@@ -129,7 +129,7 @@ W2P7D54=54.0 <!-- newest sample -->
 			</prior>
 
 			<!-- Generate a gmrfSkyrideLikelihood for GMRF Bayesian Skyride process      -->
-			<distribution id="skyride" timeAwareSmoothing="true" spec='beast.evolution.tree.coalescent.GMRFSkyrideLikelihood'> <!-- randomizeTree="false" -->
+			<distribution id="skyride" timeAwareSmoothing="true" spec='beastclassic.evolution.tree.coalescent.GMRFSkyrideLikelihood'> <!-- randomizeTree="false" -->
 				<!-- skyride.logPopSize is in log units unlike other popSize                 -->
 				<populationSizes id="skyrideLogPopSize" dimension="32" value="6.29156913955832"  spec='parameter.RealParameter'/>
 				<groupSizes id="skyrideGroupSize" dimension="32" spec='parameter.RealParameter' value='1'/>
@@ -138,7 +138,7 @@ W2P7D54=54.0 <!-- newest sample -->
 			</distribution>
 
         </distribution>
-        <distribution id="likelihood" spec="util.CompoundDistribution">
+        <distribution id="likelihood" spec="beast.base.inference.CompoundDistribution">
             <distribution data="@x" id="treeLikelihood.x" spec="TreeLikelihood" tree="@Tree.t:x">
                 <siteModel id="SiteModel.s:x" spec="SiteModel">
                     <parameter estimate="false" id="mutationRate.s:x" name="mutationRate" value="1.0"/>
@@ -148,13 +148,13 @@ W2P7D54=54.0 <!-- newest sample -->
                         <frequencies frequencies="@freqParameter.s:x" id="estimatedFreqs.s:x" spec="Frequencies"/>
                     </substModel>
                 </siteModel>
-                <branchRateModel clock.rate="@clockRate.c:x" id="StrictClock.c:x" spec="beast.evolution.branchratemodel.StrictClockModel"/>
+                <branchRateModel clock.rate="@clockRate.c:x" id="StrictClock.c:x" spec="beast.base.evolution.branchratemodel.StrictClockModel"/>
             </distribution>
         </distribution>
     </distribution>
 
 
-    <operator spec='GMRFSkyrideBlockUpdateOperator' weight="10" scaleFactor="8.6" maxIterations="200" 
+    <operator spec='beastclassic.evolution.operators.GMRFSkyrideBlockUpdateOperator' weight="10" scaleFactor="8.6" maxIterations="200" 
                                  stopValue="0.01" likelihood='@skyride'/> <!-- autoOptimize="true" -->
 
     <operator id="treeScaler.t:x" scaleFactor="0.5" spec="ScaleOperator" tree="@Tree.t:x" weight="3.0"/>
@@ -189,7 +189,7 @@ W2P7D54=54.0 <!-- newest sample -->
         <log idref="likelihood"/>
         <log idref="prior"/>
         <log idref="treeLikelihood.x"/>
-        <log id="TreeHeight.t:x" spec="beast.evolution.tree.TreeHeightLogger" tree="@Tree.t:x"/>
+        <log id="TreeHeight.t:x" spec="beast.base.evolution.tree.TreeHeightLogger" tree="@Tree.t:x"/>
         <log idref="skyride"/>
         <parameter idref="clockRate.c:x" name="log"/>
         <parameter idref="kappa.s:x" name="log"/>
@@ -208,14 +208,14 @@ W2P7D54=54.0 <!-- newest sample -->
     </logger>
 
     <logger fileName="$(tree).trees" id="treelog.t:x" logEvery="1000" mode="tree">
-        <log id="TreeWithMetaDataLogger.t:x" spec="beast.evolution.tree.TreeWithMetaDataLogger" tree="@Tree.t:x"/>
+        <log id="TreeWithMetaDataLogger.t:x" spec="beast.base.evolution.TreeWithMetaDataLogger" tree="@Tree.t:x"/>
     </logger>
 
-	<init spec='beast.util.TreeParser' taxa='@x' initial="@Tree.t:x" 
+	<init spec='beast.base.evolution.tree.TreeParser' taxa='@x' initial="@Tree.t:x" 
 	newick='(((W2P9D5:12.983825646947054,W2P1D12:19.983825646947054):1.4300293642999122,(W2P4D5:9.646627021951318,W2P12D0:4.646627021951318):4.767227989295648):2.83185397871398,((((W2P15D12:9.25378069647568,W2P2D12:9.25378069647568):5.922840926698534,W2P8D5:8.176621623174213):2.3648365710890573,((W2P14D34:15.50233134492035,(((((((W2P1D41:2.943850833708977,W2P7D54:15.943850833708977):6.8498083253444,(W2P9D41:6.564234686676009,W2P5D41:6.564234686676009):3.2294244723773673):0.2867007415795406,((W2P7D41:8.669841624381775,W2P1D34:1.6698416243817746):0.6754795479372646,(W2P1D54:16.848540346534538,W2P1D48:10.848540346534538):5.4967808257845014):0.735038728313878):2.9595902436285435,W2P6D30:2.0399501442614607):1.1480961231673916,((W2P3D30:0.03984799282374141,W2P2D41:11.039847992823741):0.4012903086709265,(W2P2D34:4.318186805880355,(W2P5D34:3.057643645446614,W2P1D36:5.057643645446614):1.2605431604337411):0.12295149561431273):2.7469079659341844):1.8665474390668777,(W2P12D36:10.222552036590518,W2P7D30:4.222552036590518):0.8320416699052124):1.6043505950953403,(W2P4D30:4.658228892638782,W2P5D30:4.658228892638782):2.0007154089522885):4.84338704332928):11.996957431429294,((W2P2D30:13.104495226550377,W2P1D30:13.104495226550377):3.7104294789770904,(((W2P1D18:1.3110203951392165,W2P2D18:1.3110203951392165):1.1266782721563402,W2P4D18:2.4376986672955567):0.35489927639714125,W2P3D18:2.792597943692698):2.022326761834769):6.684364070822177):12.042169417913627):5.272942023996379,W2P1D0:10.81440021825965):1.4313087717012962);'>
 	</init>
 <!--
-    <init estimate="false" id="RandomTree.t:x" initial="@Tree.t:x" spec="beast.evolution.tree.RandomTree" taxa="@x">
+    <init estimate="false" id="RandomTree.t:x" initial="@Tree.t:x" spec="beast.base.evolution.tree.coalescent.RandomTree" taxa="@x">
         <populationModel id="ConstantPopulation0.t:x" spec="ConstantPopulation">
             <parameter id="randomPopSize.t:x" name="popSize" value="10000"/>
         </populationModel>

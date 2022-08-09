@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.core.parameter:beast.evolution.branchratemodel" version="2.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast namespace="beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.alignment:beast.base.evolution.tree.coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.pkgmgmt:beast.base.core:beast.base.inference.parameter:beast.base.evolution.branchratemodel" version="2.0">
 
 
     <data id="RacRABV" name="alignment">
@@ -96,7 +96,7 @@
 
 
     
-	<diffusionModel id="diffusionModel" spec='beast.continuous.MultivariateDiffusionModel'>
+	<diffusionModel id="diffusionModel" spec='beastclassic.continuous.MultivariateDiffusionModel'>
 		<precisionMatrix spec='RealParameter' id='precisionMatrix' minordimension='2'>
 <!--
 				0.05 0.002 
@@ -107,15 +107,15 @@
 		</precisionMatrix>
 	</diffusionModel>
 
-	<distribution  id="precisionPrior" spec='beast.math.distributions.WishartDistribution' df='2' arg='@precisionMatrix'>
+	<distribution  id="precisionPrior" spec='beastclassic.math.distributions.WishartDistribution' df='2' arg='@precisionMatrix'>
 		<scaleMatrix spec='RealParameter' minordimension='2'>
 				1.0 0.0
 				0.0 1.0
 		</scaleMatrix>
 	</distribution>
 
-	<distribution id="rootPrior" spec='beast.math.distributions.MultivariateNormalDistribution'>
-		<arg id='rootTrait' spec='beast.evolution.tree.RootTrait' traitmap='@traitmap'/>
+	<distribution id="rootPrior" spec='beastclassic.math.distributions.MultivariateNormalDistribution'>
+		<arg id='rootTrait' spec='beastclassic.evolution.tree.RootTrait' traitmap='@traitmap'/>
 		<mean spec='RealParameter' value='0.0 0.0'/>
 		<precision spec='RealParameter' minordimension='2'>
 				0.001 0.0
@@ -125,16 +125,16 @@
 
     <branchRateModel id="branchRatesDiffusion" spec='UCRelaxedClockModel' tree='@Tree.t:RacRABV'>
         <parameter name='clock.rate' id='ucld.mean' value='1'/>
-        <distr id='lognormal' spec="beast.math.distributions.LogNormalDistributionModel"  meanInRealSpace="true">
+        <distr id='lognormal' spec="beast.base.inference.distribution.LogNormalDistributionModel"  meanInRealSpace="true">
             <M id='ucldDiffusion.mean' spec='RealParameter' value="1"/>
             <S id='ucldDiffusion.stdev' spec='RealParameter' value="0.1" lower="0" upper="5"/>
         </distr>
         <parameter spec='IntegerParameter' name='rateCategories' id='rateCategories' dimension="92" value="1"/>
     </branchRateModel>
 
-    <log id='rateStat' spec='RateStatistic' tree='@Tree.t:RacRABV' branchratemodel='@branchRatesDiffusion'/>
+    <log id='rateStat' spec='beast.base.evolution.RateStatistic' tree='@Tree.t:RacRABV' branchratemodel='@branchRatesDiffusion'/>
 
-	<traitmap id='traitmap' spec='beast.evolution.tree.TreeTraitMap' tree='@Tree.t:RacRABV' parameter='@location' traitName='location' 
+	<traitmap id='traitmap' spec='beastclassic.evolution.tree.TreeTraitMap' tree='@Tree.t:RacRABV' parameter='@location' traitName='location' 
 		randomizeupper="45 -70" randomizelower="28 -122">
 				hOH10_97.2_41.053_80.706=41.053 -80.706,
 				hWVa01_93.2_40.505_80.575=40.505 -80.575,
@@ -185,11 +185,11 @@
 				WVa22_02.7_39.635_79.995=39.635 -79.995
 	</traitmap>
 
-	<multivariateTraitLikelihood id="traitLikelihood" spec='beast.continuous.SampledMultivariateTraitLikelihood'
+	<multivariateTraitLikelihood id="traitLikelihood" spec='beastclassic.continuous.SampledMultivariateTraitLikelihood'
 		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@Tree.t:RacRABV'>
 		<traitParameter id='location' spec='RealParameter' value='0 0' minordimension='2'/>
-	    <data spec='AlignmentFromTraitMap' traitMap='@traitmap'>
-			<userDataType spec='beast.evolution.datatype.LocationDataType'/>
+	    <data spec='beastclassic.evolution.alignment.AlignmentFromTraitMap' traitMap='@traitmap'>
+			<userDataType spec='beastclassic.evolution.datatype.LocationDataType'/>
 		</data>
 		<siteModel spec='SiteModel' substModel='@diffusionModel'/>
 <!--
@@ -230,22 +230,22 @@
 
 
     
-<map name="Beta">beast.math.distributions.Beta</map>
-<map name="Exponential">beast.math.distributions.Exponential</map>
-<map name="InverseGamma">beast.math.distributions.InverseGamma</map>
-<map name="LogNormal">beast.math.distributions.LogNormalDistributionModel</map>
-<map name="Prior">beast.math.distributions.Prior</map>
-<map name="Gamma">beast.math.distributions.Gamma</map>
-<map name="Uniform">beast.math.distributions.Uniform</map>
-<map name="LaplaceDistribution">beast.math.distributions.LaplaceDistribution</map>
-<map name="OneOnX">beast.math.distributions.OneOnX</map>
-<map name="Normal">beast.math.distributions.Normal</map>
+<map name="Beta">beast.base.inference.distribution.Beta</map>
+<map name="Exponential">beast.base.inference.distribution.Exponential</map>
+<map name="InverseGamma">beast.base.inference.distribution.InverseGamma</map>
+<map name="LogNormal">beast.base.inference.distribution.LogNormalDistributionModel</map>
+<map name="Prior">beast.base.inference.distribution.Prior</map>
+<map name="Gamma">beast.base.inference.distribution.Gamma</map>
+<map name="Uniform">beast.base.inference.distribution.Uniform</map>
+<map name="LaplaceDistribution">beast.base.inference.distribution.LaplaceDistribution</map>
+<map name="OneOnX">beast.base.inference.distribution.OneOnX</map>
+<map name="Normal">beast.base.inference.distribution.Normal</map>
 
 
 <run chainLength="8000000" id="mcmc" spec="MCMC">
     <state id="state" storeEvery="1000">
         <tree id="Tree.t:RacRABV" name="stateNode">
-            <trait id="dateTrait.t:RacRABV" spec="beast.evolution.tree.TraitSet" traitname="date">
+            <trait id="dateTrait.t:RacRABV" spec="beast.base.evolution.tree.TraitSet" traitname="date">
 		            hOH10_97.2_41.053_80.706=1997.2,
 					hWVa01_93.2_40.505_80.575=1993.2,
 					NY01_03.4_41.057_73.794=2003.4,
@@ -310,11 +310,11 @@
 		<stateNode idref='precisionMatrix'/>
     </state>
 
-    <distribution id="posterior" spec="util.CompoundDistribution">
-        <distribution id="prior" spec="util.CompoundDistribution">
+    <distribution id="posterior" spec="beast.base.inference.CompoundDistribution">
+        <distribution id="prior" spec="beast.base.inference.CompoundDistribution">
             <distribution id="CoalescentConstant.t:RacRABV" spec="Coalescent">
                 <populationModel id="ConstantPopulation.t:RacRABV" popSize="@popSize.t:RacRABV" spec="ConstantPopulation"/>
-                <treeIntervals id="TreeIntervals.t:RacRABV" spec="TreeIntervals" tree="@Tree.t:RacRABV"/>
+                <treeIntervals id="TreeIntervals.t:RacRABV" spec="beast.base.evolution.tree.TreeIntervals" tree="@Tree.t:RacRABV"/>
             </distribution>
             <Prior id="ClockPrior.c:RacRABV" name="distribution" x="@clockRate.c:RacRABV">
                 <Uniform id="Uniform.0" name="distr"/>
@@ -331,11 +331,11 @@
 
 			<distribution idref='rootPrior'/>
 			<distribution idref='precisionPrior'/>
-            <distribution id="ucldDiffusion.stdev.prior" spec="beast.math.distributions.Prior" x="@ucldDiffusion.stdev">
-                <distr spec="beast.math.distributions.Exponential" mean='10'/>
+            <distribution id="ucldDiffusion.stdev.prior" spec="beast.base.inference.distribution.Prior" x="@ucldDiffusion.stdev">
+                <distr spec="beast.base.inference.distribution.Exponential" mean='10'/>
 			</distribution>
         </distribution>
-        <distribution id="likelihood" spec="util.CompoundDistribution">
+        <distribution id="likelihood" spec="beast.base.inference.CompoundDistribution">
             <distribution data="@RacRABV" id="treeLikelihood.RacRABV" spec="TreeLikelihood" tree="@Tree.t:RacRABV">
                 <siteModel id="SiteModel.s:RacRABV" spec="SiteModel">
                     <parameter estimate="false" id="mutationRate.s:RacRABV" name="mutationRate" value="1.0"/>
@@ -345,7 +345,7 @@
                         <frequencies id="empiricalFreqs.s:RacRABV" spec="Frequencies" data='@RacRABV'/>
                     </substModel>
                 </siteModel>
-                <branchRateModel clock.rate="@clockRate.c:RacRABV" id="StrictClock.c:RacRABV" spec="beast.evolution.branchratemodel.StrictClockModel"/>
+                <branchRateModel clock.rate="@clockRate.c:RacRABV" id="StrictClock.c:RacRABV" spec="beast.base.evolution.branchratemodel.StrictClockModel"/>
             </distribution>
 			<distribution idref='traitLikelihood'/>
         </distribution>
@@ -387,16 +387,16 @@
     <operator id="CategoriesRandomWalk" spec="IntRandomWalkOperator" windowSize='1' weight="10" parameter="@rateCategories"/>
     <operator id='CategoriesUniform' spec='UniformOperator' weight="10" parameter='@rateCategories'/>
 
-	<operator id='precisionGibbsOperator' spec='PrecisionMatrixGibbsOperator' tree='@Tree.t:RacRABV' parameter='@precisionMatrix' traitmap='@traitmap'  weight="15">
+	<operator id='precisionGibbsOperator' spec='beastclassic.evolution.operators.PrecisionMatrixGibbsOperator' tree='@Tree.t:RacRABV' parameter='@precisionMatrix' traitmap='@traitmap'  weight="15">
 		<likelihood idref='traitLikelihood'/>
 		<prior idref='precisionPrior'/>
 	</operator>
-    <operator id='traitGibbsOperator' spec='TraitGibbsOperator' tree='@Tree.t:RacRABV' precisionMatrix='@precisionMatrix' traitmap='@traitmap' weight="50">
+    <operator id='traitGibbsOperator' spec='beastclassic.evolution.operators.TraitGibbsOperator' tree='@Tree.t:RacRABV' precisionMatrix='@precisionMatrix' traitmap='@traitmap' weight="50">
 		<likelihood idref='traitLikelihood'/>
 		<!--rootprior idref="rootPrior"/-->
 	</operator>
 
-	<operator spec='RootTraitRandowWalkOperator' windowSize="10.0" weight="5" parameter='@location' traitmap='@traitmap' />
+	<operator spec='beastclassic.evolution.operators.RootTraitRandowWalkOperator' windowSize="10.0" weight="5" parameter='@location' traitmap='@traitmap' />
 
 
     <logger fileName="RacRABV.lnRRW.$(seed).log" id="tracelog" logEvery="1000" model="@posterior" sanitiseHeaders="true" sort="smart">
@@ -412,7 +412,7 @@
 		<log idref='rootPrior'/>
 		<log idref='precisionPrior'/>
 
-        <log id="TreeHeight.t:RacRABV.7taxa" spec="beast.evolution.tree.TreeHeightLogger" tree="@Tree.t:RacRABV"/>
+        <log id="TreeHeight.t:RacRABV.7taxa" spec="beast.base.evolution.tree.TreeStatLogger" tree="@Tree.t:RacRABV"/>
         <parameter idref="clockRate.c:RacRABV" name="log"/>
         <parameter idref="kappa.s:RacRABV" name="log"/>
         <parameter idref="popSize.t:RacRABV" name="log"/>
@@ -434,7 +434,7 @@
     </logger>
 
     <logger fileName="$(tree)R.$(seed).trees" id="treelog.t:RacRABV1.lnRRW" logEvery="1000" mode="tree">
-        <log id="TreeWithMetaDataLogger.t:RacRABV" spec="beast.evolution.tree.TreeWithMetaDataLogger" tree="@Tree.t:RacRABV">
+        <log id="TreeWithMetaDataLogger.t:RacRABV" spec="beast.base.evolution.TreeWithMetaDataLogger" tree="@Tree.t:RacRABV">
 			<metadata idref='location'/>
 			<branchratemodel idref='branchRatesDiffusion'/>
 		</log>
@@ -442,13 +442,13 @@
 
 
 <!--
-    <init spec='beast.util.TreeParser' id='tree1' initial="@Tree.t:RacRABV" taxa="@RacRABV">
+    <init spec='beast.base.evolution.tree.TreeParser' id='tree1' initial="@Tree.t:RacRABV" taxa="@RacRABV">
 		<input name='newick'>
 (((NY03_03.4_42.934_76.565:8.273346380513605,NY01_03.4_41.057_73.794:8.273346380513605):8.778378960669347,hOH10_97.2_41.053_80.706:10.851725341182906):0.9308011547075559,hWVa01_93.2_40.505_80.575:7.782526495890462)
 		</input>
 	</init>
 -->
-    <init estimate="false" id="RandomTree.t:RacRABV" initial="@Tree.t:RacRABV" spec="beast.evolution.tree.RandomTree" taxa="@RacRABV">
+    <init estimate="false" id="RandomTree.t:RacRABV" initial="@Tree.t:RacRABV" spec="beast.base.evolution.tree.coalescent.RandomTree" taxa="@RacRABV">
         <populationModel id="ConstantPopulation0.t:RacRABV" spec="ConstantPopulation">
             <parameter id="randomPopSize.t:RacRABV" name="popSize" value="1"/>
         </populationModel>

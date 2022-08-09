@@ -1,0 +1,22 @@
+<beast version='2.0'
+       namespace='beast.app.beauti:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.branchratemodel:beast.base.evolution.speciation:beast.base.evolution.tree.coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.evolution:beast.base.inference.distribution'>
+
+    <mergewith point='substModelTemplates'>
+        <!-- empirical amino acid substitution models -->
+        <subtemplate id='LG' class='beastclassic.evolution.substitutionmodel.LG'
+                     suppressInputs='beastclassic.evolution.substitutionmodel.LG.beastclassic,
+                     	beastclassic.evolution.substitutionmodel.LG.rates,
+                     	beastclassic.evolution.substitutionmodel.LG.frequencies'
+                     mainid='LG.s:$(n)'>
+            <![CDATA[<plugin spec='LG' id='LG.s:$(n)'/>]]></subtemplate>
+        <subtemplate id="FLU" class='beastclassic.evolution.substitutionmodel.FLU'
+                     suppressInputs='beastclassic.evolution.substitutionmodel.FLU.eigenSystem,
+                     	beastclassic.evolution.substitutionmodel.FLU.rates,
+                     	beastclassic.evolution.substitutionmodel.FLU.frequencies'
+                     mainid='FLU.s:$(n)'>
+            <![CDATA[<plugin spec='FLU' id='FLU.s:$(n)'/>]]></subtemplate>
+    </mergewith>
+    
+    
+</beast>
+

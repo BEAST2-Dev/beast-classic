@@ -8,10 +8,11 @@
 	</description>
 
 	<!-- set global properties for this build -->
-	<property name="srcBEAST_CLASSIC" location="../beast-classic/src" />
-	<property name="buildBEAST_CLASSIC" location="../beast-classic/build" />
-	<property name="libBEAST_CLASSIC" location="../beast-classic/lib" />
-	<property name="release_dir" value="../beast-classic/release" />
+	<property name="BEAST_CLASSICdir" location="../beast-classic/" />
+	<property name="srcBEAST_CLASSIC" location="${BEAST_CLASSICdir}/src" />
+	<property name="buildBEAST_CLASSIC" location="${BEAST_CLASSICdir}/build" />
+	<property name="libBEAST_CLASSIC" location="${BEAST_CLASSICdir}/lib" />
+	<property name="release_dir" value="${BEAST_CLASSICdir}/release" />
 	<property name="distBEAST_CLASSIC" location="${buildBEAST_CLASSIC}/dist" />
 	<property name="beast2path" location="../beast2" />
 	<property name="libBeast2" location="${beast2path}/lib" />
@@ -19,8 +20,10 @@
 	<property name="beast2classpath" location="${beast2path}/build" />
 	<property name="BEASTLabspath" location="../BEASTLabs" />
 	<property name="BEASTLabsclasspath" location="${BEASTLabspath}/build" />
+    <property name="beastappdir" location="../BeastFX/" />
+    <property name="beastappclasspath" location="${beastappdir}/build" />
+    <property name="beastapplib" location="${beastappdir}/locallib" />
 	<property name="Add_on_dir" value="${release_dir}/add-on" />
-	<property name="version" value="1.5.0" />
 
     <import file="${beast2path}/build.xml" />
 
@@ -29,21 +32,31 @@
 
 	<path id="classpath">
         <pathelement path="${buildBEAST_CLASSIC}"/>
-		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
-		<fileset dir="${libBeast2}" includes="commons-math3-3.1.1.jar"/>
-		<fileset dir="${libBeast2}" includes="fest.jar"/>
-		<fileset dir="${libBeast2}" includes="beagle.jar"/>
-		<fileset dir="${libBeast2}" includes="jam.jar"/>
-		<fileset dir="${libBeast2}" includes="colt.jar"/>
-		<fileset dir="${libBeast2}" includes="antlr-runtime-4.7.jar"/>
-		<fileset dir="${libBEAST_CLASSIC}" includes="mtj.jar"/>
+        <fileset dir="${libBeast2}/junit" includes="junit-platform-console-standalone-1.8.2.jar"/>
+        <fileset dir="${libBEAST_CLASSIC}" includes="mtj.jar"/>
+        <fileset dir="${libBeast2}" includes="beagle.jar"/>
+        <fileset dir="${libBeast2}" includes="antlr-runtime-4.10.1.jar"/>
+        <fileset dir="${libBeast2}" includes="beagle.jar"/> 
+        <fileset dir="${libBeast2}" includes="colt.jar"/> 
+		<fileset dir="${libBeast2}" includes="commons-math3-3.6.1.jar"/>
+		<fileset dir="${beastapplib}" includes="testfx.jar"/>
         <pathelement path="${beast2classpath}"/>
+        <pathelement path="${beastappclasspath}"/>
         <pathelement path="${BEASTLabsclasspath}"/>
 	</path>
 
 	<!-- start -->
 	<target name="initBEAST_CLASSIC">
 		<echo message="${ant.project.name}: ${ant.file}" />
+
+        <available file="${BEAST_CLASSICdir}/version.xml" property="versionAvailable"/>
+        <fail unless="versionAvailable">
+              ** Required file version.xml does not exist. **
+            </fail>
+
+        <!-- Read package name and version from xml file -->
+            <xmlproperty file="${BEAST_CLASSICdir}/version.xml" prefix="fromVersionFile" />
+        <property name="BEAST_CLASSICversion" value="${fromVersionFile.package(version)}" />
 	</target>
 
 	<target name="cleanBEAST_CLASSIC">
@@ -78,20 +91,16 @@
 		<mkdir dir="${buildBEAST_CLASSIC}" />
 
 		<!-- Compile the java code from ${srcBEAST_CLASSIC} into ${buildBEAST_CLASSIC} /bin -->
-		<javac target="1.8" srcdir="${srcBEAST_CLASSIC}" destdir="${buildBEAST_CLASSIC}" classpathref="classpath" 
+		<javac srcdir="${srcBEAST_CLASSIC}" destdir="${buildBEAST_CLASSIC}" classpathref="classpath" 
 		       fork="true"
 		       memoryinitialsize="256m"
 		       memorymaximumsize="256m"
-		 	   source="1.8"
-		       target="1.8">
-<!--
-		 	   source="1.6"
-		       target="1.6">
--->
-			<include name="beast/**/**" />
-			<include name="dr/**/**" />
+		       >
+			<include name="beastclassic/**/**" />
 			<!-- compile JUnit test classes -->
+			<!--
 			<include name="test/**" />
+			-->
 		</javac>
 		<echo message="Successfully compiled." />
 	</target>
@@ -128,8 +137,7 @@
 		</jar>
 		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.src.jar">
 			<fileset dir="${srcBEAST_CLASSIC}">
-				<include name="beast/**/*.java" />
-				<include name="dr/**/*.java" />
+				<include name="beastclassic/**/*.java" />
 				<include name="test/**/*.java" />
 				<include name="beast/**/*.png" />
 				<include name="beast/**/*.xsl" />
@@ -140,9 +148,8 @@
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
 			<fileset dir="${buildBEAST_CLASSIC}">
-				<include name="beast/**/*.class" />
-				<include name="dr/**/*.class" />
-				<include name="util/**/*.class" />
+				<include name="beastclassic/**/*.class" />
+				<include name="test/**/*.class" />
 				<include name="**/*.properties" />
 			</fileset>
 		</jar>
@@ -200,7 +207,7 @@
 		<mkdir dir="${Add_on_dir}/lib" />
 		<mkdir dir="${Add_on_dir}/examples" />
 		<mkdir dir="${Add_on_dir}/examples/nexus" />
-		<mkdir dir="${Add_on_dir}/templates" />
+		<mkdir dir="${Add_on_dir}/fxtemplates" />
 
 		<copy todir="${Add_on_dir}">
 			<fileset file="version.xml"/>
@@ -218,16 +225,16 @@
 		<copy todir="${Add_on_dir}">
 			<fileset dir="${distBEAST_CLASSIC}" includes="BEAST_CLASSIC.src.jar" />
 		</copy>
-		<copy todir="${Add_on_dir}/templates">
-			<fileset file="templates/discrete-trait.xml" />
-			<fileset file="templates/ClassicSubtseModels.xml" />
+		<copy todir="${Add_on_dir}/fxtemplates">
+			<fileset file="fxtemplates/discrete-trait.xml" />
+			<fileset file="fxtemplates/ClassicSubtseModels.xml" />
 		</copy>
-		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.addon.v${version}.zip">
+		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.addon.v${BEAST_CLASSICversion}.zip">
 			<fileset dir="${Add_on_dir}">
 				<include name="**/*" />
 			</fileset>
         </jar>
-		<echo message="Add-on version v${version} release is finished." />
+		<echo message="Add-on version v${BEAST_CLASSICversion} release is finished." />
 	</target>
 
 	<target name="tutorial">
