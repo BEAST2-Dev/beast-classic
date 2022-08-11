@@ -3,4 +3,67 @@
         <depends on='BEAST.app' atleast='2.7.0'/>
         <depends on='BEASTLabs' atleast='2.0.0'/>
 
+    <service type="beast.base.core.BEASTInterface">
+        <provider classname="beastclassic.app.beauti.BeautiDiscreteTraitProvider"/>
+        <provider classname="beastclassic.app.beauti.BeautiLocationTraitProvider"/>
+        <provider classname="beastclassic.continuous.FullyConjugateMultivariateTraitLikelihood"/>
+        <provider classname="beastclassic.continuous.MultivariateDiffusionModel"/>
+        <provider classname="beastclassic.continuous.SampledMultivariateTraitLikelihood"/>
+        <provider classname="beastclassic.evolution.alignment.AlignmentFromTrait"/>
+        <provider classname="beastclassic.evolution.alignment.AlignmentFromTraitMap"/>
+        <provider classname="beastclassic.evolution.datatype.ContinuousDataType"/>
+        <provider classname="beastclassic.evolution.datatype.LocationDataType"/>
+        <provider classname="beastclassic.evolution.likelihood.AncestralSequenceLogger"/>
+        <provider classname="beastclassic.evolution.likelihood.AncestralStateCounter"/>
+        <provider classname="beastclassic.evolution.likelihood.AncestralStateCounter2"/>
+        <provider classname="beastclassic.evolution.likelihood.AncestralStateInitialiser"/>
+        <provider classname="beastclassic.evolution.likelihood.AncestralStateTreeLikelihood"/>
+        <provider classname="beastclassic.evolution.likelihood.LeafTrait"/>
+        <provider classname="beastclassic.evolution.operators.BitFlipBSSVSOperator"/>
+        <provider classname="beastclassic.evolution.operators.GeneralIntegerOperator"/>
+        <provider classname="beastclassic.evolution.operators.GMRFMultilocusSkyrideBlockUpdateOperator"/>
+        <provider classname="beastclassic.evolution.operators.GMRFSkyrideBlockUpdateOperator"/>
+        <provider classname="beastclassic.evolution.operators.PickIndicatorOperator"/>
+        <provider classname="beastclassic.evolution.operators.PrecisionMatrixGibbsOperator"/>
+        <provider classname="beastclassic.evolution.operators.RegressionGibbsEffectOperator"/>
+        <provider classname="beastclassic.evolution.operators.RegressionGibbsPrecisionOperator"/>
+        <provider classname="beastclassic.evolution.operators.RootTraitRandowWalkOperator"/>
+        <provider classname="beastclassic.evolution.operators.SampleNonActiveGibbsOperator"/>
+        <provider classname="beastclassic.evolution.operators.SphereRandomWalker"/>
+        <provider classname="beastclassic.evolution.operators.TraitGibbsOperator"/>
+        <provider classname="beastclassic.evolution.speciation.BirthDeathSerialSampling"/>
+        <provider classname="beastclassic.evolution.substitutionmodel.FLU"/>
+        <provider classname="beastclassic.evolution.substitutionmodel.GLM"/>
+        <provider classname="beastclassic.evolution.substitutionmodel.GLMBasedSubstModel"/>
+        <provider classname="beastclassic.evolution.substitutionmodel.LG"/>
+        <provider classname="beastclassic.evolution.substitutionmodel.LogLinear"/>
+        <provider classname="beastclassic.evolution.substitutionmodel.SVSGeneralSubstitutionModel"/>
+        <provider classname="beastclassic.evolution.substitutionmodel.SVSGeneralSubstitutionModelLogger"/>
+        <provider classname="beastclassic.evolution.tree.coalescent.Expansion"/>
+        <provider classname="beastclassic.evolution.tree.coalescent.GMRFMultilocusSkyrideLikelihood"/>
+        <provider classname="beastclassic.evolution.tree.coalescent.GMRFSkyrideLikelihood"/>
+        <provider classname="beastclassic.evolution.tree.coalescent.LogisticGrowth"/>
+        <provider classname="beastclassic.evolution.tree.RootTrait"/>
+        <provider classname="beastclassic.evolution.tree.TreeTraitMap"/>
+        <provider classname="beastclassic.evolution.tree.TreeWithTraitLogger"/>
+        <provider classname="beastclassic.geo.GeoSpatialDistribution"/>
+        <provider classname="beastclassic.inference.distribution.GeneralizedLinearModel"/>
+        <provider classname="beastclassic.inference.distribution.LinearRegression"/>
+        <provider classname="beastclassic.inference.distribution.LogisticRegression"/>
+        <provider classname="beastclassic.math.distributions.CTMCScalePrior"/>
+        <provider classname="beastclassic.math.distributions.MultivariateNormalDistribution"/>
+        <provider classname="beastclassic.math.distributions.WishartDistribution"/>
+        <provider classname="beastclassic.phylogeography.RateIndicatorInitializer"/>
+    </service>
+
+    <service type="beast.base.evolution.datatype.DataType">
+        <provider classname="beastclassic.evolution.datatype.ContinuousDataType"/>
+        <provider classname="beastclassic.evolution.datatype.LocationDataType"/>
+    </service>
+
+    <service type="beastfx.app.inputeditor.InputEditor">
+        <provider classname="beastclassic.app.beauti.LocationInputEditor"/>
+        <provider classname="beastclassic.app.beauti.TraitInputEditor"/>
+    </service>
+
 </package>

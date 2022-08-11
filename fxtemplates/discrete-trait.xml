@@ -24,7 +24,7 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
 <![CDATA[
         <!--distribution spec="CompoundDistribution" id="discrete-trait.$(n)" ignore="true"-->
 			<distribution id="traitedtreeLikelihood.$(n)" spec='beastclassic.evolution.likelihood.AncestralStateTreeLikelihood' useJava="true" tag="location" tree='@Tree.t:$(n)'> 
-				<data spec="beast.base.evolution.alignment.AlignmentFromTrait" id='$(n)'>
+				<data spec="beastclassic.evolution.alignment.AlignmentFromTrait" id='$(n)'>
 					<userDataType spec='beast.base.evolution.datatype.UserDataType' id='traitDataType.$(n)' 
 						states='4'
 						codelength='-1'
@@ -55,7 +55,7 @@ suppressInputs='beast.evolution.substitutionmodel.SVSGeneralSubstitutionModel.ra
         <!--/distribution-->
 
 		<logger id='treeWithTraitLogger.$(n)' logEvery="10000" fileName="$(n)_tree_with_trait.trees" mode="tree">
-			<log id="treeWithTraitLoggerItem.t:$(n)" spec='beast.base.evolution.tree.TreeWithTraitLogger' tree='@Tree.t:$(n)'>
+			<log id="treeWithTraitLoggerItem.t:$(n)" spec='beastclassic.evolution.tree.TreeWithTraitLogger' tree='@Tree.t:$(n)'>
 				<metadata idref="posterior"/>
 				<metadata idref="traitedtreeLikelihood.$(n)"/>
 			</log>
@@ -131,8 +131,8 @@ suppressInputs='beast.evolution.substitutionmodel.LocationSubstitutionModel.freq
 	<multivariateTraitLikelihood id="locationtreeLikelihood.$(n)" spec='beastclassic.continuous.SampledMultivariateTraitLikelihood'
 		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@Tree.t:$(n)'>
 		<traitParameter id='location.$(n)' spec='parameter.RealParameter' value='0 0' minordimension='2'/>
-	    <data spec='beastclasssic.evolution.alignment.AlignmentFromTraitMap' id='$(n)'>
-			<userDataType spec='beast.evolution.datatype.LocationDataType'/>
+	    <data spec='beastclassic.evolution.alignment.AlignmentFromTraitMap' id='$(n)'>
+			<userDataType spec='beastclassic.evolution.datatype.LocationDataType'/>
 			<traitMap id='traitmap.s:$(n)' spec='beastclassic.evolution.tree.TreeTraitMap' tree='@Tree.t:$(n)' parameter='@location.$(n)' traitName='location' 
 				randomizeupper="90 180" randomizelower="-90 -180">
 			</traitMap>

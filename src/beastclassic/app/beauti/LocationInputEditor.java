@@ -11,18 +11,25 @@ import beastfx.app.util.Alert;
 import beastfx.app.util.FXUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.util.Callback;
 import beastclassic.evolution.tree.TreeTraitMap;
 import beastclassic.app.beauti.TraitInputEditor.LocationMap;
 import beastclassic.continuous.SampledMultivariateTraitLikelihood;
@@ -38,6 +45,7 @@ import javax.script.ScriptEngineManager;
 import beast.base.core.BEASTInterface;
 import beast.base.core.BEASTObject;
 import beast.base.core.Input;
+import beast.base.core.Log;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.alignment.TaxonSet;
 import beast.base.evolution.tree.Tree;
@@ -182,27 +190,98 @@ public class LocationInputEditor extends ListInputEditor {
         table.setItems(taxonMapping);
 
         TableColumn<LocationMap, String> col1 = new TableColumn<>("Taxon");
-        col1.setPrefWidth(500);
+        col1.setPrefWidth(700);
         col1.setEditable(false);
         col1.setCellValueFactory(
         	    new PropertyValueFactory<LocationMap,String>("Taxon")
         	);
         table.getColumns().add(col1);        
 
-        TableColumn<LocationMap, String> col2 = new TableColumn<>("Latitude");
-        col2.setPrefWidth(500);
-        col2.setEditable(false);
+        TableColumn<LocationMap, Double> col2 = new TableColumn<>("Latitude");
+        col2.setPrefWidth(100);
+        col2.setEditable(true);
         col2.setCellValueFactory(
-        	    new PropertyValueFactory<LocationMap,String>("Latitude")
+        	    new PropertyValueFactory<LocationMap,Double>("Latitude")
         	);
+        col2.setCellFactory(new Callback<TableColumn<LocationMap, Double>,TableCell<LocationMap, Double>>() {
+			@Override
+			public TableCell<LocationMap, Double> call(TableColumn<LocationMap, Double> param) {
+				StringConverter<Double> sc = new DoubleStringConverter();
+				TextFieldTableCell<LocationMap, Double> tc = new TextFieldTableCell<LocationMap, Double>(sc) {
+                    @Override
+                    public void updateItem(Double item, boolean empty) {
+                      super.updateItem(item, empty);
+                      if (!isEmpty()) {
+                        if (!Double.isNaN(item)) { 
+                        	this.setTextFill(Color.GREEN);
+                        } else { 
+                        	this.setTextFill(Color.RED);
+                        }
+                        setText(String.valueOf(item));
+                      }
+                    }
+                  };
+                  tc.setConverter(sc);
+                  return tc;
+              }
+		});
+        col2.setOnEditCommit(
+                new EventHandler<CellEditEvent<LocationMap, Double>>() {
+  					@Override
+  					public void handle(CellEditEvent<LocationMap, Double> event) {
+  						Double newValue = event.getNewValue();
+  						LocationMap location = event.getRowValue();
+  						location.setLatitude(newValue);
+  						convertTableDataToTrait();
+  						validateInput();
+  						table.refresh();
+  					}
+  				}                
+            );
+
         table.getColumns().add(col2);
         
-        TableColumn<LocationMap, String> col3 = new TableColumn<>("Longitude");
-        col3.setPrefWidth(500);
-        col3.setEditable(false);
+        TableColumn<LocationMap, Double> col3 = new TableColumn<>("Longitude");
+        col3.setPrefWidth(100);
+        col3.setEditable(true);
         col3.setCellValueFactory(
-        	    new PropertyValueFactory<LocationMap,String>("Longitude")
+        	    new PropertyValueFactory<LocationMap,Double>("Longitude")
         	);
+        col3.setCellFactory(new Callback<TableColumn<LocationMap, Double>,TableCell<LocationMap, Double>>() {
+			@Override
+			public TableCell<LocationMap, Double> call(TableColumn<LocationMap, Double> param) {
+				StringConverter<Double> sc = new DoubleStringConverter();
+				TextFieldTableCell<LocationMap, Double> tc = new TextFieldTableCell<LocationMap, Double>(sc) {
+                    @Override
+                    public void updateItem(Double item, boolean empty) {
+                      super.updateItem(item, empty);
+                      if (!isEmpty()) {
+                        if (!Double.isNaN(item)) { 
+                        	this.setTextFill(Color.GREEN);
+                        } else { 
+                        	this.setTextFill(Color.RED);
+                        }
+                        setText(String.valueOf(item));
+                      }
+                    }
+                  };
+                  tc.setConverter(sc);
+                  return tc;
+              }
+		});
+        col3.setOnEditCommit(
+                new EventHandler<CellEditEvent<LocationMap, Double>>() {
+  					@Override
+  					public void handle(CellEditEvent<LocationMap, Double> event) {
+  						Double newValue = event.getNewValue();
+  						LocationMap location = event.getRowValue();
+  						location.setLongitude(newValue);
+  						convertTableDataToTrait();
+  						validateInput();
+  						table.refresh();
+  					}
+  				}                
+            );
         table.getColumns().add(col3);   
         
 //        table = new Table(tableData, columnData) {
@@ -341,7 +420,9 @@ public class LocationInputEditor extends ListInputEditor {
             }
         }
 
-        table.refresh();
+        if (table != null) {
+        	table.refresh();
+        }
 //        if (table != null) {
 //            for (int i = 0; i < taxonMapping.size(); i++) {
 //                table.setValueAt(tableData[i][1], i, 1);
@@ -493,6 +574,9 @@ public class LocationInputEditor extends ListInputEditor {
     		}
     	}
         convertTableDataToTrait();
+        if (table != null) {
+        	table.refresh();
+        }
         validateInput();
         //convertTraitToTableData();
         repaint();
@@ -518,13 +602,14 @@ public class LocationInputEditor extends ListInputEditor {
     
     
     // a JavaScript engine
-    static ScriptEngine m_engine;
-    {
-		// create a script engine manager
-	    ScriptEngineManager factory = new ScriptEngineManager();
-	    // create a JavaScript engine
-	    m_engine = factory.getEngineByName("JavaScript");
-    }
+    //static ScriptEngine m_engine = null;
+    
+//    private void initEngine() {
+//		// create a script engine manager
+//	    ScriptEngineManager factory = new ScriptEngineManager();
+//	    // create a JavaScript engine
+//	    m_engine = factory.getEngineByName("nashorn");
+//    }
 
     private void manipulate(int column) {
 		String operatee = (column == 1 ? "latitude" : "longitude");
@@ -547,29 +632,34 @@ public class LocationInputEditor extends ListInputEditor {
 			} catch (Exception e) {
 				value = "0";
 			}
-			String newValue = value(formula, value);
+			double newValue = value(formula, value);
 			if (column == 1) {
-					taxonMapping.get(i).latitude = parseDouble(newValue);
+					taxonMapping.get(i).latitude = newValue;
 			} else {
-					taxonMapping.get(i).longitude = parseDouble(newValue);
+					taxonMapping.get(i).longitude = newValue;
 			}
 		}
 		convertTableDataToTrait();
 		validateInput();
-		repaint();
+		table.refresh();
 	}
 
-	String value(String formula, String value) {
-		String sFormula = "with (Math) {" + formula + "}";
+	double value(String sFormula, String value) {
+//		String sFormula = "with (Math) {" + formula + "}";
 		sFormula = sFormula.replaceAll("\\$x", "("+value+")");
-		System.err.println("parsing " + sFormula);
-		try {
-			Object o = m_engine.eval(sFormula);
-			String sValue = o.toString();
-			return sValue;
-		} catch (javax.script.ScriptException es) {
-			return es.getMessage();
-		}
+		Log.debug.print("parsing " + sFormula);
+//		try {
+//			if (m_engine == null) {
+//				initEngine();
+//			}
+//			Object o = m_engine.eval(sFormula);
+//			String sValue = o.toString();
+			double s = ScriptUtil.eval(sFormula);
+			Log.debug.println(" = " + s);
+			return s;
+//		} catch (javax.script.ScriptException es) {
+//			return es.getMessage();
+//		}
 	}
 
     

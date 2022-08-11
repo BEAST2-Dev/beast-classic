@@ -2,27 +2,25 @@ package beastclassic.app.beauti;
 
 import javax.swing.JDialog;
 
-import java.awt.Frame;
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.GridBagConstraints;
-import javax.swing.JComboBox;
-import javax.swing.border.EmptyBorder;
-
+import beastfx.app.beauti.ThemeProvider;
 import beastfx.app.inputeditor.BeautiDoc;
+import beastfx.app.util.FXUtils;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
-
-import java.awt.Insets;
 import java.util.List;
+import java.util.Optional;
 
-public class TraitDialog extends JPanel {
-	private static final long serialVersionUID = 1L;
+public class TraitDialog extends DialogPane {
 	
-	private JTextField txtTraitname;
-	JComboBox comboBox;
+	private TextField txtTraitname;
+	ComboBox comboBox;
 	String tree;
 	public String getTree() {
 		return tree;
@@ -35,60 +33,49 @@ public class TraitDialog extends JPanel {
 	String name;
 	
 	public TraitDialog(BeautiDoc doc, List<String> trees) {
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWeights = new double[]{1.0, 0.0};
-		setLayout(gridBagLayout);
+		VBox box  = FXUtils.newVBox();
 		
-		JLabel lblTraitName = new JLabel("Trait name");
-		GridBagConstraints gbc_lblTraitName = new GridBagConstraints();
-		gbc_lblTraitName.anchor = GridBagConstraints.EAST;
-		gbc_lblTraitName.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTraitName.gridx = 0;
-		gbc_lblTraitName.gridy = 0;
-		add(lblTraitName, gbc_lblTraitName);
+		HBox traitNameBox = FXUtils.newHBox(); 
+		Label lblTraitName = new Label("Trait name");
+		lblTraitName.setMinWidth(100);
+		traitNameBox.getChildren().add(lblTraitName);
 		
-		txtTraitname = new JTextField();
-		txtTraitname.setName("traitname");
+		txtTraitname = new TextField();
+		txtTraitname.setId("traitname");
 		txtTraitname.setText("newTrait");
-		GridBagConstraints gbc_txtTraitname = new GridBagConstraints();
-		gbc_txtTraitname.insets = new Insets(0, 0, 5, 0);
-		gbc_txtTraitname.gridx = 1;
-		gbc_txtTraitname.gridy = 0;
-		add(txtTraitname, gbc_txtTraitname);
-		txtTraitname.setColumns(10);
+		traitNameBox.getChildren().add(txtTraitname);
+		txtTraitname.setMinWidth(200);
+		box.getChildren().add(traitNameBox);
+
+		HBox treeBox = FXUtils.newHBox(); 
+		Label lblTree = new Label("Tree");
+		lblTree.setMinWidth(100);
+		treeBox.getChildren().add(lblTree);
 		
-		JLabel lblTree = new JLabel("Tree");
-		GridBagConstraints gbc_lblTree = new GridBagConstraints();
-		gbc_lblTree.insets = new Insets(0, 0, 0, 5);
-		gbc_lblTree.anchor = GridBagConstraints.EAST;
-		gbc_lblTree.gridx = 0;
-		gbc_lblTree.gridy = 1;
-		add(lblTree, gbc_lblTree);
-		
-		comboBox = new JComboBox(trees.toArray());
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
-		gbc_comboBox.gridx = 1;
-		gbc_comboBox.gridy = 1;
-		add(comboBox, gbc_comboBox);
+		comboBox = new ComboBox();
+		comboBox.getItems().addAll(trees.toArray());
+		comboBox.getSelectionModel().select(0);
+		comboBox.setMinWidth(200);
+		treeBox.getChildren().add(comboBox);
+		box.getChildren().add(treeBox);
+		getChildren().add(box);
 	}
 
 	public boolean showDialog(String title) {
-        JOptionPane optionPane = new JOptionPane(this, JOptionPane.PLAIN_MESSAGE,
-                JOptionPane.OK_CANCEL_OPTION, null, new String[]{"Cancel", "OK"}, "OK");
-        optionPane.setBorder(new EmptyBorder(12, 12, 12, 12));
+		Dialog dlg = new Dialog();
+		dlg.setDialogPane(this);
+		getButtonTypes().add(ButtonType.CANCEL);
+		getButtonTypes().add(ButtonType.OK);
+    	dlg.setTitle("Specify trait name and tree");
+    	setMinHeight(260);
+    	ThemeProvider.loadStyleSheet(dlg.getDialogPane().getScene());
 
-        final JDialog dialog = optionPane.createDialog(Frame.getFrames()[0], title);
-    	dialog.setName("TraitDialog");
-        // dialog.setResizable(true);
-        dialog.pack();
-
-        dialog.setVisible(true);
-        if (!optionPane.getValue().equals("OK")) {
+    	Optional<ButtonType> result = dlg.showAndWait();
+        if (!result.get().toString().contains("OK")) {
             return false;
         }
         
-        tree = (String) comboBox.getSelectedItem();
+        tree = (String) comboBox.getSelectionModel().getSelectedItem();
         name = txtTraitname.getText().trim();
         return true;
 	}

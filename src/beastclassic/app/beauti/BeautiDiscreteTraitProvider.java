@@ -10,6 +10,9 @@ import javax.swing.border.EmptyBorder;
 
 import beastfx.app.inputeditor.BeautiAlignmentProvider;
 import beastfx.app.inputeditor.BeautiDoc;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import beast.base.core.BEASTInterface;
 import beast.base.core.Description;
 import beast.base.inference.State;
@@ -81,16 +84,17 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 			if (output instanceof AncestralStateTreeLikelihood) {
 				likelihood = (AncestralStateTreeLikelihood) output;
 				editor.initPanel(likelihood);
-		        JOptionPane optionPane = new JOptionPane(editor, JOptionPane.PLAIN_MESSAGE,
-		                JOptionPane.CLOSED_OPTION, null, new String[]{"Close"}, "Close");
-		        optionPane.setBorder(new EmptyBorder(12, 12, 12, 12));
-
-		        final JDialog dialog = optionPane.createDialog(Frame.getFrames()[0], "Discrete trait editor");
-		    	dialog.setName("DiscreteTraitEditor");
-		        // dialog.setResizable(true);
-		        dialog.pack();
-
-		        dialog.setVisible(true);
+				
+				Dialog dlg = new Dialog();
+				DialogPane pane = new DialogPane();
+				pane.setContent(editor);
+				pane.getButtonTypes().add(ButtonType.CLOSE);
+				dlg.setDialogPane(pane);
+				dlg.setTitle("Discrete trait editor");
+		    	pane.setId("DiscreteTraitEditor");
+		        dlg.setResizable(true);
+		        dlg.showAndWait();
+		        
 		        try {
 			        AlignmentFromTrait traitData = (AlignmentFromTrait) likelihood.dataInput.get();
 			        int stateCount = ((UserDataType) traitData.userDataTypeInput.get()).stateCountInput.get();

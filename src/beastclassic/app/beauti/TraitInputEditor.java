@@ -16,6 +16,8 @@ import beastfx.app.inputeditor.TaxonSetInputEditor.TaxonMap;
 import beastfx.app.util.FXUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -24,7 +26,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -201,7 +205,7 @@ public class TraitInputEditor extends ListInputEditor {
 
 
 
-    private ScrollPane createListBox() {
+    private TableView createListBox() {
     	try {
     		traitSet.taxaInput.get().initAndValidate();
     		
@@ -253,14 +257,26 @@ public class TraitInputEditor extends ListInputEditor {
 
       TableColumn<LocationMap, String> col2 = new TableColumn<>("Trait");
       col2.setPrefWidth(500);
-      col2.setEditable(false);
+      col2.setEditable(true);
       col2.setCellValueFactory(
       	    new PropertyValueFactory<LocationMap,String>("Trait")
       	);
+      col2.setCellFactory(TextFieldTableCell.forTableColumn());
+      col2.setOnEditCommit(
+              new EventHandler<CellEditEvent<LocationMap, String>>() {
+					@Override
+					public void handle(CellEditEvent<LocationMap, String> event) {
+						String newValue = event.getNewValue();
+						LocationMap location = event.getRowValue();
+						location.setTrait(newValue);
+						convertTableDataToTrait();
+  						validateInput();
+					}
+				}                
+          );
+      
       table.getColumns().add(col2);        
-        
-        
-        
+      
 //        table = new JTable(tableData, columnData) {
 //            private static final long serialVersionUID = 1L;
 //
@@ -344,8 +360,7 @@ public class TraitInputEditor extends ListInputEditor {
 //        });
 //        table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 //        table.setRowHeight(24);
-        ScrollPane scrollPane = new ScrollPane(table);
-        return scrollPane;
+        return table;
     } // createListBox
 
     /* synchronise table with data from traitSet Plugin */
@@ -401,6 +416,8 @@ public class TraitInputEditor extends ListInputEditor {
             }
         }
         try {
+System.err.println("TRAIT=" + sTrait);
+
             traitSet.traitsInput.setValue(sTrait, traitSet);
         } catch (Exception e) {
             e.printStackTrace();
@@ -481,7 +498,11 @@ public class TraitInputEditor extends ListInputEditor {
         clearButton.setOnAction(e-> {
                 try {
                     traitSet.traitsInput.setValue("", traitSet);
+                    convertTraitToTableData();
                     convertTableDataToDataType();
+                    if (table != null) {
+                        table.refresh();
+                    }
                 } catch (Exception ex) {
                     // TODO: handle exception
                 }
