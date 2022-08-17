@@ -11,8 +11,8 @@ import beast.base.inference.parameter.BooleanParameter;
 import beast.base.inference.parameter.Parameter;
 import beastclassic.inference.BayesianStochasticSearchVariableSelection;
 import beast.base.core.Log;
+import beast.base.evolution.substitutionmodel.ComplexSubstitutionModel;
 import beast.base.evolution.substitutionmodel.DefaultEigenSystem;
-import beastlabs.evolution.substitutionmodel.ComplexSubstitutionModel;
 
 
 

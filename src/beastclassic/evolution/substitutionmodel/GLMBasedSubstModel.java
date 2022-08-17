@@ -4,8 +4,8 @@ package beastclassic.evolution.substitutionmodel;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
+import beast.base.evolution.substitutionmodel.ComplexColtEigenSystem;
 import beast.base.evolution.substitutionmodel.GeneralSubstitutionModel;
-import beastlabs.evolution.substitutionmodel.ComplexColtEigenSystem;
 
 @Description("Subst model where the rates are determined by a generalised linear model (GLM)")
 public class GLMBasedSubstModel extends GeneralSubstitutionModel {
