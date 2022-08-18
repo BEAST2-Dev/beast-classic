@@ -18,8 +18,6 @@
 	<property name="libBeast2" location="${beast2path}/lib" />
 	<property name="srcBeast2" location="${beast2path}/src" />
 	<property name="beast2classpath" location="${beast2path}/build" />
-	<property name="BEASTLabspath" location="../BEASTLabs" />
-	<property name="BEASTLabsclasspath" location="${BEASTLabspath}/build" />
     <property name="beastappdir" location="../BeastFX/" />
     <property name="beastappclasspath" location="${beastappdir}/build" />
     <property name="beastapplib" location="${beastappdir}/locallib" />
@@ -42,7 +40,6 @@
 		<fileset dir="${beastapplib}" includes="testfx.jar"/>
         <pathelement path="${beast2classpath}"/>
         <pathelement path="${beastappclasspath}"/>
-        <pathelement path="${BEASTLabsclasspath}"/>
 	</path>
 
 	<!-- start -->
@@ -125,9 +122,6 @@
 				<include name="beast/**/*.png" />
 				<include name="beagle/**/*.class" />
 				<include name="org/**/*.class" />
-			</fileset>
-			<fileset dir="${BEASTLabsclasspath}">
-				<include name="beast/**/*.class" />
 			</fileset>
 			<zipgroupfileset dir="${libBeast2}" includes="jam.jar" />
 			<zipgroupfileset dir="${libBeast2}" includes="beagle.jar" />
