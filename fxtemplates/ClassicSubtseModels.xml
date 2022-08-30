@@ -8,13 +8,13 @@
                      	beastclassic.evolution.substitutionmodel.LG.rates,
                      	beastclassic.evolution.substitutionmodel.LG.frequencies'
                      mainid='LG.s:$(n)'>
-            <![CDATA[<plugin spec='LG' id='LG.s:$(n)'/>]]></subtemplate>
+            <![CDATA[<plugin spec='beastclassic.evolution.substitutionmodel.LG' id='LG.s:$(n)'/>]]></subtemplate>
         <subtemplate id="FLU" class='beastclassic.evolution.substitutionmodel.FLU'
                      suppressInputs='beastclassic.evolution.substitutionmodel.FLU.eigenSystem,
                      	beastclassic.evolution.substitutionmodel.FLU.rates,
                      	beastclassic.evolution.substitutionmodel.FLU.frequencies'
                      mainid='FLU.s:$(n)'>
-            <![CDATA[<plugin spec='FLU' id='FLU.s:$(n)'/>]]></subtemplate>
+            <![CDATA[<plugin spec='beastclassic.evolution.substitutionmodel.FLU' id='FLU.s:$(n)'/>]]></subtemplate>
     </mergewith>
     
     
