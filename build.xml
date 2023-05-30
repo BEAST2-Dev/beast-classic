@@ -222,6 +222,7 @@
 		<copy todir="${Add_on_dir}/fxtemplates">
 			<fileset file="fxtemplates/discrete-trait.xml" />
 			<fileset file="fxtemplates/ClassicSubtseModels.xml" />
+			<fileset file="fxtemplates/ClassicTreePriors.xml" />
 			<fileset file="fxtemplates/RelaxedClockModels.xml" />
 			<fileset file="fxtemplates/StarBeast.xml" />
 		</copy>

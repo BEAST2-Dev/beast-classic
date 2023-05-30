@@ -35,6 +35,7 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
             "If false, n(n-1) rates and indicators need to be specified.", Boolean.TRUE);
 
     private BooleanParameter rateIndicator;
+    private boolean isSymmetric = false;
 
     @Override
     public void initAndValidate(){
@@ -57,6 +58,7 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
             }
             Log.warning.println("Setting dimension of indicators to " + dim);
             indicator.get().setDimension(dim);
+            isSymmetric = true;
         }
 
         if (!isSymmetricInput.get() && eigenSystemClass.equals(DefaultEigenSystem.class.getName())) {
@@ -248,5 +250,10 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
     	}
 
     	return super.requiresRecalculation();
+    }
+    
+    @Override
+    public boolean canReturnComplexDiagonalization() {
+    	return isSymmetric;
     }
 }

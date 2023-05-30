@@ -195,7 +195,7 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 
 		/* Force all entries in groupSizeParameter = 1 for compatibility with Tracer */
 		if (groupSizeParameter != null) {
-			groupSizeParameter.initByName("value","1.0");
+			groupSizeParameter.initByName("value", "1.0", "dimension", correctFieldLength);
 //			for (int i = 0; i < groupSizeParameter.getDimension(); i++)
 //				groupSizeParameter.setValue(i, 1.0);
 		}

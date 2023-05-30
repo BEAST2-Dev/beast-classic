@@ -617,7 +617,7 @@ public class LocationInputEditor extends ListInputEditor {
 				" e.g., -$x to make values negative\n" +
 				"180+$x to add 180 to " + operatee + "\n" +
 				"$x*2+10 to multiply by 2 and add 10\n" +
-				"max($x,100) to get the maximum of " + operatee + " and 100", "Manipulate " + operatee, Alert.QUESTION_MESSAGE, "$x");
+				"max($x,100) to get the maximum of " + operatee + " and 100", "Manipulate " + operatee, Alert.QUESTION_MESSAGE, "$x").get();
 		if (formula == null || formula.trim().length() == 0) {
 			return;
 		}

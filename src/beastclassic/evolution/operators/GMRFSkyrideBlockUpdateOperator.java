@@ -13,6 +13,7 @@ import beast.base.core.Input;
 import beast.base.inference.Operator;
 import beast.base.inference.StateNode;
 import beast.base.core.Input.Validate;
+import beast.base.evolution.tree.TreeInterface;
 import beast.base.inference.parameter.RealParameter;
 import beast.base.util.Randomizer;
 import beastclassic.evolution.tree.coalescent.GMRFSkyrideLikelihood;
@@ -51,7 +52,9 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 
     @Override
     public void initAndValidate() {
-        gmrfField = GMRFSkyrideLikelihoodInput .get();
+        gmrfField = GMRFSkyrideLikelihoodInput.get();
+        TreeInterface tree = gmrfField.treeInput.get();
+        int internalNodes = tree.getInternalNodeCount();
         popSizeParameter = gmrfField.getPopSizeParameter();
         precisionParameter = gmrfField.getPrecisionParameter();
         lambdaParameter = gmrfField.getLambdaParameter();
