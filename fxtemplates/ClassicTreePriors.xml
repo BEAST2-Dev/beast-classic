@@ -26,23 +26,27 @@
                 </Gamma>
  			</prior>
 			
-			<operator id="SkyrideBlockUpdateOperator.t:$(n)" spec='beastclassic.evolution.operators.GMRFSkyrideBlockUpdateOperator' weight="3" scaleFactor="2.0" maxIterations="200" 
-                                 stopValue="0.01" likelihood='@SkyRide.t:$(n)'/>
     		<operator id="SkyRidePopSizeWalker.t:$(n)" scaleFactor="0.5" spec="kernel.BactrianRandomWalkOperator" parameter="@skyrideLogPopSize.t:$(n)" weight="3.0"/>
-    		<operator id="SkyRidePrecisionScaler.t:$(n)" scaleFactor="0.5" spec="kernel.BactrianScaleOperator" parameter="@skyridePrecision.t:$(n)" weight="0.1"/>
-			<operator id="SkyRideAVMNOperator.t:$(n)" spec="beast.base.evolution.operator.kernel.AdaptableVarianceMultivariateNormalOperator" weight="3.0" 
-                coefficient="1.0"
-                scaleFactor="1"
-                beta="0.05"
-                initial="800"
-                burnin="400"
-                every="1" allowNonsense="true">
-                <transformations id="SkyRideLogTransform.t:$(n)" spec="beast.base.inference.operator.kernel.Transform$LogTransform">
-                        <f idref="skyridePrecision.t:$(n)"/>
-                </transformations>
-                <transformations id="SkyRideNoTransform.t:$(n)" spec="beast.base.inference.operator.kernel.Transform$NoTransform">
-                        <f idref="skyrideLogPopSize.t:$(n)"/>
-                </transformations>
+		    <operator id="SkyRideAdaptablePopSizeOperator.t:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" weight="10.0">
+		        <parameter idref="skyrideLogPopSize.t:$(n)"/>
+		    	
+				<operator id="SkyrideBlockUpdateOperator.t:$(n)" spec='beastclassic.evolution.operators.GMRFSkyrideBlockUpdateOperator' weight="3" scaleFactor="2.0" maxIterations="200" 
+                                 stopValue="0.01" likelihood='@SkyRide.t:$(n)'/>
+    			<operator id="SkyRidePrecisionScaler.t:$(n)" scaleFactor="0.5" spec="kernel.BactrianScaleOperator" parameter="@skyridePrecision.t:$(n)" weight="0.1"/>
+				<operator id="SkyRideAVMNOperator.t:$(n)" spec="beast.base.evolution.operator.kernel.AdaptableVarianceMultivariateNormalOperator" weight="3.0" 
+    	            coefficient="1.0"
+        	        scaleFactor="1"
+            	    beta="0.05"
+                	initial="800"
+	                burnin="400"
+    	            every="1" allowNonsense="true">
+        	        <transformations id="SkyRideLogTransform.t:$(n)" spec="beast.base.inference.operator.kernel.Transform$LogTransform">
+            	            <f idref="skyridePrecision.t:$(n)"/>
+                	</transformations>
+	                <transformations id="SkyRideNoTransform.t:$(n)" spec="beast.base.inference.operator.kernel.Transform$NoTransform">
+    	                    <f idref="skyrideLogPopSize.t:$(n)"/>
+        	        </transformations>
+	    		</operator>
     		</operator>
 			]]>
 			
@@ -66,21 +70,13 @@
                 Sky Ride precision of partition t:$(n)
             </connect>
             
-            <connect srcID='SkyrideBlockUpdateOperator.t:$(n)' targetID='mcmc' inputName='operator'
+            <connect srcID='SkyRideAdaptablePopSizeOperator.t:$(n)' targetID='mcmc' inputName='operator'
                      if='inposterior(SkyRide.t:$(n)) and inposterior(Tree.t:$(n))'>
-                Block update of Sky Ride parameters of tree t:$(n)
+                Adaptable update of Sky Ride parameters of tree t:$(n)
             </connect>
             <connect srcID='SkyRidePrecisionScaler.t:$(n)' targetID='mcmc' inputName='operator'
                      if='inposterior(SkyRide.t:$(n)) and inposterior(Tree.t:$(n)) and skyridePrecision.t:$(n)/estimate=true'>
                 Scale precision of Sky Ride prior of tree t:$(n)
-            </connect>
-            <connect srcID='SkyRidePopSizeWalker.t:$(n)' targetID='mcmc' inputName='operator'
-                     if='inposterior(SkyRide.t:$(n)) and inposterior(Tree.t:$(n)) and skyrideLogPopSize.t:$(n)/estimate=true'>
-                Random walk for Log Pop Sizes of Sky Ride prior of tree t:$(n)
-            </connect>
-            <connect srcID='SkyRideAVMNOperator.t:$(n)' targetID='mcmc' inputName='operator'
-                     if='inposterior(SkyRide.t:$(n)) and inposterior(Tree.t:$(n))'>
-                AVMN operator for parameters of Sky Ride prior of tree t:$(n)
             </connect>
 
             <connect srcID='SkyRide.t:$(n)' targetID='tracelog' inputName='log'
