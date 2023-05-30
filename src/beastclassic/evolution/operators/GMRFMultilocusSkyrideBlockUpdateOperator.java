@@ -432,7 +432,9 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
     	List<StateNode> stateNodes = new ArrayList<>();
     	stateNodes.add(popSizeParameter);
     	stateNodes.add(precisionParameter);
-    	stateNodes.add(lambdaParameter);
+    	if (lambdaParameter!= null && lambdaParameter.isEstimated()) {
+    		stateNodes.add(lambdaParameter);
+    	}
     	return stateNodes;
     }
 }

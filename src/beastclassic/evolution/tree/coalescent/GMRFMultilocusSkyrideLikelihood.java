@@ -2,6 +2,7 @@ package beastclassic.evolution.tree.coalescent;
 
 import beast.base.core.Citation;
 import beast.base.core.Description;
+import beast.base.core.Function;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.inference.parameter.RealParameter;
@@ -11,6 +12,7 @@ import beast.base.evolution.tree.TreeIntervals;
 import no.uib.cipr.matrix.DenseVector;
 import no.uib.cipr.matrix.SymmTridiagMatrix;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,7 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 	public GMRFMultilocusSkyrideLikelihood() {
 		treeInput.setRule(Validate.OPTIONAL);
 		treeIntervalsInput.setRule(Validate.OPTIONAL);
+		groupParameterInput.setRule(Validate.OPTIONAL);
 	}
 	
 //	public Input<List<TreeIntervals>> intervalsInput = new Input<>("intervals", "for internal use", new ArrayList<>());
@@ -69,9 +72,13 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 //    	super.initAndValidate();
 
         this.popSizeParameter = popSizeParameterInput.get();
-        this.groupSizeParameter = groupParameterInput.get();
+//        this.groupSizeParameter = groupParameterInput.get();
         this.precisionParameter = precParameterInput.get();
         this.lambdaParameter = lambdaInput.get();
+        if (lambdaParameter == null) {
+        	lambdaParameter = new RealParameter("1.0");
+        	lambdaParameter.initByName("estimate", false);
+        }
         this.betaParameter = betaInput.get();
         this.dMatrix = dMatrixInput.get();
         this.timeAwareSmoothing = timeAwareSmoothingInput.get();
@@ -112,7 +119,10 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
         oldFieldLength = getCorrectOldFieldLength();
 
 
-        if (ploidyFactors.getDimension() != treeList.size()) {
+        if (ploidyFactors == null) {
+        	ploidyFactors = new RealParameter("1.0");
+        	ploidyFactors.setDimension(treeList.size());
+        } else if (ploidyFactors.getDimension() != treeList.size()) {
             throw new IllegalArgumentException("Ploidy factors parameter should have length " + treeList.size());
         }
 
@@ -137,10 +147,10 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
         initializationReport();
 
         /* Force all entries in groupSizeParameter = 1 for compatibility with Tracer */
-        if (groupSizeParameter != null) {
-            for (int i = 0; i < groupSizeParameter.getDimension(); i++)
-                groupSizeParameter.setValue(i, 1.0);
-        }
+//        if (groupSizeParameter != null) {
+//            for (int i = 0; i < groupSizeParameter.getDimension(); i++)
+//                groupSizeParameter.setValue(i, 1.0);
+//        }
 
         this.coalescentEventStatisticValues = new double[getNumberOfCoalescentEvents()];
 
@@ -720,4 +730,20 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
         return null;
     }*/
 
+    @Override
+    public void init(PrintStream out) {
+    	super.init(out);
+    	out.print("skyGrid.cutOff\t");
+    }
+    
+    @Override
+    public void log(long sample, PrintStream out) {
+    	super.log(sample, out);
+    	out.print(cutOff + "\t");
+    }
+    
+    @Override
+    public void close(PrintStream out) {
+    	super.close(out);
+    }
 }

@@ -712,8 +712,10 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 		storedWeightMatrix = weightMatrix.copy();
         storedLogFieldLikelihood = logFieldLikelihood;
 
-        System.arraycopy(intervals, 0, storedIntervals, 0, intervals.length);
-        System.arraycopy(lineageCounts, 0, storedLineageCounts, 0, lineageCounts.length);
+        if (intervals != null) {
+        	System.arraycopy(intervals, 0, storedIntervals, 0, intervals.length);
+            System.arraycopy(lineageCounts, 0, storedLineageCounts, 0, lineageCounts.length);
+        }
         storedIntervalsKnown = intervalsKnown;
         storedIntervalCount = intervalCount;
 	}
@@ -727,8 +729,10 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 		weightMatrix = storedWeightMatrix;
         logFieldLikelihood = storedLogFieldLikelihood;
 
-        System.arraycopy(storedIntervals, 0, intervals, 0, storedIntervals.length);
-        System.arraycopy(storedLineageCounts, 0, lineageCounts, 0, storedLineageCounts.length);
+        if (intervals != null) {
+        	System.arraycopy(storedIntervals, 0, intervals, 0, storedIntervals.length);
+            System.arraycopy(storedLineageCounts, 0, lineageCounts, 0, storedLineageCounts.length);
+        }
         intervalsKnown = storedIntervalsKnown;
         intervalCount = storedIntervalCount;
 	}
@@ -743,12 +747,14 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
             assert ti.isDirtyCalculation();
             isDirty = true;
         } else {
-        	isDirty = treeInput.get().somethingIsDirty();
+        	if (treeInput.get() != null) {
+        		isDirty = treeInput.get().somethingIsDirty();
+        	}
         }
 
 		isDirty =  isDirty || 
 			popSizeParameter.somethingIsDirty() ||
-			groupSizeParameter.somethingIsDirty() ||
+			(groupSizeParameter != null && groupSizeParameter.somethingIsDirty()) ||
 			precisionParameter.somethingIsDirty() ||
 			lambdaParameter.somethingIsDirty()
 //			dMatrix.somethingIsDirty()
