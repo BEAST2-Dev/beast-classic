@@ -23,9 +23,9 @@ import java.util.List;
         "Molecular biology and evolution, 30(3), 713-724.",
         year = 2012, firstAuthorSurname = "Gill", DOI="10.1093/molbev/mss265")
 public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
-	public Input<List<Tree>> treesInput = new Input<>("trees", "? ? ? ?", new ArrayList<>());
-	public Input<RealParameter> betaInput = new Input<>("beta","? ? ? ?");
-	public Input<RealParameter> dMatrixInput = new Input<>("dMatrix","? ? ? ?");
+	public Input<TreeList> treesInput = new Input<>("trees", "? ? ? ?", Validate.REQUIRED);
+//	public Input<RealParameter> betaInput = new Input<>("beta","? ? ? ?");
+//	public Input<RealParameter> dMatrixInput = new Input<>("dMatrix","? ? ? ?");
 	public Input<RealParameter> phiInput = new Input<>("phi","? ? ? ?");
 	public Input<RealParameter> ploidyFactorsParameterInput = new Input<>("ploidyFactors","? ? ? ?");
 	public Input<Integer> numGridPointsInput = new Input<>("numGridPoints","? ? ? ?");
@@ -35,6 +35,9 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 		treeInput.setRule(Validate.OPTIONAL);
 		treeIntervalsInput.setRule(Validate.OPTIONAL);
 		groupParameterInput.setRule(Validate.OPTIONAL);
+		if (GMRFMultilocusSkyrideLikelihood.primary == null) {
+			GMRFMultilocusSkyrideLikelihood.primary = this;
+		}
 	}
 	
 //	public Input<List<TreeIntervals>> intervalsInput = new Input<>("intervals", "for internal use", new ArrayList<>());
@@ -61,11 +64,15 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
     protected SymmTridiagMatrix precMatrix;
     protected SymmTridiagMatrix storedPrecMatrix;
     
-    private RealParameter betaParameter;
-    private RealParameter dMatrix;
+//    private RealParameter betaParameter;
+//    private RealParameter dMatrix;
 
     private double[] coalescentEventStatisticValues;
 
+    private static GMRFMultilocusSkyrideLikelihood primary = null;
+    
+    
+    
     @Override
     public void initAndValidate() {
 //    	super.initAndValidate();
@@ -78,8 +85,8 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
         	lambdaParameter = new RealParameter("1.0");
         	lambdaParameter.initByName("estimate", false);
         }
-        this.betaParameter = betaInput.get();
-        this.dMatrix = dMatrixInput.get();
+//        this.betaParameter = betaInput.get();
+//        this.dMatrix = dMatrixInput.get();
         this.timeAwareSmoothing = timeAwareSmoothingInput.get();
 
         this.cutOff = cutOffInput.get();
@@ -100,7 +107,7 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 //        }
         //addVariable(ploidyFactors);
 
-        treeList = treesInput.get();
+        treeList = treesInput.get().treesInput.get();
         setTree(treeList);
 
         int correctFieldLength = getCorrectFieldLength();
@@ -155,6 +162,15 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 
     }
 
+    @Override
+    public double calculateLogP() {
+    	if (this == primary) {
+    		logP = getLogLikelihood();
+    	} else {
+    		logP = 0;
+    	}
+    	return logP;
+    }    
 
     //rewrite this constructor without duplicating so much code
 //    public GMRFMultilocusSkyrideLikelihood(List<Tree> treeList,
@@ -737,18 +753,24 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 
     @Override
     public void init(PrintStream out) {
-    	super.init(out);
-    	out.print("skyGrid.cutOff\t");
+    	if (this == primary) {
+    		super.init(out);
+    		out.print("skyGrid.cutOff\t");
+    	}
     }
     
     @Override
     public void log(long sample, PrintStream out) {
-    	super.log(sample, out);
-    	out.print(cutOff + "\t");
+    	if (this == primary) {
+    		super.log(sample, out);
+    		out.print(cutOff + "\t");
+    	}
     }
     
     @Override
     public void close(PrintStream out) {
-    	super.close(out);
+    	if (this == primary) {
+    		super.close(out);
+    	}
     }
 }

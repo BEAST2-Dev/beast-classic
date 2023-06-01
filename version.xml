@@ -42,6 +42,7 @@
         <provider classname="beastclassic.evolution.tree.coalescent.GMRFMultilocusSkyrideLikelihood"/>
         <provider classname="beastclassic.evolution.tree.coalescent.GMRFSkyrideLikelihood"/>
         <provider classname="beastclassic.evolution.tree.coalescent.LogisticGrowth"/>
+        <provider classname="beastclassic.evolution.tree.coalescent.TreeList"/>
         <provider classname="beastclassic.evolution.tree.RootTrait"/>
         <provider classname="beastclassic.evolution.tree.TreeTraitMap"/>
         <provider classname="beastclassic.evolution.tree.TreeWithTraitLogger"/>
