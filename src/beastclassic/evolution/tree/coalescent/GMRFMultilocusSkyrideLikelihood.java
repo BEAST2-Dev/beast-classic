@@ -2,7 +2,6 @@ package beastclassic.evolution.tree.coalescent;
 
 import beast.base.core.Citation;
 import beast.base.core.Description;
-import beast.base.core.Function;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.inference.parameter.RealParameter;
@@ -236,15 +235,21 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
     private void makeTreeIntervalList(List<Tree> treeList, boolean add) {
         if (intervalsList == null) {
             intervalsList = new ArrayList<TreeIntervals>();
+            for (Tree tree : treeList) {
+                intervalsList.add(new TreeIntervals(tree));
+            }
         } else {
-            intervalsList.clear();
+            for (TreeIntervals i : intervalsList) {
+                i.initAndValidate();
+            }
+//            intervalsList.clear();
         }
-        for (Tree tree : treeList) {
-            intervalsList.add(new TreeIntervals(tree));
-//            if (add && tree instanceof Tree) {
-//                addModel((TreeModel) tree);
-//            }
-        }
+//        for (Tree tree : treeList) {
+//            intervalsList.add(new TreeIntervals(tree));
+////            if (add && tree instanceof Tree) {
+////                addModel((TreeModel) tree);
+////            }
+//        }
     }
 
     protected int getCorrectFieldLength() {
