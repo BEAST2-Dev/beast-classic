@@ -20,7 +20,7 @@ public class AlignmentFromTrait extends Alignment {
 
 		public Input<TraitSet> traitInput = new Input<TraitSet>("traitSet", "trait to be interpreted as single site alignment");
 			
-		TraitSet traitSet;
+		public TraitSet traitSet;
 		
 	    public AlignmentFromTrait() {
 	        sequenceInput.setRule(Validate.OPTIONAL);

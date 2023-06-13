@@ -137,7 +137,7 @@
 				<include name="beast/**/*.xsl" />
 			</fileset>
         </jar>
-		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.addon.jar">
+		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.package.jar">
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
@@ -190,8 +190,9 @@
 		<echo message="JUnit test report finished." />
 	</target>
 
+	<target name="addon" depends="package"/>
 
-	<target name="addon"
+	<target name="package"
 	        depends="build_jar_all_BEAST_CLASSIC_NoJUnitTest"
 	        description="release BEAST 2 add-on version of BEAST_CLASSIC">
 
@@ -214,7 +215,7 @@
 		</copy>
 		<copy todir="${Add_on_dir}/lib">
 			<fileset dir="${libBEAST_CLASSIC}" includes="mtj.jar"/>
-			<fileset dir="${distBEAST_CLASSIC}" includes="BEAST_CLASSIC.addon.jar" />
+			<fileset dir="${distBEAST_CLASSIC}" includes="BEAST_CLASSIC.package.jar" />
 		</copy>
 		<copy todir="${Add_on_dir}">
 			<fileset dir="${distBEAST_CLASSIC}" includes="BEAST_CLASSIC.src.jar" />
@@ -226,7 +227,7 @@
 			<fileset file="fxtemplates/RelaxedClockModels.xml" />
 			<fileset file="fxtemplates/StarBeast.xml" />
 		</copy>
-		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.addon.v${BEAST_CLASSICversion}.zip">
+		<jar jarfile="${distBEAST_CLASSIC}/BEAST_CLASSIC.package.v${BEAST_CLASSICversion}.zip">
 			<fileset dir="${Add_on_dir}">
 				<include name="**/*" />
 			</fileset>
