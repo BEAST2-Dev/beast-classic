@@ -254,6 +254,6 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
     
     @Override
     public boolean canReturnComplexDiagonalization() {
-    	return isSymmetric;
+    	return !isSymmetric;
     }
 }
