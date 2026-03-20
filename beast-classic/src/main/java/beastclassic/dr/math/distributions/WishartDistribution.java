@@ -1,8 +1,7 @@
 package beastclassic.dr.math.distributions;
 
 
-import org.apache.commons.math.distribution.GammaDistribution;
-import org.apache.commons.math.distribution.GammaDistributionImpl;
+import org.apache.commons.statistics.distribution.GammaDistribution;
 
 import beast.base.core.Description;
 import beast.base.math.matrixalgebra.CholeskyDecomposition;
@@ -282,13 +281,13 @@ public class WishartDistribution implements MultivariateDistribution {
     public static void main(String[] argv) {
         WishartDistribution wd = new WishartDistribution(2, new Double[]{500.0});
         // The above is just an approximation
-        GammaDistribution gd = new GammaDistributionImpl(1.0 / 1000.0, 1000.0);
+        GammaDistribution gd = GammaDistribution.of(1.0 / 1000.0, 1000.0);
         double[] x = new double[]{1.0};
         System.out.println("Wishart, df=2, scale = 500, PDF(1.0): " + wd.logPdf(x));
         System.out.println("Gamma, shape = 1/1000, scale = 1000, PDF(1.0): " + gd.logDensity(x[0]));
 
         wd = new WishartDistribution(4, new Double[]{5.0});
-        gd = new GammaDistributionImpl(2.0, 10.0);
+        gd = GammaDistribution.of(2.0, 10.0);
         x = new double[]{1.0};
         System.out.println("Wishart, df=4, scale = 5, PDF(1.0): " + wd.logPdf(x));
         System.out.println("Gamma, shape = 1/1000, scale = 10, PDF(1.0): " + gd.logDensity(x[0]));

@@ -2,7 +2,7 @@ package beastclassic.evolution.operators;
 
 import java.text.DecimalFormat;
 
-import org.json.JSONObject;
+import beast.base.internal.json.JSONObject;
 
 import beast.base.core.Description;
 import beast.base.core.Input;

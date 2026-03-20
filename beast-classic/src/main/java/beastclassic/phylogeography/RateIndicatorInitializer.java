@@ -22,7 +22,7 @@ import beast.base.evolution.substitutionmodel.SubstitutionModel;
 @Description("RateIndicatorInitializer ported from BEAST1")
 public class RateIndicatorInitializer extends BEASTObject implements StateNodeInitialiser{
 
-    public Input<StateNode> indicator = new Input<StateNode>("rateIndicator",
+    public Input<BooleanParameter> indicator = new Input<BooleanParameter>("rateIndicator",
             "rates to indicate the presence or absence of transition matrix entries", Input.Validate.REQUIRED);
     public Input<SubstitutionModel.Base> model =
             new Input<SubstitutionModel.Base>("substitutionModel", "The substitution model whose transition matrix shall be checked", Input.Validate.REQUIRED);

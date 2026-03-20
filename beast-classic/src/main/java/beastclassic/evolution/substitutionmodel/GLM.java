@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.math3.util.FastMath;
+
 
 import beast.base.inference.CalculationNode;
 import beast.base.core.Description;
@@ -175,7 +175,7 @@ public class GLM extends CalculationNode implements Loggable {
     	double[] Ne = NeGLMInput.get().getRates();
 		double[] coal = new double[Ne.length];
 		for (int j = 0; j < Ne.length; j++){
-			coal[j] = FastMath.min(1/Ne[j],maxRateInput.get());
+			coal[j] = Math.min(1/Ne[j],maxRateInput.get());
 		}
 		return coal;
     }
@@ -200,7 +200,7 @@ public class GLM extends CalculationNode implements Loggable {
 		for (int a = 0; a < dimensionInput.get(); a++) {
 			for (int b = 0; b < dimensionInput.get(); b++){
 				if (a!=b){
-					m[c] = FastMath.min( 
+					m[c] = Math.min( 
 							Ne[a]*mig[c]/Ne[b],
 							maxRateInput.get());
 					c++;

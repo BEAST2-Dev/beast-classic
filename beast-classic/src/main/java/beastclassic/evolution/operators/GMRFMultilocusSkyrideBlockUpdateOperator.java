@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.commons.math.MathException;
+
 
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
@@ -188,12 +188,12 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
         return returnValue;
     }
        
-    public DenseVector newtonRaphson(double[] data1, double[] data2, DenseVector currentGamma, SymmTridiagMatrix proposedQ) throws MathException {
+    public DenseVector newtonRaphson(double[] data1, double[] data2, DenseVector currentGamma, SymmTridiagMatrix proposedQ)  {
         return newNewtonRaphson(data1, data2, currentGamma, proposedQ, maxIterations, stopValue);
     }
 
     public static DenseVector newNewtonRaphson(double[] data1, double[] data2, DenseVector currentGamma, SymmTridiagMatrix proposedQ,
-                                               int maxIterations, double stopValue) throws MathException {
+                                               int maxIterations, double stopValue)  {
 
         DenseVector iterateGamma = currentGamma.copy();
         DenseVector tempValue = currentGamma.copy();
@@ -206,10 +206,10 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
                 jacobian(data2, iterateGamma, proposedQ).solve(gradient(data1, data2, iterateGamma, proposedQ), tempValue);
            } catch (no.uib.cipr.matrix.MatrixNotSPDException e) {
                 Logger.getLogger("dr.evomodel.coalescent.operators.GMRFMultilocusSkyrideBlockUpdateOperator").fine("Newton-Raphson F");
-                throw new MathException("");
+                throw new RuntimeException("");
             } catch (no.uib.cipr.matrix.MatrixSingularException e) {
                 Logger.getLogger("dr.evomodel.coalescent.operators.GMRFMultilocusSkyrideBlockUpdateOperator").fine("Newton-Raphson F");
-                throw new MathException("");
+                throw new RuntimeException("");
             }     
 
             iterateGamma.add(tempValue);
@@ -217,7 +217,7 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
 
             if (numberIterations > maxIterations) {
                 Logger.getLogger("dr.evomodel.coalescent.operators.GMRFMultilocusSkyrideBlockUpdateOperator").fine("Newton-Raphson F");
-                throw new MathException("Newton Raphson algorithm did not converge within " + maxIterations + " step to a norm less than " + stopValue + "\n" +
+                throw new RuntimeException("Newton Raphson algorithm did not converge within " + maxIterations + " step to a norm less than " + stopValue + "\n" +
                         "Try starting BEAST with a more accurate initial tree.");
             }
         }
@@ -285,7 +285,7 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
         DenseVector modeForward;
 		try {
 			modeForward = newtonRaphson(numCoalEv, wNative, currentGamma, proposedQ.copy());
-		} catch (MathException e) {
+		} catch (RuntimeException e) {
 			return Double.NEGATIVE_INFINITY;
 		}
        
@@ -335,7 +335,7 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
         DenseVector modeBackward;
 		try {
 			modeBackward = newtonRaphson(numCoalEv, wNative, proposedGamma, currentQ.copy());
-		} catch (MathException e) {
+		} catch (RuntimeException e) {
 			return Double.NEGATIVE_INFINITY;
 		}
 
