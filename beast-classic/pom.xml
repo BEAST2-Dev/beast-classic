@@ -33,6 +33,21 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Beagle (optional in beast-base, needed for JPMS) -->
+        <dependency>
+            <groupId>io.github.compevol</groupId>
+            <artifactId>beagle</artifactId>
+            <version>1.0</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Colt (scientific computing library) -->
+        <dependency>
+            <groupId>io.github.compevol</groupId>
+            <artifactId>colt</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!-- MTJ (Matrix Toolkits for Java, used by GMRF Skyride) -->
         <dependency>
             <groupId>com.googlecode.matrix-toolkits-java</groupId>
