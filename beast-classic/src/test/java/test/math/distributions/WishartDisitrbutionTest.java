@@ -21,7 +21,7 @@ public class WishartDisitrbutionTest {
         			"scaleMatrix", new RealParameter(new Double[]{500.0}),
         			"arg", new RealParameter(new Double[]{1.0}));
         // The above is just an approximation
-        GammaDistribution gd = new GammaDistributionImpl(1.0 / 1000.0, 1000.0);
+        var gd = org.apache.commons.statistics.distribution.GammaDistribution.of(1.0 / 1000.0, 1000.0);
         double[] x = new double[]{1.0};
         
         assertEquals(-6.908755278962187, wd.calculateLogP(), 1e-10);
@@ -31,7 +31,7 @@ public class WishartDisitrbutionTest {
         wd.initByName("df", 4.0, 
     			"scaleMatrix", new RealParameter(new Double[]{5.0}), 
     			"arg", new RealParameter(new Double[]{1.0}));
-        gd = new GammaDistributionImpl(2.0, 10.0);
+        gd = org.apache.commons.statistics.distribution.GammaDistribution.of(2.0, 10.0);
         x = new double[]{1.0};
         assertEquals(-4.7051701859880914, wd.calculateLogP(), 1e-10);
 
@@ -58,7 +58,7 @@ public class WishartDisitrbutionTest {
 	public void testClassicWishartDistribution() {
 		beastclassic.dr.math.distributions.WishartDistribution wd = new beastclassic.dr.math.distributions.WishartDistribution(2, new Double[]{500.0});
         // The above is just an approximation
-        GammaDistribution gd = new GammaDistributionImpl(1.0 / 1000.0, 1000.0);
+        var gd = org.apache.commons.statistics.distribution.GammaDistribution.of(1.0 / 1000.0, 1000.0);
         double[] x = new double[]{1.0};
         
         assertEquals(-6.908755278962187, wd.logPdf(x), 1e-10);
@@ -66,7 +66,7 @@ public class WishartDisitrbutionTest {
 
 
         wd = new beastclassic.dr.math.distributions.WishartDistribution(4, new Double[]{5.0});
-        gd = new GammaDistributionImpl(2.0, 10.0);
+        gd = org.apache.commons.statistics.distribution.GammaDistribution.of(2.0, 10.0);
         x = new double[]{1.0};
         assertEquals(-4.7051701859880914, wd.logPdf(x), 1e-10);
 
