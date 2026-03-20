@@ -55,7 +55,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
                 <configuration>
-                    <workingDirectory>${project.build.testOutputDirectory}</workingDirectory>
+                    <workingDirectory>${project.parent.basedir}</workingDirectory>
                     <argLine>
                         --add-reads beast.classic=ALL-UNNAMED
                         --add-reads beast.base=ALL-UNNAMED
