@@ -17,7 +17,7 @@ import org.fest.swing.fixture.JOptionPaneFixture;
 import org.fest.swing.fixture.JTabbedPaneFixture;
 import org.fest.swing.fixture.JTableFixture;
 import org.fest.swing.image.ScreenshotTaker;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import test.beast.app.beauti.BeautiBase;
 

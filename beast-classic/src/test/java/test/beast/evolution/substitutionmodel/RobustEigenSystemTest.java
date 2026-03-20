@@ -1,17 +1,17 @@
 package test.beast.evolution.substitutionmodel;
 
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import beast.base.evolution.substitutionmodel.DefaultEigenSystem;
 import beast.base.evolution.substitutionmodel.EigenDecomposition;
 import beast.base.evolution.substitutionmodel.EigenSystem;
 import beast.base.util.Randomizer;
 import beastclassic.evolution.substitutionmodel.RobustEigenSystem;
-import junit.framework.TestCase;
 
-public class RobustEigenSystemTest extends TestCase {
+public class RobustEigenSystemTest  {
 	
 	@Test
 	public void testRobustEigenSystem() {

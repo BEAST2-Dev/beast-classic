@@ -1,10 +1,10 @@
 package test.math.distributions;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.apache.commons.math.distribution.GammaDistribution;
-import org.apache.commons.math.distribution.GammaDistributionImpl;
-import org.junit.Test;
+
+
+import org.junit.jupiter.api.Test;
 
 import beast.base.inference.parameter.RealParameter;
 import beastclassic.math.distributions.WishartDistribution;

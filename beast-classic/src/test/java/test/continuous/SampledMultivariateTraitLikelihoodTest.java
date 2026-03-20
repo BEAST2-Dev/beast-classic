@@ -1,10 +1,10 @@
 package test.continuous;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import beast.base.inference.Distribution;
 import beast.base.inference.MCMC;
