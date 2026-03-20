@@ -1,6 +1,6 @@
 # BEAST Classic
 
-[![Build Status](https://github.com/BEAST2-Dev/beast-classic/workflows/Unit%2Fintegration%20tests/badge.svg)](https://github.com/BEAST2-Dev/beast-classic/actions)
+[![Build Status](https://github.com/alexeid/beast-classic/workflows/Unit%2Fintegration%20tests/badge.svg)](https://github.com/alexeid/beast-classic/actions)
 
 Classic BEAST models ported from BEAST 1, providing discrete and continuous
 phylogeography, GMRF skyride coalescent models, and generalised linear models
