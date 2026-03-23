@@ -102,8 +102,8 @@ public class SVSGeneralSubstitutionModelLogger extends BEASTObject implements Lo
                 if (j==i)
                     continue;
 
-                out.print(model.ratesInput.get().getArrayValue(count)
-                        *model.indicator.get().getArrayValue(count) + "\t");
+                out.print(model.ratesInput.get().get(count)
+                        * (model.indicator.get().getValue(count) ? 1.0 : 0.0) + "\t");
 
                 count += 1;
             }

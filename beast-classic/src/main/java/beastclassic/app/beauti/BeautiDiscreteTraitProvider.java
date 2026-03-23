@@ -102,9 +102,12 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 			        		((SiteModel.Base) likelihood.siteModelInput.get()).substModelInput.get();
 		        	substModel.indicator.get().dimensionInput.setValue(stateCount * (stateCount - 1) / 2, null);
 		        	((Parameter.Base<?>) substModel.ratesInput.get()).dimensionInput.setValue(stateCount* (stateCount - 1) / 2, null);
-		        	RealParameter freqs = substModel.frequenciesInput.get().frequenciesInput.get();
-			        freqs.dimensionInput.setValue(stateCount, freqs);
-			        freqs.valuesInput.setValue(1.0/stateCount + "", freqs);
+		        	// TODO: update for beast3 spec Frequencies/Simplex types
+		        	var freqs = substModel.frequenciesInput.get().frequenciesInput.get();
+			        if (freqs instanceof beast.base.inference.parameter.RealParameter rp) {
+			            rp.dimensionInput.setValue(stateCount, rp);
+			            rp.valuesInput.setValue(1.0/stateCount + "", rp);
+			        }
 			        // set offset on non-zero rate prior
 			        PartitionContext context = new PartitionContext(likelihood);
 			        Prior prior = (Prior) doc.pluginmap.get("nonZeroRatePrior.s:" + context.clockModel);
