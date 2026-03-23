@@ -17,8 +17,7 @@ import beast.base.core.BEASTInterface;
 import beast.base.core.Description;
 import beast.base.inference.State;
 import beast.base.inference.StateNode;
-import beast.base.inference.parameter.Parameter;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.parser.PartitionContext;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.datatype.UserDataType;
@@ -100,13 +99,13 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 			        int stateCount = ((UserDataType) traitData.userDataTypeInput.get()).stateCountInput.get();
 			        SVSGeneralSubstitutionModel substModel = (SVSGeneralSubstitutionModel) 
 			        		((SiteModel.Base) likelihood.siteModelInput.get()).substModelInput.get();
-		        	substModel.indicator.get().dimensionInput.setValue(stateCount * (stateCount - 1) / 2, null);
-		        	((Parameter.Base<?>) substModel.ratesInput.get()).dimensionInput.setValue(stateCount* (stateCount - 1) / 2, null);
-		        	// TODO: update for beast3 spec Frequencies/Simplex types
+		        	substModel.indicator.get().setDimension(stateCount * (stateCount - 1) / 2);
+		        	if (substModel.ratesInput.get() instanceof RealVectorParam<?> ratesParam) {
+		        		ratesParam.setDimension(stateCount * (stateCount - 1) / 2);
+		        	}
 		        	var freqs = substModel.frequenciesInput.get().frequenciesInput.get();
-			        if (freqs instanceof beast.base.inference.parameter.RealParameter rp) {
-			            rp.dimensionInput.setValue(stateCount, rp);
-			            rp.valuesInput.setValue(1.0/stateCount + "", rp);
+			        if (freqs instanceof RealVectorParam<?> rp) {
+			            rp.setDimension(stateCount);
 			        }
 			        // set offset on non-zero rate prior
 			        PartitionContext context = new PartitionContext(likelihood);

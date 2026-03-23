@@ -1,6 +1,6 @@
 # Beast-Classic Strong Typing Migration TODO
 
-Status: **compiles**, 2/3 test classes pass. Only BeauTi file uses old parameter types.
+Status: **compiles**, 2/3 test classes pass. Zero old parameter imports in main source (including BeauTi).
 
 ## API cheat sheet
 
@@ -29,15 +29,24 @@ All 64 non-BeauTi source files migrated to spec types. WishartDistribution test 
 
 ## Remaining
 
-### BeauTi (deferred)
+### XML test files (blocked by beast3 upstream)
 
-- [ ] `app/beauti/BeautiDiscreteTraitProvider.java` -- uses `RealParameter` in one place
+The 2 XML-based tests fail because `RealVectorParam` does not implement `Function`.
+In beast3, `Parameter<T> extends Function` but the spec types (`RealVectorParam`, etc.) do not.
+This means any beast3 class with `Input<Function>` cannot accept spec param types.
 
-### XML test files
+Affected beast3 classes: `TreeWithMetaDataLogger` (metadata input), `LogNormalDistributionModel` (M, S inputs).
+Affected beast-classic classes: `MultivariateNormalDistribution` (arg input -- takes `RootTrait` which implements `Function`).
 
-- [ ] `examples/RacRABV_LogNRRW2.xml` -- uses `spec='RealParameter'`, `spec='IntegerParameter'`, `minordimension` attribute
-- [ ] `examples/AncestralState.xml` -- similar XML references
-- These need `spec='RealParameter'` -> `spec='RealVectorParam'` etc, plus `minordimension` handling
+**Resolution options (all upstream in beast3):**
+1. Have `RealVectorParam` implement `Function` (cleanest)
+2. Have `RealVector` extend `Function` (broader)
+3. Change beast3 `Input<Function>` usages to accept spec types
+
+Until resolved, these XML tests cannot pass with pure spec param types.
+
+- [ ] `examples/RacRABV_LogNRRW2.xml` -- partially updated, blocked by Function gap
+- [ ] `examples/H5N1_HA_discrete2.xml` -- not yet updated, same issue
 
 ## Verification
 

@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import beast.base.inference.parameter.RealParameter;
 import beast.base.spec.domain.NonNegativeReal;
 import beast.base.spec.domain.Real;
 import beast.base.spec.inference.parameter.RealVectorParam;
@@ -16,8 +15,10 @@ import beastclassic.math.distributions.WishartDistribution;
 
 public class WishartDisitrbutionTest {
 
-	private RealParameter realParam(String values) {
-		return new RealParameter(values);
+	private RealVectorParam<Real> realParam(String values) {
+		RealVectorParam<Real> p = new RealVectorParam<>();
+		p.initByName("value", values);
+		return p;
 	}
 
 	private RealVectorParam<NonNegativeReal> nnrealParam(String values) {
