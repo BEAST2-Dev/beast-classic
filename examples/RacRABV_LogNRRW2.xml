@@ -123,7 +123,7 @@
 		</precision>
 	</distribution>
 
-    <branchRateModel id="branchRatesDiffusion" spec='UCRelaxedClockModel' tree='@Tree.t:RacRABV'>
+    <branchRateModel id="branchRatesDiffusion" spec='beast.base.evolution.branchratemodel.UCRelaxedClockModel' tree='@Tree.t:RacRABV'>
         <parameter name='clock.rate' id='ucld.mean' value='1'/>
         <distr id='lognormal' spec="beast.base.inference.distribution.LogNormalDistributionModel"  meanInRealSpace="true">
             <M id='ucldDiffusion.mean' spec='RealParameter' value="1"/>

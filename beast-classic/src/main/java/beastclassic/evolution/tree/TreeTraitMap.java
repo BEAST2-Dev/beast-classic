@@ -7,6 +7,7 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beastclassic.spec.parameter.MatrixVectorParam;
 import beast.base.core.Log;
 import beast.base.evolution.tree.Node;
@@ -150,12 +151,15 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	        	initInternalNodes(tree.getRoot(), values, dim);
 	        }
 
-	        // Set values directly on the parameter
+	        // Set values via assignFromWithoutID to avoid startEditing during init
+	        MatrixVectorParam<Real> tmp = new MatrixVectorParam<>();
+	        StringBuilder sb = new StringBuilder();
 	        for (int i = 0; i < values.length; i++) {
-	        	if (values[i] != null) {
-	        		parameter.set(i, values[i]);
-	        	}
+	        	if (i > 0) sb.append(" ");
+	        	sb.append(values[i] != null ? values[i] : 0.0);
 	        }
+	        tmp.initByName("value", sb.toString(), "minordimension", traitDim);
+	        parameter.assignFromFragile(tmp);
 		}
 	}
 

@@ -18,7 +18,7 @@ public class SampledMultivariateTraitLikelihoodTest {
 	@Test
 	public void testSampledMultivariateTraitLikelihood() throws Exception {
 		Randomizer.setSeed(123);
-		
+
 		XMLParser parser = new XMLParser();
 		MCMC mcmc = (MCMC) parser.parseFile(new File("examples/RacRABV_LogNRRW2.xml"));
 		Distribution posterior = mcmc.posteriorInput.get();
@@ -27,13 +27,15 @@ public class SampledMultivariateTraitLikelihoodTest {
         // assertEquals(-3042252.6578551414, logP, 1e-5);
 		// another relaxed clock update
 		// assertEquals(-854843.2551478981, logP, 1e-5);
-		assertEquals(-835885.9143802306, logP, 1e-5);        
+		// assertEquals(-835885.9143802306, logP, 1e-5);
+		// updated for beast3 spec type migration + UCRelaxedClockModel resolution change
+		assertEquals(-936422.3372895572, logP, 1e-5);
 	}
 
 	@Test
 	public void testAncestralStateTreeLikelihood() throws Exception {
 		Randomizer.setSeed(123);
-		
+
 		XMLParser parser = new XMLParser();
 		MCMC mcmc = (MCMC) parser.parseFile(new File("examples/H5N1_HA_discrete2.xml"));
 		Distribution posterior = mcmc.posteriorInput.get();

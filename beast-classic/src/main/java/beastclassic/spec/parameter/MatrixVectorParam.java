@@ -2,6 +2,7 @@ package beastclassic.spec.parameter;
 
 import beast.base.core.Description;
 import beast.base.core.Input;
+import beast.base.inference.StateNode;
 import beast.base.spec.domain.Real;
 import beast.base.spec.inference.parameter.RealVectorParam;
 
@@ -78,5 +79,13 @@ public class MatrixVectorParam<D extends Real> extends RealVectorParam<D> {
 
     public void setMinorDimension(int dim) {
         minorDimension = dim;
+    }
+
+    @Override
+    public void assignFromFragile(StateNode other) {
+        super.assignFromFragile(other);
+        if (other instanceof MatrixVectorParam<?> mvp) {
+            this.minorDimension = mvp.minorDimension;
+        }
     }
 }
