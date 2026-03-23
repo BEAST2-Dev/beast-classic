@@ -11,7 +11,8 @@ import beagle.Beagle;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.IntegerParameter;
+import beast.base.spec.domain.Int;
+import beast.base.spec.inference.parameter.IntVectorParam;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.datatype.DataType;
 import beast.base.evolution.datatype.UserDataType;
@@ -48,7 +49,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 	int[][] storedTipStates;
 
 	/** parameters for each of the leafs **/
-	IntegerParameter[] parameters;
+	IntVectorParam<? extends Int>[] parameters;
 
 	/** and node number associated with parameter **/
 	int[] leafNr;
@@ -185,16 +186,16 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 		traitDimension = tipStates[0].length;
 
 		leafNr = new int[leafTriatsInput.get().size()];
-		parameters = new IntegerParameter[leafTriatsInput.get().size()];
+		parameters = new IntVectorParam[leafTriatsInput.get().size()];
 
 		List<String> taxaNames = dataInput.get().getTaxaNames();
 		for (int i = 0; i < leafNr.length; i++) {
 			LeafTrait leafTrait = leafTriatsInput.get().get(i);
 			parameters[i] = leafTrait.parameter.get();
 			// sanity check
-			if (parameters[i].getDimension() != traitDimension) {
+			if (parameters[i].size() != traitDimension) {
 				throw new IllegalArgumentException("Expected parameter dimension to be " + traitDimension + ", not "
-						+ parameters[i].getDimension());
+						+ parameters[i].size());
 			}
 			// identify node
 			String taxon = leafTrait.taxonName.get();
@@ -207,15 +208,10 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 			if (k == taxaNames.size()) {
 				throw new IllegalArgumentException("Could not find taxon '" + taxon + "' in tree");
 			}
-			// initialise parameter value from states
-			Integer[] values = new Integer[tipStates[k].length];
+			// initialise parameter values from states
 			for (int j = 0; j < tipStates[k].length; j++) {
-				values[j] = tipStates[k][j];
+				parameters[i].set(j, tipStates[k][j]);
 			}
-			IntegerParameter p = new IntegerParameter(values);
-			p.setLower(0);
-			p.setUpper(dataType.getStateCount()-1);
-			parameters[i].assignFromWithoutID(p);
 		}
 
 		storedTipStates = new int[tipStates.length][traitDimension];
@@ -289,7 +285,7 @@ public class AncestralStateTreeLikelihood extends TreeLikelihood implements Tree
 			if (parameters[i].somethingIsDirty()) {
 				int k = leafNr[i];
 				for (int j = 0; j < traitDimension; j++) {
-					tipStates[k][j] = parameters[i].getValue(j);
+					tipStates[k][j] = parameters[i].get(j);
 				}
 				likelihoodCore.setNodeStates(k, tipStates[k]);
 				isDirty = true;

@@ -32,7 +32,8 @@ import java.util.Random;
 import beast.base.inference.Distribution;
 import beast.base.core.Input;
 import beast.base.inference.State;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.type.RealVector;
 import beastclassic.dr.GammaFunction;
 import beast.base.evolution.substitutionmodel.SubstitutionModel;
 import beast.base.evolution.tree.Tree;
@@ -46,13 +47,13 @@ import beast.base.evolution.tree.TreeUtils;
  *         Time: 3:26:57 PM
  */
 public class CTMCScalePrior extends Distribution {
-    public Input<RealParameter> ctmcScaleInput1 = new Input<>("ctmcScale", "description here");
+    public Input<RealVector<? extends PositiveReal>> ctmcScaleInput1 = new Input<>("ctmcScale", "description here");
     public Input<Tree> treeInput2 = new Input<>("tree", "description here");
     public Input<Boolean> reciprocalInput3 = new Input<>("reciprocal", "description here", false);
     public Input<SubstitutionModel.Base> substModelInput4 = new Input<>("substModel", "description here");
-    public Input<Boolean> trialInput5 = new Input<Boolean>("trial", "description here", false);
+    public Input<Boolean> trialInput5 = new Input<>("trial", "description here", false);
 
-    private RealParameter ctmcScale;
+    private RealVector<? extends PositiveReal> ctmcScale;
     private Tree treeModel;
     private double treeLength;
     private boolean treeLengthKnown;
@@ -109,8 +110,8 @@ public class CTMCScalePrior extends Distribution {
         double logNormalization = 0.5 * Math.log(lambda2) - logGammaOneHalf;
 
         double logLike = 0;
-        for (int i = 0; i < ctmcScale.getDimension(); ++i) {
-            double ab = ctmcScale.getValue(i) * totalTreeTime;
+        for (int i = 0; i < ctmcScale.size(); ++i) {
+            double ab = ctmcScale.get(i) * totalTreeTime;
             logLike += logNormalization - 0.5 * Math.log(ab) - ab * lambda2;
         }
         return logLike;
@@ -149,8 +150,8 @@ public class CTMCScalePrior extends Distribution {
         }
         double logNormalization = 0.5 * Math.log(totalTreeTime) - logGammaOneHalf;
         double logLike = 0;
-        for (int i = 0; i < ctmcScale.getDimension(); ++i) {
-            double ab = ctmcScale.getValue(i);
+        for (int i = 0; i < ctmcScale.size(); ++i) {
+            double ab = ctmcScale.get(i);
             logLike += logNormalization - 0.5 * Math.log(ab) - ab * totalTreeTime; // TODO Change to treeLength and confirm results
         }
         return logLike;

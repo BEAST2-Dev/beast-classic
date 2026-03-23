@@ -6,7 +6,8 @@ import beast.base.inference.CalculationNode;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.core.Log;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.TreeInterface;
@@ -14,24 +15,26 @@ import beast.base.util.Randomizer;
 
 @Description("Maps nodes in a tree to entries of a parameter")
 public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]> {
-	public Input<TreeInterface> treeInput = new Input<TreeInterface>("tree", "tree for which to map the nodes", Validate.REQUIRED);
-	public Input<RealParameter> parameterInput = new Input<RealParameter>("parameter",
+	public Input<TreeInterface> treeInput = new Input<>("tree", "tree for which to map the nodes", Validate.REQUIRED);
+	public Input<RealVectorParam<? extends Real>> parameterInput = new Input<>("parameter",
 			"paramater for which to map entries for", Validate.REQUIRED);
-	public Input<String> traitName = new Input<String>("traitName", "name of the trait", "unnamed");
-	public Input<Intent> intent = new Input<Intent>("intent", "intent of the trait, one of " + Intent.values()
+	public Input<String> traitName = new Input<>("traitName", "name of the trait", "unnamed");
+	public Input<Intent> intent = new Input<>("intent", "intent of the trait, one of " + Intent.values()
 			+ " (Default whole tree)", Intent.WHOLE_TREE);
-	public Input<String> value = new Input<String>("value","initialisation values for traits in the form of " +
+	public Input<String> value = new Input<>("value","initialisation values for traits in the form of " +
 			"a comma separated string of taxon-name, value pairs. For example, for a two-dimensional trait " +
 			"the value could be Taxon1=10 20,Taxon2=20 30,Taxon3=10 10");
 
-	public Input<Boolean> initAsMeanInput =new Input<Boolean>("initByMean", "initialise internal nodes by taking the mean of its children", false);
-	public Input<Double> jitterInput =new Input<Double>("jitter", "amount of jitter used to ensure traits are not exactly the same when using initByMean", 0.0001);
-	
-	public Input<String> randomizeupper = new Input<String>("randomizeupper", "if specified, used as upper bound for randomly initialising unassigned nodes");
-	public Input<String> randomizelower = new Input<String>("randomizelower", "if specified, used as lower bound for randomly initialising unassigned nodes");
+	public Input<Boolean> initAsMeanInput = new Input<>("initByMean", "initialise internal nodes by taking the mean of its children", false);
+	public Input<Double> jitterInput = new Input<>("jitter", "amount of jitter used to ensure traits are not exactly the same when using initByMean", 0.0001);
+
+	public Input<String> randomizeupper = new Input<>("randomizeupper", "if specified, used as upper bound for randomly initialising unassigned nodes");
+	public Input<String> randomizelower = new Input<>("randomizelower", "if specified, used as lower bound for randomly initialising unassigned nodes");
 	TreeInterface tree;
-	RealParameter parameter;
-	
+	RealVectorParam<? extends Real> parameter;
+
+	/** the number of trait dimensions per node **/
+	int traitDim;
 
 	/** flag to indicate the root has no trait **/
 	boolean rootHasNoTrait;
@@ -44,15 +47,26 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		tree = treeInput.get();
 		int nNodes = tree.getNodeCount();
 		parameter = parameterInput.get();
-		if (parameter.getMinorDimension1() > 0) {
-			parameter.setDimension(nNodes * parameter.getMinorDimension1());
-			traitvalues = new double[parameter.getMinorDimension1()];
+
+		// Determine trait dimension: if parameter already has more values than nodes,
+		// infer dimension from size/nNodes. Otherwise try to infer from value input, default 1.
+		int paramSize = parameter.size();
+		if (paramSize > 1 && paramSize >= nNodes) {
+			traitDim = paramSize / nNodes;
 		} else {
+			traitDim = inferTraitDimFromValue();
+		}
+
+		if (traitDim > 1) {
+			parameter.setDimension(nNodes * traitDim);
+			traitvalues = new double[traitDim];
+		} else {
+			traitDim = 1;
 			parameter.setDimension(nNodes);
 			traitvalues = new double[1];
 		}
-		
-		
+
+
 		rootHasNoTrait = intent.get().equals(Intent.BRANCH);
 
 		nodeToParameterIndexMap = new int[nNodes];
@@ -64,18 +78,17 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 			nodeToParameterIndexMap[tree.getRoot().getNr()] = -1;
 		}
 		System.arraycopy(nodeToParameterIndexMap, 0, storedNodeToParameterIndexMap, 0, nNodes);
-		
-		
+
+
 		if ((value.get() != null && value.get().trim().length() > 0) || randomizelower.get() != null || randomizeupper.get() != null) {
 	        List<String> sTaxa = tree.getTaxonset().asStringList();
 	        boolean [] bDone = new boolean[sTaxa.size()];
-	        
+
 			// we need to initialise the trait parameter
-	        int dim = traitvalues.length;
+	        int dim = traitDim;
 			Double [] values = new Double[nNodes * dim];
 			if (randomizelower.get() != null || randomizeupper.get() != null) {
 				// randomly assign values in the provided range
-				// defaults to range with extremes zero if nothing is specified
 				double [] upper = new double[dim];
 				double [] lower = new double[dim];
 				if (randomizelower.get() != null) {
@@ -100,13 +113,12 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 					}
 				}
 			}
-		
+
 			if (value.get() != null && value.get().trim().length() > 0) {
 				String [] sValues = value.get().split(",");
 		        for (String sTrait : sValues) {
 		            sTrait = sTrait.replaceAll("\\s+", " ");
                     if( sTrait.matches("\\s+") ) {
-                        // ignore extra commas
                         continue;
                     }
 		            String[] sStrs = sTrait.split("=");
@@ -140,16 +152,38 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	                System.out.println("WARNING: no trait specified for " + sTaxa.get(i));
 	            }
 	        }
-	        
+
 	        // initialise internal nodes
 	        if (initAsMeanInput.get()) {
 	        	initInternalNodes(tree.getRoot(), values, dim);
 	        }
-	        
-	        RealParameter tmp = new RealParameter(values);	        
-	        tmp.setBounds(parameter.getLower(), parameter.getUpper());
-	        parameter.assignFromWithoutID(tmp);
+
+	        // Set values directly on the parameter
+	        for (int i = 0; i < values.length; i++) {
+	        	if (values[i] != null) {
+	        		parameter.set(i, values[i]);
+	        	}
+	        }
 		}
+	}
+
+	/** Infer trait dimension from the value input string by counting
+	 *  space-separated numbers in the first entry's value. Returns 1 if
+	 *  the value input is not set or cannot be parsed. */
+	private int inferTraitDimFromValue() {
+		if (value.get() != null && value.get().trim().length() > 0) {
+			String[] entries = value.get().split(",");
+			for (String entry : entries) {
+				entry = entry.replaceAll("\\s+", " ").trim();
+				if (entry.isEmpty()) continue;
+				String[] parts = entry.split("=");
+				if (parts.length == 2) {
+					String[] vals = normalize(parts[1]).trim().split("\\s+");
+					return vals.length;
+				}
+			}
+		}
+		return 1;
 	}
 
 	/** set trait value as mean of its children **/
@@ -160,24 +194,16 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 				initInternalNodes(child, values, dim);
 			}
 			for (int i = 0; i < dim; i++) {
-				double value = 0;
+				double v = 0;
 				for (Node child : node.getChildren()) {
-					value += values[child.getNr() * dim + i];
+					v += values[child.getNr() * dim + i];
 				}
-				values[node.getNr() * dim + i] = value / node.getChildCount() + Randomizer.nextDouble() * jitter - jitter / 2.0;
+				values[node.getNr() * dim + i] = v / node.getChildCount() + Randomizer.nextDouble() * jitter - jitter / 2.0;
 			}
 		}
 	}
 
-//	private int indexOf(String[] sTaxa, String sTaxonID) {
-//		int i = sTaxa.length - 1;
-//		while (i >= 0 && !sTaxa[i].equals(sTaxonID)) {
-//			i--;
-//		}
-//		return i;
-//	}
-
-	/**
+    /**
      * remove start and end spaces
      */
     String normalize(String sStr) {
@@ -200,10 +226,12 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 
 	public double [] getTrait(TreeInterface tree, Node node) {
 		int id = nodeToParameterIndexMap[node.getNr()];
-		parameter.getMatrixValues1(id, traitvalues);
+		for (int j = 0; j < traitDim; j++) {
+			traitvalues[j] = parameter.get(id * traitDim + j);
+		}
 		return traitvalues.clone();
 	}
-	
+
 	public int getTraitNr(Node node) {
 		int id = nodeToParameterIndexMap[node.getNr()];
 		return id;
@@ -214,7 +242,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 
 		int i = nodeToParameterIndexMap[node.getNr()];
 		for (int j = 0; j < values.length; j++) {
-			parameter.setMatrixValue(i, j, values[j]);
+			parameter.set(i * traitDim + j, values[j]);
 		}
 	}
 
@@ -266,8 +294,6 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 			if (rootHasNoTrait) {
 				int rootNr = tree.getRoot().getNr();
 				if (nodeToParameterIndexMap[rootNr] >= 0) {
-					// the root has changed, so what was the root before now
-					// inherits the current root's trait
 					int nr = nodeToParameterIndexMap[rootNr];
 					int i = 0;
 					while (nodeToParameterIndexMap[i] >= 0) {
@@ -278,7 +304,6 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 				}
 			}
 		}
-		// the parameter must have changed, so mark as dirty
 		return true;
 	}
 

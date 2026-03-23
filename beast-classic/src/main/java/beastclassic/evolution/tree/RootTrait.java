@@ -10,23 +10,24 @@ import beast.base.core.Input.Validate;
 import beast.base.core.Loggable;
 import beast.base.evolution.tree.TreeInterface;
 import beast.base.inference.CalculationNode;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 
 
 @Description("A logger for the type of the tree root")
 public class RootTrait extends CalculationNode implements Function, Loggable {
-    public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
+    public Input<TreeTraitMap> mapInput = new Input<>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
 
     TreeTraitMap map;
     TreeInterface tree;
-    RealParameter parameter;
+    RealVectorParam<? extends Real> parameter;
     int dim;
-    
+
     public void initAndValidate() {
     	map = mapInput.get();
     	tree = map.tree;
     	parameter = map.parameterInput.get();
-    	dim = parameter.getMinorDimension1();
+    	dim = map.traitDim;
     }
 
 	@Override
@@ -43,8 +44,7 @@ public class RootTrait extends CalculationNode implements Function, Loggable {
 	public double getArrayValue(int iDim) {
 		int root = tree.getRoot().getNr();
 		int i = map.nodeToParameterIndexMap[root];
-		double value = parameter.getMatrixValue(i, iDim);
-		return value;
+		return parameter.get(i * dim + iDim);
 	}
 
 	@Override
@@ -69,6 +69,6 @@ public class RootTrait extends CalculationNode implements Function, Loggable {
 	public void close(PrintStream out) {
 		// nothing to do
 	};
-	
-	
+
+
 }

@@ -4,7 +4,9 @@ package beastclassic.evolution.operators;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.inference.Operator;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
+import beast.base.spec.type.RealVector;
 import beast.base.math.matrixalgebra.SymmetricMatrix;
 import beastclassic.dr.math.distributions.MultivariateDistribution;
 import beastclassic.dr.math.distributions.MultivariateNormalDistribution;
@@ -17,15 +19,15 @@ import beastclassic.inference.distribution.LinearRegression;
 @Description("Regression Gibbs Effect Operator")
 public class RegressionGibbsEffectOperator extends Operator {
     public Input<LinearRegression> linearModelInput = new Input<LinearRegression>("linearModel", "description here");
-    public Input<RealParameter> effectInput = new Input<RealParameter>("effect", "description here");
-    public Input<RealParameter> indicatorsInput = new Input<RealParameter>("indicators", "description here");
+    public Input<RealVectorParam<? extends Real>> effectInput = new Input<>("effect", "description here");
+    public Input<RealVectorParam<? extends Real>> indicatorsInput = new Input<>("indicators", "description here");
     public Input<MultivariateDistribution> effectPriorInput = new Input<MultivariateDistribution>("effectPrior", "description here");	    
 
     public static final String GIBBS_OPERATOR = "regressionGibbsEffectOperator";
 
     private LinearRegression linearModel;
-    private RealParameter effect;
-    private RealParameter indicators;
+    private RealVectorParam<? extends Real> effect;
+    private RealVectorParam<? extends Real> indicators;
     private boolean hasNoIndicators = true;
     private MultivariateDistribution effectPrior;
     private int dim;
@@ -45,13 +47,13 @@ public class RegressionGibbsEffectOperator extends Operator {
         this.indicators = indicatorsInput.get();
         if (indicators != null) {
             hasNoIndicators = false;
-            if (indicators.getDimension() != effect.getDimension())
+            if (indicators.size() != effect.size())
                 throw new RuntimeException("Indicator and effect dimensions must match");
         }
         effectNumber = linearModel.getEffectNumber(effect);
         this.effectPrior = effectPriorInput.get();
-        dim = effect.getDimension();
-        N = linearModel.getDependentVariable().getDimension();
+        dim = effect.size();
+        N = (int) linearModel.getDependentVariable().size();
         numEffects = linearModel.getNumberOfFixedEffects();
         X = linearModel.getX(effectNumber);
     }
@@ -62,7 +64,7 @@ public class RegressionGibbsEffectOperator extends Operator {
 
     public void computeForwardDensity(double[] outMean, double[][] outVariance, double[][] outPrecision) {
 
-         Double[] W = linearModel.getTransformedDependentParameter();
+         double[] W = linearModel.getTransformedDependentParameter();
          double[] P = linearModel.getScale();  // outcome precision, fresh copy
 
          for (int k = 0; k < numEffects; k++) {
@@ -78,7 +80,7 @@ public class RegressionGibbsEffectOperator extends Operator {
 
          double[][] XtP = new double[dim][N];
          for (int j = 0; j < dim; j++) {
-             if (hasNoIndicators || indicators.getArrayValue(j) == 1) {
+             if (hasNoIndicators || indicators.get(j) == 1) {
                   for (int i = 0; i < N; i++)
                      XtP[j][i] = X[i][j] * P[i];
              } // else already filled with zeros
@@ -86,9 +88,9 @@ public class RegressionGibbsEffectOperator extends Operator {
 
          double[][] XtPX = new double[dim][dim];
          for (int i = 0; i < dim; i++) {
-             if (hasNoIndicators || indicators.getArrayValue(i) == 1) {
+             if (hasNoIndicators || indicators.get(i) == 1) {
                  for (int j = i; j < dim; j++) {// symmetric
-                     if (hasNoIndicators || indicators.getArrayValue(j) == 1) {
+                     if (hasNoIndicators || indicators.get(j) == 1) {
                          for (int k = 0; k < N; k++)
                              XtPX[i][j] += XtP[i][k] * X[k][j];
                          XtPX[j][i] = XtPX[i][j]; // symmetric
@@ -156,7 +158,7 @@ public class RegressionGibbsEffectOperator extends Operator {
                 mean, variance);
 
         for (int i = 0; i < dim; i++)
-            effect.setValue(i, draw[i]);
+            effect.set(i, draw[i]);
 
         return 0;
     }

@@ -8,7 +8,8 @@ import beast.base.core.Function;
 import beast.base.core.Input;
 import beast.base.inference.Distribution;
 import beast.base.inference.State;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.NonNegativeReal;
+import beast.base.spec.type.RealVector;
 import beast.base.math.matrixalgebra.Matrix;
 
 
@@ -17,16 +18,19 @@ import beast.base.math.matrixalgebra.Matrix;
 @Description("WishartDistribution ported from BEAST1")
 public class WishartDistribution extends Distribution {
     public Input<Double> df = new Input<>("df", "description here");
-    public Input<RealParameter> scaleMatrix = new Input<>("scaleMatrix", "description here");
+    public Input<RealVector<? extends NonNegativeReal>> scaleMatrix = new Input<>("scaleMatrix", "description here");
     public Input<Function> argInput = new Input<>("arg", "argument of distribution");
 
     beastclassic.dr.math.distributions.WishartDistribution wishartdistribution;
     Function arg;
-    
+
     @Override
     public void initAndValidate() {
     	if (scaleMatrix.get() != null) {
-    		wishartdistribution = new beastclassic.dr.math.distributions.WishartDistribution(df.get(), scaleMatrix.get().getValues());
+    		RealVector<?> sm = scaleMatrix.get();
+    		Double[] values = new Double[(int) sm.size()];
+    		for (int i = 0; i < values.length; i++) values[i] = sm.get(i);
+    		wishartdistribution = new beastclassic.dr.math.distributions.WishartDistribution(df.get(), values);
     	} else {
     		wishartdistribution = new beastclassic.dr.math.distributions.WishartDistribution((int)(double) df.get());
     	}

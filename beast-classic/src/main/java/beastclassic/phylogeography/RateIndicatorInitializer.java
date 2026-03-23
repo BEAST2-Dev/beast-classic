@@ -10,7 +10,7 @@ import beast.base.core.Input;
 import beast.base.inference.StateNode;
 import beast.base.inference.StateNodeInitialiser;
 import beast.base.core.BEASTObject;
-import beast.base.inference.parameter.BooleanParameter;
+import beast.base.spec.inference.parameter.BoolVectorParam;
 import beast.base.evolution.substitutionmodel.SubstitutionModel;
 
 
@@ -22,21 +22,21 @@ import beast.base.evolution.substitutionmodel.SubstitutionModel;
 @Description("RateIndicatorInitializer ported from BEAST1")
 public class RateIndicatorInitializer extends BEASTObject implements StateNodeInitialiser{
 
-    public Input<BooleanParameter> indicator = new Input<BooleanParameter>("rateIndicator",
+    public Input<BoolVectorParam> indicator = new Input<>("rateIndicator",
             "rates to indicate the presence or absence of transition matrix entries", Input.Validate.REQUIRED);
     public Input<SubstitutionModel.Base> model =
-            new Input<SubstitutionModel.Base>("substitutionModel", "The substitution model whose transition matrix shall be checked", Input.Validate.REQUIRED);
+            new Input<>("substitutionModel", "The substitution model whose transition matrix shall be checked", Input.Validate.REQUIRED);
 
 
     public int stateCount;
-    private Boolean[] rateIndicator;
+    private boolean[] rateIndicator;
 
 
     @Override
     public void initAndValidate(){
 
         stateCount = model.get().getStateCount();
-        rateIndicator = new Boolean[indicator.get().getDimension()];
+        rateIndicator = new boolean[indicator.get().size()];
         Arrays.fill(rateIndicator, false);
         initStateNodes();
 
@@ -52,7 +52,10 @@ public class RateIndicatorInitializer extends BEASTObject implements StateNodeIn
         }
         rateIndicator[rateIndicator.length-1] = true;   // bottomleft corner of matrix
 
-        indicator.get().assignFromWithoutID(new BooleanParameter(rateIndicator));
+        BoolVectorParam param = indicator.get();
+        for (int i = 0; i < rateIndicator.length; i++) {
+            param.set(i, rateIndicator[i]);
+        }
 
     }
 

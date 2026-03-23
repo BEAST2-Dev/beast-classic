@@ -14,7 +14,11 @@ import beast.base.inference.Operator;
 import beast.base.inference.StateNode;
 import beast.base.core.Input.Validate;
 import beast.base.evolution.tree.TreeInterface;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.domain.Real;
+import beast.base.spec.domain.UnitInterval;
+import beast.base.spec.inference.parameter.RealScalarParam;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.util.Randomizer;
 import beastclassic.evolution.tree.coalescent.GMRFSkyrideLikelihood;
 
@@ -41,9 +45,9 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
     private int maxIterations;
     private double stopValue;
 
-    private RealParameter popSizeParameter;
-    private RealParameter precisionParameter;
-    private RealParameter lambdaParameter;
+    private RealVectorParam<? extends Real> popSizeParameter;
+    private RealScalarParam<? extends PositiveReal> precisionParameter;
+    private RealScalarParam<? extends UnitInterval> lambdaParameter;
 
     GMRFSkyrideLikelihood gmrfField;
 
@@ -61,7 +65,7 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 
         this.scaleFactor = scaleFactorInput.get();
         lambdaScaleFactor = 0.0;
-        fieldLength = popSizeParameter.getDimension();
+        fieldLength = popSizeParameter.size();
 
         this.maxIterations = maxIterationsInput.get();
         this.stopValue = stopValueInput.get();
@@ -229,15 +233,15 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
     @Override
     public double proposal() {
     	try {
-        double currentPrecision = precisionParameter.getValue(0);
+        double currentPrecision = precisionParameter.get();
         double proposedPrecision = this.getNewPrecision(currentPrecision, scaleFactor);
 
-        double currentLambda = this.lambdaParameter.getValue(0);
+        double currentLambda = this.lambdaParameter.get();
         double proposedLambda = this.getNewLambda(currentLambda, lambdaScaleFactor);
 
-        precisionParameter.setValue(0, proposedPrecision);
+        precisionParameter.set(proposedPrecision);
         if (lambdaParameter.isEstimatedInput.get()) {
-        	lambdaParameter.setValue(0, proposedLambda);
+        	lambdaParameter.set(proposedLambda);
         }
 
         DenseVector currentGamma = GMRFSkyrideLikelihood.newDenseVector(gmrfField.getPopSizeParameter());
@@ -282,7 +286,7 @@ public class GMRFSkyrideBlockUpdateOperator extends Operator {
 
 
         for (int i = 0; i < fieldLength; i++)
-            popSizeParameter.setValue(i, proposedGamma.get(i));
+            popSizeParameter.set(i, proposedGamma.get(i));
 
         double hRatio = 0;
 

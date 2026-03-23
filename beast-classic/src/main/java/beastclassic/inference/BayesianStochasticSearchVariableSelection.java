@@ -1,14 +1,9 @@
 package beastclassic.inference;
 
-import beast.base.inference.CalculationNode;
 import beast.base.core.Description;
-import beast.base.core.Input;
 import beast.base.inference.parameter.Parameter;
-import beast.base.inference.parameter.RealParameter;
-import beast.base.evolution.substitutionmodel.Frequencies;
-import beast.base.evolution.substitutionmodel.GeneralSubstitutionModel;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.substitutionmodel.SubstitutionModel;
-import beast.base.evolution.tree.Node;
 import beast.base.util.Randomizer;
 import cern.colt.bitvector.BitVector;
 
@@ -53,10 +48,10 @@ public interface BayesianStochasticSearchVariableSelection {
         }
 
         // unused methods - maybe implement as stateInitializer to make sure initial state is well connected
-        public static void randomize(RealParameter indicators,int dim, boolean reversible) {
+        public static void randomize(RealVectorParam<?> indicators, int dim, boolean reversible) {
             do {
-                for (int i = 0; i < indicators.getDimension(); i++)
-                    indicators.setValue(i,
+                for (int i = 0; i < indicators.size(); i++)
+                    indicators.set(i,
                             (Randomizer.nextDouble() < 0.5) ? 0.0 : 1.0);
             } while (!(isStronglyConnected(indicators.getValues(),
                     dim, reversible)));
@@ -81,7 +76,7 @@ public interface BayesianStochasticSearchVariableSelection {
         * a directed path from any vertex to any other vertex
         *
         */
-        public static boolean isStronglyConnected(Double[] indicatorValues, int dim, boolean reversible) {
+        public static boolean isStronglyConnected(double[] indicatorValues, int dim, boolean reversible) {
             BitVector visited = new BitVector(dim);
             boolean connected = true;
             for (int i = 0; i < dim && connected; i++) {
@@ -92,7 +87,7 @@ public interface BayesianStochasticSearchVariableSelection {
             return connected;
         }
 
-        private static boolean hasEdge(int i, int j, Double[] indicatorValues,
+        private static boolean hasEdge(int i, int j, double[] indicatorValues,
                                        int dim, boolean reversible) {
             return i != j && indicatorValues[getEntry(i, j, dim, reversible)] == 1;
         }
@@ -112,7 +107,7 @@ public interface BayesianStochasticSearchVariableSelection {
             return entry;
         }
 
-        private static void depthFirstSearch(int node, BitVector visited, Double[] indicatorValues,
+        private static void depthFirstSearch(int node, BitVector visited, double[] indicatorValues,
                                              int dim, boolean reversible) {
             visited.set(node);
             for (int v = 0; v < dim; v++) {

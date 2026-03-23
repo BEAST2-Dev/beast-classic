@@ -38,7 +38,11 @@ import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.inference.Operator;
 import beast.base.inference.StateNode;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.domain.Real;
+import beast.base.spec.domain.UnitInterval;
+import beast.base.spec.inference.parameter.RealScalarParam;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.util.Randomizer;
 import beastclassic.evolution.tree.coalescent.GMRFMultilocusSkyrideLikelihood;
 
@@ -63,9 +67,9 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
     private int maxIterations;
     private double stopValue;
 
-    private RealParameter popSizeParameter;
-    private RealParameter precisionParameter;
-    private RealParameter lambdaParameter;
+    private RealVectorParam<? extends Real> popSizeParameter;
+    private RealScalarParam<? extends PositiveReal> precisionParameter;
+    private RealScalarParam<? extends UnitInterval> lambdaParameter;
 
     GMRFMultilocusSkyrideLikelihood gmrfField;
 
@@ -83,7 +87,7 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
 
         this.scaleFactor = scaleFactorInput.get();
         lambdaScaleFactor = 0.0;
-        fieldLength = popSizeParameter.getDimension();
+        fieldLength = popSizeParameter.size();
 
         this.maxIterations = maxIterationsInput.get();
         this.stopValue = stopValueInput.get();
@@ -249,21 +253,16 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
     @Override
     public double proposal() {
 
-        double currentPrecision = precisionParameter.getValue(0);
+        double currentPrecision = precisionParameter.get();
         double proposedPrecision = this.getNewPrecision(currentPrecision, scaleFactor);
 
-        double currentLambda = this.lambdaParameter.getValue(0);
+        double currentLambda = this.lambdaParameter.get();
         double proposedLambda = this.getNewLambda(currentLambda, lambdaScaleFactor);
 
-        precisionParameter.setValue(0, proposedPrecision);
-        lambdaParameter.setValue(0, proposedLambda);
+        precisionParameter.set(proposedPrecision);
+        lambdaParameter.set(proposedLambda);
 
-        Double [] Values = gmrfField.getPopSizeParameter().getValues();
-        double [] values = new double[Values.length];
-        for (int i = 0; i < values.length; i++) {
-        	values[i] = Values[i];
-        }
-        DenseVector currentGamma = new DenseVector(values);
+        DenseVector currentGamma = new DenseVector(gmrfField.getPopSizeParameter().getValues());
         DenseVector proposedGamma;
 
         SymmTridiagMatrix currentQ = gmrfField.getStoredScaledWeightMatrix(currentPrecision, currentLambda);
@@ -321,7 +320,7 @@ public class GMRFMultilocusSkyrideBlockUpdateOperator extends Operator {
         */
 
         for (int i = 0; i < fieldLength; i++)
-            popSizeParameter.setValue(i, proposedGamma.get(i));
+            popSizeParameter.set(i, proposedGamma.get(i));
 
         //((Parameter.Abstract) popSizeParameter).fireParameterChangedEvent();
 

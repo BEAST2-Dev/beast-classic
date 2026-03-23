@@ -33,7 +33,7 @@ public class LogisticRegression extends GeneralizedLinearModel {
 
 		for (int i = 0; i < N; i++) {
 			// for each "pseudo"-datum
-			logLikelihood += dependentParam.getArrayValue(i) * xBeta[i]
+			logLikelihood += dependentParam.get(i) * xBeta[i]
 					- Math.log(1.0 + Math.exp(xBeta[i]));
 
 		}

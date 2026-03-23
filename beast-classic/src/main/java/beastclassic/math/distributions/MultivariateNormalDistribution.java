@@ -9,16 +9,17 @@ import beast.base.core.Function;
 import beast.base.core.Input;
 import beast.base.inference.Distribution;
 import beast.base.inference.State;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.type.RealVector;
 
 
 
 
 @Description("MultivariateNormalDistribution ported from BEAST1")
 public class MultivariateNormalDistribution extends Distribution {
-    public Input<RealParameter> mean = new Input<RealParameter>("mean", "description here");
-    public Input<RealParameter> precision = new Input<RealParameter>("precision", "description here");
-    public Input<Function> argInput = new Input<Function>("arg", "argument of distribution");
+    public Input<RealVector<? extends Real>> mean = new Input<>("mean", "description here");
+    public Input<RealVector<? extends Real>> precision = new Input<>("precision", "description here");
+    public Input<Function> argInput = new Input<>("arg", "argument of distribution");
 
     beastclassic.dr.math.distributions.MultivariateNormalDistribution multivariatenormaldistribution;
 
@@ -27,9 +28,15 @@ public class MultivariateNormalDistribution extends Distribution {
     @Override
     public void initAndValidate() {
         multivariatenormaldistribution = new beastclassic.dr.math.distributions.MultivariateNormalDistribution(
-                             mean.get().getValues(),
-                             precision.get().getValues());
+                             toDoubleArray(mean.get()),
+                             toDoubleArray(precision.get()));
         arg = argInput.get();
+    }
+
+    private static Double[] toDoubleArray(RealVector<?> v) {
+        Double[] arr = new Double[(int) v.size()];
+        for (int i = 0; i < arr.length; i++) arr[i] = v.get(i);
+        return arr;
     }
 
     @Override
@@ -117,8 +124,10 @@ public class MultivariateNormalDistribution extends Distribution {
     public static void main(String[] args) {
     	try {
     		beastclassic.math.distributions.MultivariateNormalDistribution m = new MultivariateNormalDistribution();
-	    	RealParameter mean = new RealParameter("0.0");
-	    	RealParameter precision = new RealParameter("1.0");
+	    	var mean = new beast.base.spec.inference.parameter.RealVectorParam<>();
+	    	mean.initByName("value", "0.0");
+	    	var precision = new beast.base.spec.inference.parameter.RealVectorParam<>();
+	    	precision.initByName("value", "1.0");
 	    	m.initByName("mean", mean, "precision", precision);
 	        m.testPdf();
 	        m.testRandomDraws();

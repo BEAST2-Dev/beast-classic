@@ -5,7 +5,8 @@ package beastclassic.evolution.operators;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.inference.Operator;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.inference.distribution.Gamma;
 import beast.base.util.Randomizer;
 import beastclassic.inference.distribution.*;
@@ -18,13 +19,13 @@ import beastclassic.inference.distribution.LinearRegression;
 @Description("Regression Gibbs Precision Operator")
 public class RegressionGibbsPrecisionOperator extends Operator {
     public Input<LinearRegression> linearModelInput = new Input<LinearRegression>("linearModel", "description here");
-    public Input<RealParameter> precisionInput = new Input<RealParameter>("precision", "description here");
+    public Input<RealVectorParam<? extends Real>> precisionInput = new Input<>("precision", "description here");
     public Input<Gamma> priorInput = new Input<Gamma>("prior", "description here");
 
     public static final String GIBBS_OPERATOR = "regressionGibbsPrecisionOperator";
 
     private LinearRegression linearModel;
-    private RealParameter precision;
+    private RealVectorParam<? extends Real> precision;
     private int dim;
     private int N;
     private int[] scaleDesign;
@@ -37,9 +38,9 @@ public class RegressionGibbsPrecisionOperator extends Operator {
         this.prior = priorInput.get();
         this.linearModel = linearModelInput.get();
         this.precision = precisionInput.get();
-        this.dim = precision.getDimension();
+        this.dim = precision.size();
         scaleDesign = linearModel.getScaleDesign();
-        N = linearModel.getDependentVariable().getDimension();
+        N = (int) linearModel.getDependentVariable().size();
     }
 
     public int getStepCount() {
@@ -49,7 +50,7 @@ public class RegressionGibbsPrecisionOperator extends Operator {
     @Override
     public double proposal() {
 
-        Double[] Y = linearModel.getTransformedDependentParameter();
+        double[] Y = linearModel.getTransformedDependentParameter();
         double[] xBeta = linearModel.getXBeta();
 
         
@@ -86,7 +87,7 @@ public class RegressionGibbsPrecisionOperator extends Operator {
             final double rate = priorRate + 0.5 * SSE;
 
             final double draw = Randomizer.nextGamma(shape, rate); // Gamma( \alpha + n/2 , \beta + (1/2)*SSE )
-            precision.setValue(k, draw);
+            precision.set(k, draw);
         }
 
         return Double.POSITIVE_INFINITY;

@@ -4,22 +4,24 @@ package beastclassic.inference.distribution;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.type.RealVector;
+import beast.base.spec.inference.parameter.RealVectorParam;
 
 @Description("(Log-) linear regression model")
 public class LinearRegression extends GeneralizedLinearModel {
-	public Input<Boolean> logTransformInput = new Input<Boolean>("logTransform", "linear model if false, log-linear model if true", false);
-	public Input<RealParameter> scaleInput = new Input<RealParameter>("scale", "description here", Validate.REQUIRED);
-	public Input<RealParameter> scaleDesignInput = new Input<RealParameter>("scaleDesign", "description here");
+	public Input<Boolean> logTransformInput = new Input<>("logTransform", "linear model if false, log-linear model if true", false);
+	public Input<RealVector<? extends Real>> scaleInput = new Input<>("scale", "description here", Validate.REQUIRED);
+	public Input<RealVector<? extends Real>> scaleDesignInput = new Input<>("scaleDesign", "description here");
 
 	@Override
 	public void initAndValidate() {
 		super.initAndValidate();
 		this.logTransform = logTransformInput.get();
-		
+
 		if (scaleDesignInput.get() == null) {
-			RealParameter scaleDesign = new RealParameter();
-			scaleDesign.setDimension(dependentParam.getDimension());
+			RealVectorParam<Real> scaleDesign = new RealVectorParam<>();
+			scaleDesign.setDimension(N);
 			addScaleParameter(scaleInput.get(), scaleDesign);
 		} else {
 			addScaleParameter(scaleInput.get(), scaleDesignInput.get());
@@ -30,11 +32,13 @@ public class LinearRegression extends GeneralizedLinearModel {
 
 	private boolean logTransform = false;
 
-	public Double[] getTransformedDependentParameter() {
-		Double[] y = dependentParam.getValues();
-		if (logTransform) {
-			for (int i = 0; i < y.length; i++)
+	public double[] getTransformedDependentParameter() {
+		double[] y = new double[N];
+		for (int i = 0; i < N; i++) {
+			y[i] = dependentParam.get(i);
+			if (logTransform) {
 				y[i] = Math.log(y[i]);
+			}
 		}
 		return y;
 	}
@@ -43,15 +47,12 @@ public class LinearRegression extends GeneralizedLinearModel {
 		double logLikelihood = 0;
 		double[] xBeta = getXBeta();
 		double[] precision = getScale();
-		Double[] y = getTransformedDependentParameter();
+		double[] y = getTransformedDependentParameter();
 
-		for (int i = 0; i < N; i++) { // assumes that all observations are
-										// independent given fixed and random
-										// effects
+		for (int i = 0; i < N; i++) {
 			if (logTransform)
 				logLikelihood -= y[i]; // Jacobian
 			logLikelihood += 0.5 * Math.log(precision[i]) - 0.5 * (y[i] - xBeta[i]) * (y[i] - xBeta[i]) * precision[i];
-
 		}
 		return N * normalizingConstant + logLikelihood;
 	}

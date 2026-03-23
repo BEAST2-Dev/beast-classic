@@ -4,7 +4,11 @@ import beast.base.core.Citation;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.domain.Real;
+import beast.base.spec.domain.UnitInterval;
+import beast.base.spec.inference.parameter.RealScalarParam;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.tree.IntervalType;
 import beast.base.evolution.tree.Tree;
 import beast.base.evolution.tree.TreeIntervals;
@@ -26,8 +30,8 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 	public Input<TreeList> treesInput = new Input<>("trees", "? ? ? ?", Validate.REQUIRED);
 //	public Input<RealParameter> betaInput = new Input<>("beta","? ? ? ?");
 //	public Input<RealParameter> dMatrixInput = new Input<>("dMatrix","? ? ? ?");
-	public Input<RealParameter> phiInput = new Input<>("phi","? ? ? ?");
-	public Input<RealParameter> ploidyFactorsParameterInput = new Input<>("ploidyFactors","? ? ? ?");
+	public Input<RealScalarParam<? extends PositiveReal>> phiInput = new Input<>("phi","? ? ? ?");
+	public Input<RealVectorParam<? extends PositiveReal>> ploidyFactorsParameterInput = new Input<>("ploidyFactors","? ? ? ?");
 	public Input<Integer> numGridPointsInput = new Input<>("numGridPoints","? ? ? ?");
 	public Input<Double> cutOffInput = new Input<>("cutOff", "? ? ? ?");
 	
@@ -57,8 +61,8 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
     // sortedPoints[i][1] is 0 if the i-th point is a grid point, 1 if it's a sampling point, and 2 if it's a coalescent point
     // sortedPoints[i][2] is the number of lineages present in the interval starting at time sortedPoints[i][0]
 
-    protected RealParameter phiParameter;
-    protected RealParameter ploidyFactors;
+    protected RealScalarParam<? extends PositiveReal> phiParameter;
+    protected RealVectorParam<? extends PositiveReal> ploidyFactors;
     protected double[] ploidySums;
     protected double[] storedPloidySums;
     protected SymmTridiagMatrix precMatrix;
@@ -82,8 +86,8 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
         this.precisionParameter = precParameterInput.get();
         this.lambdaParameter = lambdaInput.get();
         if (lambdaParameter == null) {
-        	lambdaParameter = new RealParameter("1.0");
-        	lambdaParameter.initByName("estimate", false);
+        	lambdaParameter = new RealScalarParam<>();
+        	lambdaParameter.initByName("value", 1.0, "estimate", false);
         }
 //        this.betaParameter = betaInput.get();
 //        this.dMatrix = dMatrixInput.get();
@@ -112,12 +116,12 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 
         int correctFieldLength = getCorrectFieldLength();
 
-        if (popSizeParameter.getDimension() <= 1) {
+        if (popSizeParameter.size() <= 1) {
             // popSize dimension hasn't been set yet, set it here:
             popSizeParameter.setDimension(correctFieldLength);
         }
 
-        fieldLength = popSizeParameter.getDimension();
+        fieldLength = popSizeParameter.size();
         if (correctFieldLength != fieldLength) {
             throw new IllegalArgumentException("Population size parameter should have length " + correctFieldLength);
         }
@@ -126,9 +130,9 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 
 
         if (ploidyFactors == null) {
-        	ploidyFactors = new RealParameter("1.0");
-        	ploidyFactors.setDimension(treeList.size());
-        } else if (ploidyFactors.getDimension() != treeList.size()) {
+        	ploidyFactors = new RealVectorParam<>();
+        	ploidyFactors.initByName("value", 1.0, "dimension", treeList.size());
+        } else if (ploidyFactors.size() != treeList.size()) {
             throw new IllegalArgumentException("Ploidy factors parameter should have length " + treeList.size());
         }
 
@@ -283,7 +287,7 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 
     public void initializationReport() {
         System.out.println("Creating a GMRF smoothed skyride model for multiple loci:");
-        System.out.println("\tPopulation sizes: " + popSizeParameter.getDimension());
+        System.out.println("\tPopulation sizes: " + popSizeParameter.size());
         System.out.println("\tIf you publish results using this model, please reference: ");
         System.out.println("\t\tMinin, Bloomquist and Suchard (2008) Molecular Biology and Evolution, 25, 1459-1471, and");
         System.out.println("\t\tGill, Lemey, Faria, Rambaut, Shapiro and Suchard (2013) Molecular Biology and Evolution, 30, 713-724.");
@@ -569,7 +573,7 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
         // Matrix operations taken from block update sampler to calculate data likelihood and field prior
 
         double currentLike = 0;
-        Double[] currentGamma = popSizeParameter.getValues();
+        double[] currentGamma = popSizeParameter.getValues();
 
         for (int i = 0; i < fieldLength; i++) {
             currentLike += -numCoalEvents[i] * currentGamma[i] + ploidySums[i] - sufficientStatistics[i] * Math.exp(-currentGamma[i]);
@@ -590,20 +594,15 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
 
         double currentLike = 0;
         DenseVector diagonal1 = new DenseVector(fieldLength);
-        Double [] Values = popSizeParameter.getValues();
-        double [] values = new double[Values.length];
-        for (int i = 0; i < values.length; i++) {
-        	values[i] = Values[i];
-        }
-        DenseVector currentGamma = new DenseVector(values);
+        DenseVector currentGamma2 = new DenseVector(popSizeParameter.getValues());
 
-        SymmTridiagMatrix currentQ = getScaledWeightMatrix(precisionParameter.getValue(0), lambdaParameter.getValue(0));
-        currentQ.mult(currentGamma, diagonal1);
+        SymmTridiagMatrix currentQ = getScaledWeightMatrix(precisionParameter.get(), lambdaParameter.get());
+        currentQ.mult(currentGamma2, diagonal1);
 
         //        currentLike += 0.5 * logGeneralizedDeterminant(currentQ) - 0.5 * currentGamma.dot(diagonal1);
 
-        currentLike += 0.5 * (fieldLength - 1) * Math.log(precisionParameter.getValue(0)) - 0.5 * currentGamma.dot(diagonal1);
-        if (lambdaParameter.getValue(0) == 1) {
+        currentLike += 0.5 * (fieldLength - 1) * Math.log(precisionParameter.get()) - 0.5 * currentGamma2.dot(diagonal1);
+        if (lambdaParameter.get() == 1) {
             currentLike -= (fieldLength - 1) / 2.0 * LOG_TWO_TIMES_PI;
         } else {
             currentLike -= fieldLength / 2.0 * LOG_TWO_TIMES_PI;
@@ -674,7 +673,7 @@ public class GMRFMultilocusSkyrideLikelihood extends GMRFSkyrideLikelihood {
     }
 
     public double getPopulationFactor(int nt) {
-        return ploidyFactors.getValue(nt);
+        return ploidyFactors.get(nt);
     }
 
 //    protected void handleModelChangedEvent(Model model, Object object, int index) {

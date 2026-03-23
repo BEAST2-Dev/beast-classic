@@ -29,46 +29,30 @@ package beastclassic.evolution.tree.coalescent;
 import java.util.ArrayList;
 import java.util.List;
 
+import beast.base.core.BEASTInterface;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.type.RealScalar;
 import beast.base.evolution.tree.coalescent.PopulationFunction;
 
 @Description("Demographic function according to logistic growth")
 public class LogisticGrowth extends PopulationFunction.Abstract  {
-    final public Input<RealParameter> N0ParameterInput = new Input<>("popSize",
+    final public Input<RealScalar<? extends PositiveReal>> N0ParameterInput = new Input<>("popSize",
             "present-day population size (defaults to 1.0). ");
-    final public Input<RealParameter> growthRateParameterInput = new Input<>("growthRate",
+    final public Input<RealScalar<? extends PositiveReal>> growthRateParameterInput = new Input<>("growthRate",
             "growth rate of the logistic growth", Validate.REQUIRED);
-    final public Input<RealParameter> shapeParameterInput = new Input<>("shape",
+    final public Input<RealScalar<? extends PositiveReal>> shapeParameterInput = new Input<>("shape",
             "shape parameter of the logistic growth", Validate.REQUIRED);
-	
 
     public void initAndValidate() {
-        this.N0Parameter = N0ParameterInput.get();
-        if (N0Parameter == null) {
-        	N0Parameter = new RealParameter("1.0");
-        }
-        N0Parameter.setUpper(Double.POSITIVE_INFINITY);
-        N0Parameter.setLower(0.0);
-
-        this.growthRateParameter = growthRateParameterInput.get();;
-        growthRateParameter.setUpper(Double.POSITIVE_INFINITY);
-        growthRateParameter.setLower(0.0);
-
-        this.shapeParameter = shapeParameterInput.get();
-        shapeParameter.setUpper(Double.POSITIVE_INFINITY);
-        shapeParameter.setLower(0.0);
-
-//        this.alpha = 0.5;
-//        this.usingGrowthRate = true;
-
+        // domain constraints handled by spec type PositiveReal
     }
 
-    RealParameter N0Parameter = null;
-    RealParameter growthRateParameter = null;
-    RealParameter shapeParameter = null;
+    private double getN0() {
+        return N0ParameterInput.get() != null ? N0ParameterInput.get().get() : 1.0;
+    }
 //    double alpha = 0.5;
 //    boolean usingGrowthRate = true;
 
@@ -78,18 +62,18 @@ public class LogisticGrowth extends PopulationFunction.Abstract  {
 	@Override
 	public List<String> getParameterIds() {
 		List<String> ids = new ArrayList<>();
-		ids.add(N0ParameterInput.get().getID());
-		ids.add(growthRateParameterInput.get().getID());
-		ids.add(shapeParameterInput.get().getID());
+		if (N0ParameterInput.get() instanceof BEASTInterface bi) ids.add(bi.getID());
+		if (growthRateParameterInput.get() instanceof BEASTInterface bi) ids.add(bi.getID());
+		if (shapeParameterInput.get() instanceof BEASTInterface bi) ids.add(bi.getID());
         return ids;
 	}
 
 
 	@Override
 	public double getPopSize(double t) {
-        double nZero = N0Parameter.getValue();
-        double r = growthRateParameter.getValue();
-        double c = shapeParameter.getValue();
+        double nZero = getN0();
+        double r = growthRateParameterInput.get().get();
+        double c = shapeParameterInput.get().get();
 
 //		return nZero * (1 + c) / (1 + (c * Math.exp(r*t)));
 //		AER rearranging this to use exp(-rt) may help
@@ -106,9 +90,9 @@ public class LogisticGrowth extends PopulationFunction.Abstract  {
      */
     @Override
     public double getIntensity(double t) {
-        double nZero = N0Parameter.getValue();
-        double r = growthRateParameter.getValue();
-        double c = shapeParameter.getValue();
+        double nZero = getN0();
+        double r = growthRateParameterInput.get().get();
+        double c = shapeParameterInput.get().get();
 
         double ert = Math.exp(r * t);
         if( lowLimit == 0 ) {

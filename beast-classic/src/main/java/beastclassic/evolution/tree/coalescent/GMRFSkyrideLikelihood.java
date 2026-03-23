@@ -31,7 +31,12 @@ import beast.base.core.Citation;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.domain.Real;
+import beast.base.spec.domain.UnitInterval;
+import beast.base.spec.inference.parameter.RealScalarParam;
+import beast.base.spec.inference.parameter.RealVectorParam;
+import beast.base.spec.type.RealVector;
 import beast.base.evolution.tree.IntervalType;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
@@ -62,12 +67,12 @@ import java.util.List;
         "Molecular biology and evolution, 25(7), 1459-1471.",
         year = 2008, firstAuthorSurname = "Minin", DOI="10.1093/molbev/msn090")
 public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalescentLikelihood*/  {
-    public Input<RealParameter> groupParameterInput = new Input<RealParameter>("groupSizes","",Validate.REQUIRED);
-    public Input<RealParameter> popSizeParameterInput = new Input<RealParameter>("populationSizes","",Validate.REQUIRED);
-    public Input<RealParameter> precParameterInput = new Input<RealParameter>("precisionParameter","",Validate.REQUIRED);
-    public Input<RealParameter> lambdaInput = new Input<RealParameter>("lambda","");
-    public Input<Boolean> timeAwareSmoothingInput = new Input<Boolean>("timeAwareSmoothing","use time Aware Smoothing", false);
-    public Input<Boolean> rescaleByRootHeightInput = new Input<Boolean>("rescaleByRootHeightInput","rescale By Root Height", false);
+    public Input<RealVectorParam<? extends PositiveReal>> groupParameterInput = new Input<>("groupSizes","",Validate.REQUIRED);
+    public Input<RealVectorParam<? extends Real>> popSizeParameterInput = new Input<>("populationSizes","",Validate.REQUIRED);
+    public Input<RealScalarParam<? extends PositiveReal>> precParameterInput = new Input<>("precisionParameter","",Validate.REQUIRED);
+    public Input<RealScalarParam<? extends UnitInterval>> lambdaInput = new Input<>("lambda","");
+    public Input<Boolean> timeAwareSmoothingInput = new Input<>("timeAwareSmoothing","use time Aware Smoothing", false);
+    public Input<Boolean> rescaleByRootHeightInput = new Input<>("rescaleByRootHeightInput","rescale By Root Height", false);
 
     public GMRFSkyrideLikelihood() {
 		//popSizeInput.setRule(Validate.OPTIONAL);
@@ -79,10 +84,10 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 	public static final boolean TIME_AWARE_IS_ON_BY_DEFAULT = true;
 
 	// PRIVATE STUFF
-	protected RealParameter popSizeParameter;
-	protected RealParameter groupSizeParameter;
-	protected RealParameter precisionParameter;
-	protected RealParameter lambdaParameter;
+	protected RealVectorParam<? extends Real> popSizeParameter;
+	protected RealVectorParam<? extends PositiveReal> groupSizeParameter;
+	protected RealScalarParam<? extends PositiveReal> precisionParameter;
+	protected RealScalarParam<? extends UnitInterval> lambdaParameter;
 //	protected RealParameter betaParameter;
 //	protected double[] gmrfWeights;
 	protected int fieldLength;
@@ -152,8 +157,8 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 		this.precisionParameter = precParameterInput.get();
 		this.lambdaParameter = lambdaInput.get();
 		if (lambdaParameter == null) {
-			lambdaParameter = new RealParameter();
-			lambdaParameter.initByName("value","1.0", "estimate", false);
+			lambdaParameter = new RealScalarParam<>();
+			lambdaParameter.initByName("value", 1.0, "estimate", false);
 		}
 //		this.betaParameter = betaInput.get();
 //		this.dMatrix = dMatrixInput.get();
@@ -169,12 +174,12 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 
         int correctFieldLength = getCorrectFieldLength();
 
-        if (popSizeParameter.getDimension() <= 1) {
+        if (popSizeParameter.size() <= 1) {
             // popSize dimension hasn't been set yet, set it here:
             popSizeParameter.setDimension(correctFieldLength);
         }
 
-		fieldLength = popSizeParameter.getDimension();
+		fieldLength = popSizeParameter.size();
 		if (correctFieldLength != fieldLength) {
 			throw new IllegalArgumentException("Population size parameter should have length " + correctFieldLength);
 		}
@@ -195,7 +200,7 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 
 		/* Force all entries in groupSizeParameter = 1 for compatibility with Tracer */
 		if (groupSizeParameter != null) {
-			groupSizeParameter.initByName("value", "1.0", "dimension", correctFieldLength);
+			groupSizeParameter.initByName("value", 1.0, "dimension", correctFieldLength);
 //			for (int i = 0; i < groupSizeParameter.getDimension(); i++)
 //				groupSizeParameter.setValue(i, 1.0);
 		}
@@ -239,7 +244,7 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 
 	public void initializationReport() {
 		System.out.println("Creating a GMRF smoothed skyride model:");
-		System.out.println("\tPopulation sizes: " + popSizeParameter.getDimension());
+		System.out.println("\tPopulation sizes: " + popSizeParameter.size());
 	}
 
 //	public static void checkTree(Tree treeModel) {
@@ -790,7 +795,7 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 		// Matrix operations taken from block update sampler to calculate data likelihood and field prior
 
 		double currentLike = 0;
-        Double[] currentGamma = popSizeParameter.getValues();
+        double[] currentGamma = popSizeParameter.getValues();
 
 		for (int i = 0; i < fieldLength; i++) {
 			currentLike += -currentGamma[i] - sufficientStatistics[i] * Math.exp(-currentGamma[i]);
@@ -812,13 +817,13 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
         DenseVector diagonal1 = new DenseVector(fieldLength);
         DenseVector currentGamma = newDenseVector(popSizeParameter);
 
-        SymmTridiagMatrix currentQ = getScaledWeightMatrix(precisionParameter.getValue(0), lambdaParameter.getValue(0));
+        SymmTridiagMatrix currentQ = getScaledWeightMatrix(precisionParameter.get(), lambdaParameter.get());
         currentQ.mult(currentGamma, diagonal1);
 
 //        currentLike += 0.5 * logGeneralizedDeterminant(currentQ) - 0.5 * currentGamma.dot(diagonal1);
 
-        currentLike += 0.5 * (fieldLength - 1) * Math.log(precisionParameter.getValue(0)) - 0.5 * currentGamma.dot(diagonal1);
-        if (lambdaParameter.getValue(0) == 1) {
+        currentLike += 0.5 * (fieldLength - 1) * Math.log(precisionParameter.get()) - 0.5 * currentGamma.dot(diagonal1);
+        if (lambdaParameter.get() == 1) {
             currentLike -= (fieldLength - 1) / 2.0 * LOG_TWO_TIMES_PI;
         } else {
             currentLike -= fieldLength / 2.0 * LOG_TWO_TIMES_PI;
@@ -851,15 +856,15 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 	}
 
 
-	public RealParameter getPrecisionParameter() {
+	public RealScalarParam<? extends PositiveReal> getPrecisionParameter() {
 		return precisionParameter;
 	}
 
-	public RealParameter getPopSizeParameter() {
+	public RealVectorParam<? extends Real> getPopSizeParameter() {
 		return popSizeParameter;
 	}
 
-	public RealParameter getLambdaParameter() {
+	public RealScalarParam<? extends UnitInterval> getLambdaParameter() {
 		return lambdaParameter;
 	}
 
@@ -877,10 +882,10 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 
 	public double calculateWeightedSSE() {
 		double weightedSSE = 0;
-		double currentPopSize = popSizeParameter.getValue(0);
+		double currentPopSize = popSizeParameter.get(0);
 		double currentInterval = coalescentIntervals[0];
 		for (int j = 1; j < fieldLength; j++) {
-			double nextPopSize = popSizeParameter.getValue(j);
+			double nextPopSize = popSizeParameter.get(j);
 			double nextInterval = coalescentIntervals[j];
 			double delta = nextPopSize - currentPopSize;
 			double weight = (currentInterval + nextInterval) / 2.0;
@@ -895,11 +900,10 @@ public class GMRFSkyrideLikelihood extends TreeDistribution /*OldAbstractCoalesc
 	// ****************************************************************
 	// Private and protected stuff
 	// ****************************************************************
-    public static DenseVector newDenseVector(RealParameter x) {
-        Double [] Gammas = x.getValues();
-        double [] gammas = new double [Gammas.length];
+    public static DenseVector newDenseVector(RealVector<?> x) {
+        double [] gammas = new double [(int) x.size()];
         for (int i = 0; i < gammas.length; i++) {
-        	gammas[i] = Gammas[i];
+        	gammas[i] = x.get(i);
         }
         return new DenseVector(gammas);
     }
