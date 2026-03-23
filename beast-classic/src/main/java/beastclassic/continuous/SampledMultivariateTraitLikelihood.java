@@ -15,7 +15,8 @@ import java.util.Random;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.inference.State;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.TreeInterface;
 import beast.base.math.matrixalgebra.Vector;
@@ -56,8 +57,13 @@ public class SampledMultivariateTraitLikelihood extends AbstractMultivariateTrai
 				o =  node.getMetaData("long");
 				trait[k++] = (Double) o;
 			}
-			RealParameter traitParameter = new RealParameter(trait);
-			traitParameter.setBounds(this.traitParameter.getLower(), this.traitParameter.getUpper());
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < trait.length; i++) {
+				if (i > 0) sb.append(" ");
+				sb.append(trait[i]);
+			}
+			RealVectorParam<Real> traitParameter = new RealVectorParam<>();
+			traitParameter.initByName("value", sb.toString());
 			this.traitParameter.assignFromWithoutID(traitParameter);
 		}
 	}

@@ -34,7 +34,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	RealVectorParam<? extends Real> parameter;
 
 	/** the number of trait dimensions per node **/
-	int traitDim;
+	public int traitDim;
 
 	/** flag to indicate the root has no trait **/
 	boolean rootHasNoTrait;

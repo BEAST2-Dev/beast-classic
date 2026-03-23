@@ -34,7 +34,8 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.inference.Operator;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
 import beast.base.evolution.tree.TreeInterface;
@@ -48,7 +49,7 @@ import beast.base.math.matrixalgebra.SymmetricMatrix;
 public class PrecisionMatrixGibbsOperator extends Operator {
 
 	public Input<Tree> treeInput = new Input<Tree>("tree", "", Validate.REQUIRED);
-	public Input<RealParameter> precisionParamInput = new Input<RealParameter>("parameter","parameter representing precision matrix", Validate.REQUIRED);
+	public Input<RealVectorParam<? extends Real>> precisionParamInput = new Input<>("parameter","parameter representing precision matrix", Validate.REQUIRED);
     public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
 
 	public Input<AbstractMultivariateTraitLikelihood> traitModelInput = new Input<AbstractMultivariateTraitLikelihood>("likelihood","", Validate.REQUIRED);
@@ -65,7 +66,7 @@ public class PrecisionMatrixGibbsOperator extends Operator {
 
     private AbstractMultivariateTraitLikelihood traitModel;
     WishartDistribution priorDistribution;
-    private RealParameter precisionParam;
+    private RealVectorParam<? extends Real> precisionParam;
     //    private WishartDistribution priorDistribution;
     private double priorDf;
     private SymmetricMatrix priorInverseScaleMatrix;
@@ -94,7 +95,7 @@ public class PrecisionMatrixGibbsOperator extends Operator {
                     (SymmetricMatrix) (new SymmetricMatrix(priorDistribution.scaleMatrix())).inverse();
         this.treeModel = traitModel.getTreeModel();
         traitName = traitModel.getTraitName();
-        dim = precisionParam.getMinorDimension1();//getRowDimension(); // assumed to be square
+        dim = (int) Math.sqrt(precisionParam.size()); // assumed to be square
 
 //        isSampledTraitLikelihood = (traitModel instanceof SampledMultivariateTraitLikelihood);
 
@@ -220,7 +221,7 @@ public class PrecisionMatrixGibbsOperator extends Operator {
 	
 	        for (int i = 0; i < dim; i++) {
 	            for (int j = 0; j < dim; j++)
-	                precisionParam.setValue(i*dim + j, draw[j][i]);
+	                precisionParam.set(i*dim + j, draw[j][i]);
 	        }
     	} catch (Exception e) {
 			return Double.NEGATIVE_INFINITY;

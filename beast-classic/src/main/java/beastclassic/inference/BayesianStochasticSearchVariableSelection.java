@@ -1,7 +1,7 @@
 package beastclassic.inference;
 
 import beast.base.core.Description;
-import beast.base.inference.parameter.Parameter;
+import beast.base.spec.inference.parameter.BoolVectorParam;
 import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.substitutionmodel.SubstitutionModel;
 import beast.base.util.Randomizer;
@@ -17,7 +17,7 @@ import cern.colt.bitvector.BitVector;
 @Description("BayesianStochasticSearchVariableSelection ported from BEAST1")
 public interface BayesianStochasticSearchVariableSelection {
 
-    public Parameter getIndicators();
+    public BoolVectorParam getIndicators();
 
     public boolean validState();
 

@@ -3,7 +3,8 @@ package beastclassic.continuous;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beastclassic.dr.math.distributions.MultivariateNormalDistribution;
 import beastclassic.evolution.substitutionmodel.ContinuousSubstitutionModel;
 import beast.base.evolution.tree.Tree;
@@ -12,7 +13,7 @@ import beast.base.evolution.tree.Tree;
 
 @Description("something to do with multi variate diffusion...")
 public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
-	public Input<RealParameter> diffusionPrecisionMatrixInput = new Input<RealParameter>("precisionMatrix","precision matrix for diffusion process", Validate.REQUIRED);
+	public Input<RealVectorParam<? extends Real>> diffusionPrecisionMatrixInput = new Input<RealVectorParam<? extends Real>>("precisionMatrix","precision matrix for diffusion process", Validate.REQUIRED);
  
 	public static final String DIFFUSION_PROCESS = "multivariateDiffusionModel";
     public static final String DIFFUSION_CONSTANT = "precisionMatrix";   
@@ -29,14 +30,14 @@ public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
     public void initAndValidate() {
     	//diffusionPrecisionMatrix = 
         this.diffusionPrecisionMatrixParameter = diffusionPrecisionMatrixInput.get();
-        dimension = (int) Math.sqrt(diffusionPrecisionMatrixParameter.getDimension());
-        if (dimension * dimension != diffusionPrecisionMatrixParameter.getDimension()) {
+        dimension = (int) Math.sqrt(diffusionPrecisionMatrixParameter.size());
+        if (dimension * dimension != diffusionPrecisionMatrixParameter.size()) {
         	throw new IllegalArgumentException ("Dimension of diffusion matrix should be a square");
         }
         calculatePrecisionInfo();
     }
 
-    public RealParameter getPrecisionParameter() {
+    public RealVectorParam<? extends Real> getPrecisionParameter() {
         return diffusionPrecisionMatrixParameter;
     }
 
@@ -81,7 +82,7 @@ public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
         double[][] parameterAsMatrix = new double[I][J];
         for (int i = 0; i < I; i++) {
             for (int j = 0; j < J; j++)
-                parameterAsMatrix[i][j] = diffusionPrecisionMatrixParameter.getValue(i * J + j);
+                parameterAsMatrix[i][j] = diffusionPrecisionMatrixParameter.get(i * J + j);
         }
         return parameterAsMatrix;
     }
@@ -124,7 +125,7 @@ public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
         int total = dim * (dim + 1) / 2;
         for (int i = 0; i < dim; i++) {
             for (int j = i; j < dim; j++) {
-                sb.append(String.format("%5.4e", diffusionPrecisionMatrixParameter.getValue(i * dimension + j)));
+                sb.append(String.format("%5.4e", diffusionPrecisionMatrixParameter.get(i * dimension + j)));
                 total--;
                 if (total > 0)
                     sb.append(",");
@@ -145,7 +146,7 @@ public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
     // Private instance variables
     // **************************************************************
 
-    protected RealParameter diffusionPrecisionMatrixParameter;
+    protected RealVectorParam<? extends Real> diffusionPrecisionMatrixParameter;
     private double determinatePrecisionMatrix;
     private double savedDeterminatePrecisionMatrix;
     private double[][] diffusionPrecisionMatrix;
@@ -156,9 +157,9 @@ public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
     	try {
         double[] start = {1, 2};
         double[] stop = {0, 0};
-        Double[] precision = {2.0, 0.5, 0.5, 1.0};
         double scale = 0.2;
-        RealParameter precMatrix = new RealParameter(precision);
+        RealVectorParam<Real> precMatrix = new RealVectorParam<>();
+        precMatrix.initByName("value", "2.0 0.5 0.5 1.0");
         MultivariateDiffusionModel model = new MultivariateDiffusionModel();
         model.initByName("precisionMatrix", precMatrix);
         System.err.println("logPDF = " + model.calculateLogDensity(start, stop, scale));

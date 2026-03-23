@@ -43,7 +43,8 @@ import beastclassic.evolution.tree.TreeTraitMap;
 import beast.base.core.Input;
 import beast.base.inference.Operator;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
 import beastclassic.continuous.SampledMultivariateTraitLikelihood;
@@ -61,7 +62,7 @@ import beast.base.util.Randomizer;
 @Description("A Trait Gibbs Operator")
 public class TraitGibbsOperator extends Operator {
 	public Input<Tree> treeInput = new Input<Tree>("tree", "", Validate.REQUIRED);
-	public Input<RealParameter> precisionParamInput = new Input<RealParameter>("precisionMatrix",
+	public Input<RealVectorParam<? extends Real>> precisionParamInput = new Input<>("precisionMatrix",
 			"parameter representing precision matrix", Validate.REQUIRED);
     public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
 	public Input<SampledMultivariateTraitLikelihood> traitModelInput = new Input<SampledMultivariateTraitLikelihood>("likelihood","", Validate.REQUIRED);
@@ -79,7 +80,7 @@ public class TraitGibbsOperator extends Operator {
 	public static final String ROOT_PRIOR = "rootPrior";
 
 	private Tree treeModel;
-	private RealParameter precisionMatrixParameter;
+	private RealVectorParam<? extends Real> precisionMatrixParameter;
 	private SampledMultivariateTraitLikelihood traitModel;
 	private int dim;
 	private String traitName;
@@ -118,7 +119,7 @@ public class TraitGibbsOperator extends Operator {
 		
 		this.onlyInternalNodes = onlyInternalNodesInput.get();
 		this.onlyTipsWithPriors = onlyTipsWithPriorsInput.get();
-		this.dim = precisionMatrixParameter.getMinorDimension1();
+		this.dim = (int) Math.sqrt(precisionMatrixParameter.size());
 	}
 
 	public void setRootPrior(MultivariateNormalDistribution rootPrior) {
@@ -351,7 +352,7 @@ public class TraitGibbsOperator extends Operator {
         double[][] parameterAsMatrix = new double[I][J];
         for (int i = 0; i < I; i++) {
             for (int j = 0; j < J; j++)
-                parameterAsMatrix[i][j] = precisionMatrixParameter.getValue(i * J + j);
+                parameterAsMatrix[i][j] = precisionMatrixParameter.get(i * J + j);
         }
         return parameterAsMatrix;
     }

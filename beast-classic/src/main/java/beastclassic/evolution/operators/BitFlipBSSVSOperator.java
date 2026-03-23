@@ -4,8 +4,9 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.inference.Operator;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.BooleanParameter;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.PositiveReal;
+import beast.base.spec.inference.parameter.BoolVectorParam;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.util.Randomizer;
 
 /**
@@ -17,10 +18,10 @@ import beast.base.util.Randomizer;
             " same number of 'on' bits are equiprobable.")
 public class BitFlipBSSVSOperator extends Operator {
 
-    public Input<BooleanParameter> indicator = new Input<BooleanParameter>("indicator", "the parameter to operate a flip on.", Validate.REQUIRED);
-    public Input<RealParameter> rateParameter = new Input<RealParameter>("mu", "the rate parameter in the substitution model " +
+    public Input<BoolVectorParam> indicator = new Input<>("indicator", "the parameter to operate a flip on.", Validate.REQUIRED);
+    public Input<RealVectorParam<? extends PositiveReal>> rateParameter = new Input<>("mu", "the rate parameter in the substitution model " +
             "(mutation rate).", Validate.REQUIRED);
-    public Input<Double> m_pScaleFactor = new Input<Double>("scaleFactor", "scaling factor: larger means more bold proposals", 1.0);
+    public Input<Double> m_pScaleFactor = new Input<>("scaleFactor", "scaling factor: larger means more bold proposals", 1.0);
 
 
     private double scaleFactor;
@@ -40,18 +41,18 @@ public class BitFlipBSSVSOperator extends Operator {
     @Override
     public double proposal() {
 
-        final BooleanParameter p = indicator.get();
+        final BoolVectorParam p = indicator.get();
 
-        final int dim = p.getDimension();
+        final int dim = p.size();
 
         double sum = 0.0;
         for(int i = 0; i < dim; i++) {
-            if( p.getValue(i) ) sum += 1;
+            if( p.get(i) ) sum += 1;
         }
 
         final int pos = Randomizer.nextInt(dim);
 
-        final boolean value = p.getValue(pos);
+        final boolean value = p.get(pos);
 
         double rand = 0;
         if (rateParameter != null)
@@ -59,37 +60,37 @@ public class BitFlipBSSVSOperator extends Operator {
 
         double logq = 0.0;
         if ( ! value ) {
-            p.setValue(pos, true);
+            p.set(pos, true);
 
             logq = -Math.log((dim - sum) / (sum + 1));
 //	               rand = 0.5 - rand;
         } else {
             // assert value;
 
-            p.setValue(pos, false);
+            p.set(pos, false);
             logq = -Math.log(sum / (dim - sum + 1));
 //	              rand = 0.5 + rand;
             rand *= -1;
         }
 
-        RealParameter rates = rateParameter.get();
+        RealVectorParam<? extends PositiveReal> rates = rateParameter.get();
         if (rates != null) {
             final double scale = Math.exp((rand) * scaleFactor);
             logq += Math.log(scale);
 
-            final double oldValue = rates.getValue(0);
+            final double oldValue = rates.get(0);
             final double newValue = scale * oldValue;
 
             if (outsideBounds(newValue, rates))
                 return Double.NEGATIVE_INFINITY;
 
-            rates.setValue(0, newValue);
+            rates.set(0, newValue);
         }
 
         return logq;
     }
 
-    private boolean outsideBounds(double value, RealParameter param) {
+    private boolean outsideBounds(double value, RealVectorParam<?> param) {
         final Double l = param.getLower();
         final Double h = param.getUpper();
 

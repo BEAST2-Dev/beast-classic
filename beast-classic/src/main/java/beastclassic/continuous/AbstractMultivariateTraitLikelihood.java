@@ -14,7 +14,8 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Loggable;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.branchratemodel.BranchRateModel;
 import beast.base.evolution.likelihood.GenericTreeLikelihood;
 import beast.base.evolution.sitemodel.SiteModel;
@@ -36,10 +37,10 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
 {
     //public Input<Tree> treeModelInput = new Input<Tree>("tree","", Validate.REQUIRED);
     //public Input<MultivariateDiffusionModel> diffusionModelInput = new Input<MultivariateDiffusionModel>("diffusionmodel", "", Validate.REQUIRED);
-    public Input<RealParameter> traitParameterInput = new Input<RealParameter>("traitParameter", "", Validate.REQUIRED);
+    public Input<RealVectorParam<? extends Real>> traitParameterInput = new Input<RealVectorParam<? extends Real>>("traitParameter", "", Validate.REQUIRED);
     //public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
     
-    public Input<RealParameter> deltaParameterInput = new Input<RealParameter>("deltaParameter", "");
+    public Input<RealVectorParam<? extends Real>> deltaParameterInput = new Input<RealVectorParam<? extends Real>>("deltaParameter", "");
     //public Input<List<Integer>> missingIndicesInput = new Input<List<Integer>>("missingIndices", "", new ArrayList<>());
     public Input<Boolean> cacheBranchesInput = new Input<Boolean>("cacheBranches", "", false);
     public Input<Boolean> scaleByTimeInput = new Input<Boolean>("scaleByTime", "", false);
@@ -116,7 +117,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
 
         //dimTrait = diffusionModel.getPrecisionmatrix().length;
         dimTrait = ((ContinuousDataType) dataInput.get().getDataType()).getDimension();
-        dim = traitParameter != null ? traitParameter.getMinorDimension1() : 0;
+        dim = traitParameter != null ? (int) traitParameter.size() : 0;
         numData = dim / dimTrait;
 
         if (dim % dimTrait != 0)
@@ -187,7 +188,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
 
     protected abstract String extraInfo();
 
-    public RealParameter getTraitParameter() {
+    public RealVectorParam<? extends Real> getTraitParameter() {
         return traitParameter;
     }
 
@@ -222,7 +223,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
         }
 
         if (deltaParameter != null && node.isLeaf()) {
-            length += deltaParameter.getValue(0);
+            length += deltaParameter.get(0);
         }
 
         return length;
@@ -350,11 +351,11 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     	}
     	if (traitParameter.somethingIsDirty()) {
         	recalculateTreeLength();
-    		int d = traitParameter.getMinorDimension1();
+    		int d = dim;
     		if (cacheBranches) {
 	        	Arrays.fill(validLogLikelihoods, true);
 	        	Node [] nodes = treeModel.getNodesAsArray();
-	    		for (int i = 0; i < traitParameter.getMinorDimension2(); i++) {
+	    		for (int i = 0; i < treeModel.getNodeCount(); i++) {
 	    			if (traitParameter.isDirty(i * 2)) {
 	    				validLogLikelihoods[i] = false;
 	    				for (Node child : nodes[i].getChildren()) {
@@ -822,7 +823,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     //MultivariateDiffusionModel 
     ContinuousSubstitutionModel diffusionModel = null;
     String traitName = null;
-    RealParameter traitParameter;
+    RealVectorParam<? extends Real> traitParameter;
     // List<Integer> missingIndices;
 
     protected double logLikelihood;
@@ -848,7 +849,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     protected boolean[] validLogLikelihoods;
     protected boolean[] storedValidLogLikelihoods;
 
-    private RealParameter deltaParameter;
+    private RealVectorParam<? extends Real> deltaParameter;
 
     private boolean doAscertainmentCorrect = false;
     private int ascertainedTaxonIndex;

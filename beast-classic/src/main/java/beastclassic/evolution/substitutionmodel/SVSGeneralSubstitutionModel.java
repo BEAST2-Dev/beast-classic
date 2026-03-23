@@ -5,8 +5,7 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.core.Log;
-import beast.base.inference.parameter.BooleanParameter;
-import beast.base.inference.parameter.Parameter;
+import beast.base.spec.inference.parameter.BoolVectorParam;
 import beast.base.spec.evolution.substitutionmodel.ComplexSubstitutionModel;
 import beast.base.spec.type.RealVector;
 import beastclassic.inference.BayesianStochasticSearchVariableSelection;
@@ -22,7 +21,7 @@ import beastclassic.inference.BayesianStochasticSearchVariableSelection;
 @Description("SVS General Substitution Model")
 public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implements BayesianStochasticSearchVariableSelection {
 
-    public Input<BooleanParameter> indicator = new Input<>("rateIndicator",
+    public Input<BoolVectorParam> indicator = new Input<>("rateIndicator",
             "rates to indicate the presence or absence of transition matrix entries", Validate.REQUIRED);
 
     public Input<Boolean> isSymmetricInput = new Input<>("symmetric",
@@ -30,7 +29,7 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
             "If true (default) n(n-1)/2 rates and indicators need to be specified. " +
             "If false, n(n-1) rates and indicators need to be specified.", Boolean.TRUE);
 
-    private BooleanParameter rateIndicator;
+    private BoolVectorParam rateIndicator;
     private boolean isSymmetric = false;
 
     @Override
@@ -63,7 +62,7 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
     }
 
 
-    public Parameter<?> getIndicators() {
+    public BoolVectorParam getIndicators() {
         return rateIndicator;
     }
 
@@ -82,7 +81,7 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
 
         RealVector<?> rates = this.ratesInput.get();
         for (int i = 0; i < relativeRates.length; i++) {
-            relativeRates[i] = rates.get(i) * (rateIndicator.getValue(i) ? 1. : 0.);
+            relativeRates[i] = rates.get(i) * (rateIndicator.get(i) ? 1. : 0.);
         }
     }
 
@@ -139,9 +138,9 @@ public class SVSGeneralSubstitutionModel extends ComplexSubstitutionModel implem
     	if (frequencies.isDirtyCalculation()) {
 		    return super.requiresRecalculation();
     	}
-		BooleanParameter indicator2 = indicator.get();
+		BoolVectorParam indicator2 = indicator.get();
 		for (int i = 0; i < ratesInput.get().size(); i++) {
-			if (indicator2.getValue(i)) {
+			if (indicator2.get(i)) {
 		    	return super.requiresRecalculation();
 			}
 		}

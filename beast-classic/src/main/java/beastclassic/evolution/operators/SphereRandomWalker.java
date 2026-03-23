@@ -9,7 +9,8 @@ import beast.base.core.Input;
 import beast.base.inference.Operator;
 import beast.base.core.Input.Validate;
 import beast.base.inference.OperatorSchedule;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
 import beast.base.evolution.tree.TreeInterface;
@@ -17,7 +18,7 @@ import beast.base.util.Randomizer;
 
 @Description("Produces proposals of a random walk on a sphere")
 public class SphereRandomWalker extends Operator {
-	public Input<RealParameter> locationInput = new Input<RealParameter>("location", "latitude/longitude pairs representing location", Validate.REQUIRED);
+	public Input<RealVectorParam<? extends Real>> locationInput = new Input<>("location", "latitude/longitude pairs representing location", Validate.REQUIRED);
     public Input<Double> windowSizeInput =
             new Input<Double>("windowSize", "the size of the window both up and down when using uniform interval OR standard deviation when using Gaussian", Input.Validate.REQUIRED);
     public Input<Boolean> useGaussianInput =
@@ -30,7 +31,7 @@ public class SphereRandomWalker extends Operator {
     
     
     
-	RealParameter location;
+	RealVectorParam<? extends Real> location;
 	double windowSize;
 	int range;
 	boolean useGaussian;
@@ -44,7 +45,7 @@ public class SphereRandomWalker extends Operator {
 	public void initAndValidate() {
 		location = locationInput.get();
 		windowSize = windowSizeInput.get();
-		range = 1 + location.getDimension()/2;
+		range = 1 + location.size()/2;
 		useGaussian = useGaussianInput.get();
 		if (operatorInput.get() != null) {
 			operator = operatorInput.get();
@@ -75,8 +76,8 @@ public class SphereRandomWalker extends Operator {
 	}
 	
 	public double doproposal(int nodeIndex) {
-        double latitude = location.getValue(nodeIndex);
-        double longitude = location.getValue(nodeIndex + 1);
+        double latitude = location.get(nodeIndex);
+        double longitude = location.get(nodeIndex + 1);
         
         double newLatitude = latitude;
         if (useGaussian) {
@@ -119,8 +120,8 @@ public class SphereRandomWalker extends Operator {
             return Double.NEGATIVE_INFINITY;
         }
 
-        location.setValue(nodeIndex, newLatitude);
-        location.setValue(nodeIndex + 1, newLongitude);
+        location.set(nodeIndex, newLatitude);
+        location.set(nodeIndex + 1, newLongitude);
 
         return 0.0;
 	}

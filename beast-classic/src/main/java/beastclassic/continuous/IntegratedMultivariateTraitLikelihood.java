@@ -31,7 +31,8 @@ import java.util.List;
 
 import beast.base.core.Description;
 import beast.base.core.Input;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.branchratemodel.BranchRateModel;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.TreeInterface;
@@ -51,7 +52,7 @@ public abstract class IntegratedMultivariateTraitLikelihood extends AbstractMult
 //    public Input<MultivariateTraitTree> treeModel = new Input<MultivariateTraitTree>("treeModel", "description here");
     public Input<MultivariateDiffusionModel> diffusionModel = new Input<MultivariateDiffusionModel>("diffusionModel", "description here");
 //    public Input<CompoundParameter> traitParameter = new Input<CompoundParameter>("traitParameter", "description here");
-    public Input<RealParameter> deltaParameter = new Input<RealParameter>("deltaParameter", "description here");
+    public Input<RealVectorParam<? extends Real>> deltaParameter = new Input<RealVectorParam<? extends Real>>("deltaParameter", "description here");
     public Input<List<Integer>> missingIndices = new Input<List<Integer>>("missingIndices", "description here");
     public Input<Boolean> cacheBranches = new Input<Boolean>("cacheBranches", "description here");
     public Input<Boolean> scaleByTime = new Input<Boolean>("scaleByTime", "description here");
@@ -153,8 +154,8 @@ public abstract class IntegratedMultivariateTraitLikelihood extends AbstractMult
     public IntegratedMultivariateTraitLikelihood(String traitName,
                                                  TreeInterface treeModel,
                                                  MultivariateDiffusionModel diffusionModel,
-                                                 RealParameter traitParameter,
-                                                 RealParameter deltaParameter,
+                                                 RealVectorParam<? extends Real> traitParameter,
+                                                 RealVectorParam<? extends Real> deltaParameter,
                                                  List<Integer> missingIndices,
                                                  boolean cacheBranches, boolean scaleByTime, boolean useTreeLength,
                                                  BranchRateModel rateModel,
@@ -220,9 +221,9 @@ public abstract class IntegratedMultivariateTraitLikelihood extends AbstractMult
     private void setTipDataValuesForNode(Node node) {
         // Set tip data values
         int index = node.getNr();
-        double[] traitValue = new double[traitParameter.getMinorDimension1()];
+        double[] traitValue = new double[dim];
         for (int i = 0; i < traitValue.length; i++) {
-        	traitValue[i] = traitParameter.getMatrixValue(index, i);
+        	traitValue[i] = traitParameter.get(index * dim + i);
         }
         if (traitValue.length < dim) {
             throw new RuntimeException("The trait parameter for the tip with index, " + index + ", is too short");
@@ -1068,7 +1069,7 @@ public abstract class IntegratedMultivariateTraitLikelihood extends AbstractMult
         }
 
         if (deltaParameter != null && node.isLeaf()) {
-            length += deltaParameter.get().getArrayValue(0);
+            length += deltaParameter.get().get(0);
         }
         //System.err.println("Node Number: " + node.getNumber());
 

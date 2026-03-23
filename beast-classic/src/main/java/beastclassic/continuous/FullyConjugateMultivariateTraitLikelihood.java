@@ -29,7 +29,8 @@ import beast.base.core.Description;
 
 import java.util.List;
 
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.domain.Real;
+import beast.base.spec.inference.parameter.RealVectorParam;
 import beastclassic.dr.math.distributions.MultivariateNormalDistribution;
 import beastclassic.dr.math.distributions.WishartSufficientStatistics;
 import beast.base.evolution.branchratemodel.BranchRateModel;
@@ -49,8 +50,8 @@ public class FullyConjugateMultivariateTraitLikelihood extends IntegratedMultiva
     public FullyConjugateMultivariateTraitLikelihood(String traitName,
     												TreeInterface treeModel,
                                                      MultivariateDiffusionModel diffusionModel,
-                                                     RealParameter traitParameter,
-                                                     RealParameter deltaParameter,
+                                                     RealVectorParam<? extends Real> traitParameter,
+                                                     RealVectorParam<? extends Real> deltaParameter,
                                                      List<Integer> missingIndices,
                                                      boolean cacheBranches,
                                                      boolean scaleByTime,
@@ -79,8 +80,8 @@ public class FullyConjugateMultivariateTraitLikelihood extends IntegratedMultiva
     public FullyConjugateMultivariateTraitLikelihood(String traitName,
                                                      TreeInterface treeModel,
                                                      MultivariateDiffusionModel diffusionModel,
-                                                     RealParameter traitParameter,
-                                                     RealParameter deltaParameter,
+                                                     RealVectorParam<? extends Real> traitParameter,
+                                                     RealVectorParam<? extends Real> deltaParameter,
                                                      List<Integer> missingIndices,
                                                      boolean cacheBranches,
                                                      boolean scaleByTime,
@@ -108,8 +109,8 @@ public class FullyConjugateMultivariateTraitLikelihood extends IntegratedMultiva
     public FullyConjugateMultivariateTraitLikelihood(String traitName,
                                                      TreeInterface treeModel,
                                                      MultivariateDiffusionModel diffusionModel,
-                                                     RealParameter traitParameter,
-                                                     RealParameter deltaParameter,
+                                                     RealVectorParam<? extends Real> traitParameter,
+                                                     RealVectorParam<? extends Real> deltaParameter,
                                                      List<Integer> missingIndices,
                                                      boolean cacheBranches,
                                                      boolean scaleByTime,

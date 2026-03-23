@@ -8,7 +8,7 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.inference.Operator;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.BooleanParameter;
+import beast.base.spec.inference.parameter.BoolVectorParam;
 import beast.base.util.Randomizer;
 
 
@@ -22,20 +22,20 @@ import beast.base.util.Randomizer;
 
 public class PickIndicatorOperator extends Operator {
 
-    public Input<BooleanParameter> parameter = new Input<BooleanParameter>("parameter", "the parameter to operate a flip on.", Validate.REQUIRED);
+    public Input<BoolVectorParam> parameter = new Input<>("parameter", "the parameter to operate a flip on.", Validate.REQUIRED);
 
     public Input<Integer> minNonZeros = new Input<Integer>("minNonZeros", " minimum number of non zeros (default = 0)", 0);
     public Input<Integer> maxNonZeros = new Input<Integer>("maxNonZeros", " maximum number of non zeros (default = parameter length)");
 
     public int min;
     public int max;
-    public BooleanParameter indicator;
+    public BoolVectorParam indicator;
     public int dim;
 
     @Override
     public void initAndValidate() {
 
-        dim = parameter.get().getDimension();
+        dim = parameter.get().size();
         min = minNonZeros.get();
 
         if( maxNonZeros.get() != null ) {
@@ -58,7 +58,7 @@ public class PickIndicatorOperator extends Operator {
 
         for (int i=0; i <dim; i++)
         {
-            indicator.setValue(i, false);
+            indicator.set(i, false);
         }
 
 
@@ -69,7 +69,7 @@ public class PickIndicatorOperator extends Operator {
 
         for(Integer i : s)
         {
-            indicator.setValue(i, true);
+            indicator.set(i, true);
         }
 
         return 0;

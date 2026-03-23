@@ -8,12 +8,13 @@ import beast.base.core.BEASTInterface;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
-import beast.base.evolution.tree.coalescent.ExponentialGrowth;
-import beast.base.inference.parameter.RealParameter;
+import beast.base.spec.evolution.tree.coalescent.ExponentialGrowth;
+import beast.base.spec.domain.UnitInterval;
+import beast.base.spec.type.RealScalar;
 
 @Description("A demographic model of constant population size followed by exponential growth.")
 public class Expansion extends ExponentialGrowth {
-	final public Input<RealParameter> ancestralPopulationProportionInput = new Input<>("ancestralPopulationProportion", "", Validate.REQUIRED);
+	final public Input<RealScalar<? extends UnitInterval>> ancestralPopulationProportionInput = new Input<>("ancestralPopulationProportion", "", Validate.REQUIRED);
 	
 
 	@Override
@@ -75,7 +76,7 @@ public class Expansion extends ExponentialGrowth {
      * @return initial population size.
      */
     public double getN1() {
-        return ancestralPopulationProportionInput.get().getValue();
+        return ancestralPopulationProportionInput.get().get();
     }
 
 }
