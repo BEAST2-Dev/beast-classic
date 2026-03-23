@@ -45,8 +45,10 @@ Affected beast-classic classes: `MultivariateNormalDistribution` (arg input -- t
 
 Until resolved, these XML tests cannot pass with pure spec param types.
 
-- [ ] `examples/RacRABV_LogNRRW2.xml` -- partially updated, blocked by Function gap
-- [ ] `examples/H5N1_HA_discrete2.xml` -- not yet updated, same issue
+- [x] `examples/RacRABV_LogNRRW2.xml` -- updated to spec param types (requires beast3 PR #48)
+- [ ] `examples/H5N1_HA_discrete2.xml` -- not yet updated
+- [ ] `testSampledMultivariateTraitLikelihood` -- XML parses and likelihood computes, but value differs from expectation (-1443838 vs -835885). Likely due to loss of `minordimension` attribute which affected parameter initialization. Needs investigation: run the old code to confirm whether the new value is correct and the test expectation just needs recalibrating.
+- [ ] `testAncestralStateTreeLikelihood` -- H5N1 XML not yet updated
 
 ## Verification
 

@@ -7,7 +7,7 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.spec.domain.Real;
-import beast.base.spec.inference.parameter.RealVectorParam;
+import beastclassic.spec.parameter.MatrixVectorParam;
 import beast.base.core.Log;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.TreeInterface;
@@ -16,7 +16,7 @@ import beast.base.util.Randomizer;
 @Description("Maps nodes in a tree to entries of a parameter")
 public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]> {
 	public Input<TreeInterface> treeInput = new Input<>("tree", "tree for which to map the nodes", Validate.REQUIRED);
-	public Input<RealVectorParam<? extends Real>> parameterInput = new Input<>("parameter",
+	public Input<MatrixVectorParam<? extends Real>> parameterInput = new Input<>("parameter",
 			"paramater for which to map entries for", Validate.REQUIRED);
 	public Input<String> traitName = new Input<>("traitName", "name of the trait", "unnamed");
 	public Input<Intent> intent = new Input<>("intent", "intent of the trait, one of " + Intent.values()
@@ -31,7 +31,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 	public Input<String> randomizeupper = new Input<>("randomizeupper", "if specified, used as upper bound for randomly initialising unassigned nodes");
 	public Input<String> randomizelower = new Input<>("randomizelower", "if specified, used as lower bound for randomly initialising unassigned nodes");
 	TreeInterface tree;
-	RealVectorParam<? extends Real> parameter;
+	MatrixVectorParam<? extends Real> parameter;
 
 	/** the number of trait dimensions per node **/
 	public int traitDim;
@@ -48,15 +48,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		int nNodes = tree.getNodeCount();
 		parameter = parameterInput.get();
 
-		// Determine trait dimension: if parameter already has more values than nodes,
-		// infer dimension from size/nNodes. Otherwise try to infer from value input, default 1.
-		int paramSize = parameter.size();
-		if (paramSize > 1 && paramSize >= nNodes) {
-			traitDim = paramSize / nNodes;
-		} else {
-			traitDim = inferTraitDimFromValue();
-		}
-
+		traitDim = parameter.getMinorDimension1();
 		if (traitDim > 1) {
 			parameter.setDimension(nNodes * traitDim);
 			traitvalues = new double[traitDim];
@@ -167,25 +159,6 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 		}
 	}
 
-	/** Infer trait dimension from the value input string by counting
-	 *  space-separated numbers in the first entry's value. Returns 1 if
-	 *  the value input is not set or cannot be parsed. */
-	private int inferTraitDimFromValue() {
-		if (value.get() != null && value.get().trim().length() > 0) {
-			String[] entries = value.get().split(",");
-			for (String entry : entries) {
-				entry = entry.replaceAll("\\s+", " ").trim();
-				if (entry.isEmpty()) continue;
-				String[] parts = entry.split("=");
-				if (parts.length == 2) {
-					String[] vals = normalize(parts[1]).trim().split("\\s+");
-					return vals.length;
-				}
-			}
-		}
-		return 1;
-	}
-
 	/** set trait value as mean of its children **/
 	void initInternalNodes(Node node, Double[] values, int dim) {
 		double jitter = jitterInput.get();
@@ -226,9 +199,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 
 	public double [] getTrait(TreeInterface tree, Node node) {
 		int id = nodeToParameterIndexMap[node.getNr()];
-		for (int j = 0; j < traitDim; j++) {
-			traitvalues[j] = parameter.get(id * traitDim + j);
-		}
+		parameter.getMatrixValues1(id, traitvalues);
 		return traitvalues.clone();
 	}
 
@@ -242,7 +213,7 @@ public class TreeTraitMap extends CalculationNode implements TreeTrait<double[]>
 
 		int i = nodeToParameterIndexMap[node.getNr()];
 		for (int j = 0; j < values.length; j++) {
-			parameter.set(i * traitDim + j, values[j]);
+			parameter.setMatrixValue(i, j, values[j]);
 		}
 	}
 

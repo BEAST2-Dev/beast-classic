@@ -16,6 +16,7 @@ import beast.base.core.Loggable;
 import beast.base.core.Input.Validate;
 import beast.base.spec.domain.Real;
 import beast.base.spec.inference.parameter.RealVectorParam;
+import beastclassic.spec.parameter.MatrixVectorParam;
 import beast.base.evolution.branchratemodel.BranchRateModel;
 import beast.base.evolution.likelihood.GenericTreeLikelihood;
 import beast.base.evolution.sitemodel.SiteModel;
@@ -37,7 +38,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
 {
     //public Input<Tree> treeModelInput = new Input<Tree>("tree","", Validate.REQUIRED);
     //public Input<MultivariateDiffusionModel> diffusionModelInput = new Input<MultivariateDiffusionModel>("diffusionmodel", "", Validate.REQUIRED);
-    public Input<RealVectorParam<? extends Real>> traitParameterInput = new Input<RealVectorParam<? extends Real>>("traitParameter", "", Validate.REQUIRED);
+    public Input<MatrixVectorParam<? extends Real>> traitParameterInput = new Input<>("traitParameter", "", Validate.REQUIRED);
     //public Input<TreeTraitMap> mapInput = new Input<TreeTraitMap>("traitmap","maps node in tree to trait parameters", Validate.REQUIRED);
     
     public Input<RealVectorParam<? extends Real>> deltaParameterInput = new Input<RealVectorParam<? extends Real>>("deltaParameter", "");
@@ -117,18 +118,19 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
 
         //dimTrait = diffusionModel.getPrecisionmatrix().length;
         dimTrait = ((ContinuousDataType) dataInput.get().getDataType()).getDimension();
-        dim = traitParameter != null ? (int) traitParameter.size() : 0;
-        numData = dim / dimTrait;
 
-        if (dim % dimTrait != 0)
-            throw new RuntimeException("dim is not divisible by dimTrait");
-
-        //traitMap = mapInput.get();
         if (dataInput.get() instanceof AlignmentFromTraitMap) {
         	traitMap = ((AlignmentFromTraitMap) dataInput.get()).getTraitMap();
         } else {
         	throw new IllegalArgumentException ("Expected that data input is AlignmentFromTraitMap");
         }
+
+        dim = traitParameter != null ? traitParameter.getMinorDimension1() : 0;
+        numData = dim / dimTrait;
+
+        if (dim % dimTrait != 0)
+            throw new RuntimeException("dim is not divisible by dimTrait");
+
         recalculateTreeLength();                           
 //        printInformtion();
 
@@ -188,7 +190,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
 
     protected abstract String extraInfo();
 
-    public RealVectorParam<? extends Real> getTraitParameter() {
+    public MatrixVectorParam<? extends Real> getTraitParameter() {
         return traitParameter;
     }
 
@@ -351,12 +353,11 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     	}
     	if (traitParameter.somethingIsDirty()) {
         	recalculateTreeLength();
-    		int d = dim;
     		if (cacheBranches) {
 	        	Arrays.fill(validLogLikelihoods, true);
 	        	Node [] nodes = treeModel.getNodesAsArray();
-	    		for (int i = 0; i < treeModel.getNodeCount(); i++) {
-	    			if (traitParameter.isDirty(i * 2)) {
+	    		for (int i = 0; i < traitParameter.getMinorDimension2(); i++) {
+	    			if (traitParameter.isDirty(i * traitParameter.getMinorDimension1())) {
 	    				validLogLikelihoods[i] = false;
 	    				for (Node child : nodes[i].getChildren()) {
 	    					validLogLikelihoods[child.getNr()] = false;
@@ -823,7 +824,7 @@ public abstract class AbstractMultivariateTraitLikelihood extends GenericTreeLik
     //MultivariateDiffusionModel 
     ContinuousSubstitutionModel diffusionModel = null;
     String traitName = null;
-    RealVectorParam<? extends Real> traitParameter;
+    MatrixVectorParam<? extends Real> traitParameter;
     // List<Integer> missingIndices;
 
     protected double logLikelihood;

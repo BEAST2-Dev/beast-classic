@@ -13,6 +13,7 @@ open module beast.classic {
     requires static javafx.controls;
 
     exports beastclassic.app.beauti;
+    exports beastclassic.spec.parameter;
     exports beastclassic.continuous;
     exports beastclassic.dr;
     exports beastclassic.dr.evolmodel.continuous;
@@ -76,5 +77,6 @@ open module beast.classic {
         beastclassic.math.distributions.CTMCScalePrior,
         beastclassic.math.distributions.MultivariateNormalDistribution,
         beastclassic.math.distributions.WishartDistribution,
-        beastclassic.phylogeography.RateIndicatorInitializer;
+        beastclassic.phylogeography.RateIndicatorInitializer,
+        beastclassic.spec.parameter.MatrixVectorParam;
 }

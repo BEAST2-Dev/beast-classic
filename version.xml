@@ -54,6 +54,7 @@
         <provider classname="beastclassic.math.distributions.MultivariateNormalDistribution"/>
         <provider classname="beastclassic.math.distributions.WishartDistribution"/>
         <provider classname="beastclassic.phylogeography.RateIndicatorInitializer"/>
+        <provider classname="beastclassic.spec.parameter.MatrixVectorParam"/>
     </service>
 
     <service type="beast.base.evolution.datatype.DataType">

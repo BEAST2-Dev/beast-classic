@@ -4,7 +4,7 @@ import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Input.Validate;
 import beast.base.spec.domain.Real;
-import beast.base.spec.inference.parameter.RealVectorParam;
+import beastclassic.spec.parameter.MatrixVectorParam;
 import beastclassic.dr.math.distributions.MultivariateNormalDistribution;
 import beastclassic.evolution.substitutionmodel.ContinuousSubstitutionModel;
 import beast.base.evolution.tree.Tree;
@@ -13,7 +13,7 @@ import beast.base.evolution.tree.Tree;
 
 @Description("something to do with multi variate diffusion...")
 public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
-	public Input<RealVectorParam<? extends Real>> diffusionPrecisionMatrixInput = new Input<RealVectorParam<? extends Real>>("precisionMatrix","precision matrix for diffusion process", Validate.REQUIRED);
+	public Input<MatrixVectorParam<? extends Real>> diffusionPrecisionMatrixInput = new Input<MatrixVectorParam<? extends Real>>("precisionMatrix","precision matrix for diffusion process", Validate.REQUIRED);
  
 	public static final String DIFFUSION_PROCESS = "multivariateDiffusionModel";
     public static final String DIFFUSION_CONSTANT = "precisionMatrix";   
@@ -37,7 +37,7 @@ public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
         calculatePrecisionInfo();
     }
 
-    public RealVectorParam<? extends Real> getPrecisionParameter() {
+    public MatrixVectorParam<? extends Real> getPrecisionParameter() {
         return diffusionPrecisionMatrixParameter;
     }
 
@@ -146,7 +146,7 @@ public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
     // Private instance variables
     // **************************************************************
 
-    protected RealVectorParam<? extends Real> diffusionPrecisionMatrixParameter;
+    protected MatrixVectorParam<? extends Real> diffusionPrecisionMatrixParameter;
     private double determinatePrecisionMatrix;
     private double savedDeterminatePrecisionMatrix;
     private double[][] diffusionPrecisionMatrix;
@@ -158,8 +158,8 @@ public class MultivariateDiffusionModel extends ContinuousSubstitutionModel {
         double[] start = {1, 2};
         double[] stop = {0, 0};
         double scale = 0.2;
-        RealVectorParam<Real> precMatrix = new RealVectorParam<>();
-        precMatrix.initByName("value", "2.0 0.5 0.5 1.0");
+        MatrixVectorParam<Real> precMatrix = new MatrixVectorParam<>();
+        precMatrix.initByName("value", "2.0 0.5 0.5 1.0", "minordimension", 2);
         MultivariateDiffusionModel model = new MultivariateDiffusionModel();
         model.initByName("precisionMatrix", precMatrix);
         System.err.println("logPDF = " + model.calculateLogDensity(start, stop, scale));
