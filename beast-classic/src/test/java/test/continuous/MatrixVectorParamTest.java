@@ -44,10 +44,10 @@ public class MatrixVectorParamTest {
         assertEquals(99.0, p.getMatrixValue(0, 1), 1e-10);
         assertEquals(99.0, p.get(1), 1e-10); // flat index 1
 
-        // Function interface
-        assertEquals(6, p.getDimension());
-        assertEquals(1.0, p.getArrayValue(0), 1e-10);
-        assertEquals(99.0, p.getArrayValue(1), 1e-10);
+        // Size and element access
+        assertEquals(6, p.size());
+        assertEquals(1.0, p.get(0), 1e-10);
+        assertEquals(99.0, p.get(1), 1e-10);
     }
 
     @Test
