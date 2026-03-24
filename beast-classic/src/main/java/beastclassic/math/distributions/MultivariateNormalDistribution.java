@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 
 import beast.base.core.Description;
-import beast.base.core.Function;
 import beast.base.core.Input;
 import beast.base.inference.Distribution;
 import beast.base.inference.State;
@@ -19,12 +18,12 @@ import beast.base.spec.type.RealVector;
 public class MultivariateNormalDistribution extends Distribution {
     public Input<RealVector<? extends Real>> mean = new Input<>("mean", "description here");
     public Input<RealVector<? extends Real>> precision = new Input<>("precision", "description here");
-    public Input<Function> argInput = new Input<>("arg", "argument of distribution");
+    public Input<RealVector<? extends Real>> argInput = new Input<>("arg", "argument of distribution");
 
     beastclassic.dr.math.distributions.MultivariateNormalDistribution multivariatenormaldistribution;
 
 
-    Function arg;
+    RealVector<? extends Real> arg;
     @Override
     public void initAndValidate() {
         multivariatenormaldistribution = new beastclassic.dr.math.distributions.MultivariateNormalDistribution(
@@ -41,9 +40,9 @@ public class MultivariateNormalDistribution extends Distribution {
 
     @Override
     public double calculateLogP() {
-    	double [] y = new double[arg.getDimension()];
+    	double [] y = new double[arg.size()];
     	for (int i = 0; i < y.length; i++) {
-    		y[i] = arg.getArrayValue(i);
+    		y[i] = arg.get(i);
     	}
     	logP = logPdf(y);
     	return logP;

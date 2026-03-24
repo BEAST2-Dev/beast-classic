@@ -3,7 +3,6 @@ package beastclassic.evolution.likelihood;
 import java.io.PrintStream;
 
 import beast.base.core.Description;
-import beast.base.core.Function;
 import beast.base.core.Input;
 import beast.base.core.Loggable;
 import beast.base.evolution.tree.Node;
@@ -11,7 +10,7 @@ import beast.base.evolution.tree.Tree;
 import beast.base.evolution.tree.TreeInterface;
 
 @Description("Reconstructs sequences at internal nodes and logs them in NEXUS format")
-public class AncestralSequenceLogger extends AncestralStateTreeLikelihood implements Function, Loggable {
+public class AncestralSequenceLogger extends AncestralStateTreeLikelihood implements Loggable {
 	final public Input<Boolean> logIndividualInput = new Input<>("logIndividualSites", "if true, tree log gets one entry for every site, "
 			+ "if false complete sequence is logged", false);
 	

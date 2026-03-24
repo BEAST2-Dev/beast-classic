@@ -13,7 +13,6 @@ import beast.base.core.BEASTInterface;
 import beast.base.inference.Distribution;
 import beast.base.inference.State;
 import beast.base.core.Description;
-import beast.base.core.Function;
 import beast.base.core.Input;
 import beast.base.core.Log;
 import beast.base.spec.domain.Real;
@@ -21,7 +20,7 @@ import beast.base.spec.type.RealVector;
 
 
 @Description("A Generalized Linear Model")
-public class GeneralizedLinearModel extends Distribution implements Function {
+public class GeneralizedLinearModel extends Distribution {
     public Input<RealVector<? extends Real>> dependentParamInput = new Input<>("dependentParam", "description here");
     public Input<List<RealVector<? extends Real>>> independentParamInput = new Input<>("dependentParam", "description here", new ArrayList<>());
     public Input<List<RealVector<? extends Real>>> designMatrixInput = new Input<>("dependentParam", "description here", new ArrayList<>());

@@ -5,7 +5,6 @@ import java.util.List;
 import java.io.PrintStream;
 
 import beast.base.core.Description;
-import beast.base.core.Function;
 import beast.base.core.Input;
 import beast.base.core.Loggable;
 import beast.base.inference.StateNode;
@@ -33,17 +32,15 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 	List<Parameter<?>> parameters;
 	List<BranchRateModel> rates;
 	List<TreeTraitProvider> traits;
-	List<Function> valuables;
 	Boolean combineParameters;
-	
+
 	@Override
 	public void initAndValidate() {
 		parameters = new ArrayList<Parameter<?>>();
 		rates = new ArrayList<BranchRateModel>();
 		traits = new ArrayList<TreeTraitProvider>();
-		valuables = new ArrayList<Function>();
 		combineParameters = combineParametersInput.get();
-		
+
 		for (BEASTObject plugin : metadataInput.get()) {
 			if (plugin instanceof Parameter) {
 				parameters.add((Parameter) plugin);
@@ -51,8 +48,6 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 				traits.add((TreeTraitProvider) plugin);
 			} else if (plugin instanceof BranchRateModel) {
 				rates.add((BranchRateModel) plugin);
-			} else if (plugin instanceof Function){
-				valuables.add((Function) plugin);
 			} else {
 				throw new IllegalArgumentException ("This entry (id=" + plugin.getID() + ") is not metadata that can be logged with a tree");
 			}
@@ -78,43 +73,6 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
         
         // write out the log tree with meta data
         out.print("tree STATE_" + nSample + " = ");
-        if (valuables.size() > 0) {
-        	out.print("[&");
-        	if (combineParameters) {
-	    		for (int j = 0; j < valuables.size(); j++) {
-	    			out.print(((BEASTObject)valuables.get(j)).getID());
-	    		}
-	    		out.print("={");
-	    		for (int j = 0; j < valuables.size(); j++) {
-	    			Function valuable = valuables.get(j);
-	        		for (int i = 0; i < valuable.getDimension(); i++) {
-	        			out.print(valuable.getArrayValue(i));
-	        			if (i < valuable.getDimension() - 1) {
-	        				out.print(",");
-	        			}
-	        		}
-	    			if (j < valuables.size() - 1) {
-	    				out.print(",");
-	    			}
-	        	}
-	    		out.print("}");
-        		 
-        	} else {
-	    		for (int j = 0; j < valuables.size(); j++) {
-	    			Function valuable = valuables.get(j);
-	        		for (int i = 0; i < valuable.getDimension(); i++) {
-	        			out.print(((BEASTObject) valuable).getID() + "=" +  valuable.getArrayValue(i));
-	        			if (i < valuable.getDimension() - 1) {
-	        				out.print(",");
-	        			}
-	        		}
-	    			if (j < valuables.size() - 1) {
-	    				out.print(",");
-	    			}
-	        	}
-    		}
-        	out.print("] ");
-        }
 		tree.getRoot().sort();
 		out.print(toNewick(tree.getRoot(), treeTraits));
         //out.print(tree.getRoot().toShortNewick(false));

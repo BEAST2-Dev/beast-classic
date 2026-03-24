@@ -12,11 +12,13 @@ All `RealParameter`, `BooleanParameter`, and `IntegerParameter` imports removed 
 with `minordimension` support for matrix-style parameters used by the continuous trait
 likelihood classes.
 
-### Dependencies
+### Function removal
 
-Requires beast3 PR [#48](https://github.com/CompEvol/beast3/pull/48): spec Param types
-implement `Function` interface. Without this, XML files that reference a spec param from
-both a spec-typed input and a `Function`-typed input (loggers, metadata) will fail to parse.
+All `beast.base.core.Function` usage has been removed from beast-classic. This means
+beast-classic no longer requires beast3 PR [#48](https://github.com/CompEvol/beast3/pull/48)
+(spec Param types implement `Function`). That PR is shelved to avoid widening `Function`'s
+footprint — the long-term goal is to deprecate `Function` in beast3. 33 `Input<Function>`
+usages remain in beast3-core itself, each a candidate for strong-typing.
 
 ## Remaining work
 
