@@ -19,6 +19,7 @@ import beast.base.inference.State;
 import beast.base.inference.StateNode;
 import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.parser.PartitionContext;
+import beastfx.app.util.PartitionContextUtil;
 import beast.base.evolution.alignment.Alignment;
 import beast.base.evolution.datatype.UserDataType;
 import beastclassic.evolution.alignment.AlignmentFromTrait;
@@ -108,7 +109,7 @@ public class BeautiDiscreteTraitProvider extends BeautiAlignmentProvider {
 			            rp.setDimension(stateCount);
 			        }
 			        // set offset on non-zero rate prior
-			        PartitionContext context = new PartitionContext(likelihood);
+			        PartitionContext context = PartitionContextUtil.newPartitionContext(likelihood);
 			        Prior prior = (Prior) doc.pluginmap.get("nonZeroRatePrior.s:" + context.clockModel);
 			        ParametricDistribution distr = prior.distInput.get();
 			        Poisson poisson = (Poisson) distr;
