@@ -21,17 +21,21 @@ PR #48 (spec types implementing Function). `Function` is on a deprecation path i
 
 ### Done
 
-- **testSkyGrid.xml**: migrated to spec types, spec Gamma distribution (no Prior wrapper),
-  spec ScaleOperator and RealRandomWalkOperator. AVMN sub-operator removed (no spec
-  equivalent). TreeList wrapper added. TreeHeightLogger → TreeStatLogger. Verified:
-  parses and starts sampling.
+- **testSkyGrid.xml**: spec params, spec Gamma (no Prior wrapper), spec ScaleOperator
+  and RealRandomWalkOperator. AVMN removed (no spec equivalent). Verified sampling.
+- **testSkyRide.xml**: same pattern as testSkyGrid.
+- **testDiscreteSmall.xml**: BoolVectorParam, IntVectorParam, RealVectorParam, RealScalarParam,
+  SimplexParam. Spec Gamma/IID distributions, spec ScaleOperator/BitFlipOperator/UpDownOperator,
+  spec StrictClockModel/Frequencies. RPNcalculator removed. Verified sampling.
+- **beast1/testBinaryDollo2.xml**: TreeStatLogger fix only (deprecated params feed into
+  beast-base classes, not beast-classic).
 
-### TODO
+### Blocked
 
-- **testSkyRide.xml**: same pattern as testSkyGrid (3 RealParameter → RealVectorParam/RealScalarParam)
-- **testDiscreteSmall.xml**: adds BoolVectorParam, IntVectorParam, BSSVS operators
-- **H5N1_HA_discrete2.xml**: large discrete phylogeography (3 Real + 1 Boolean)
-- **beast1/testBinaryDollo2.xml**: trivial (1 RealParameter for frequencies)
+- **H5N1_HA_discrete2.xml**: `geoMutationRate` feeds into both old `SiteModel.mutationRate`
+  (needs `RealParameter`) and `BitFlipBSSVSOperator.mu` (needs `RealScalarParam`). Also
+  `nonZeroRates` uses `beast.base.evolution.Sum` which requires `Function` on `BoolVectorParam`.
+  Needs spec SiteModel or further code changes. TreeStatLogger fixed.
 
 ### Not applicable (BEAST 1 format, not runnable)
 
