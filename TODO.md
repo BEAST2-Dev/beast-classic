@@ -1,8 +1,10 @@
-# Beast-Classic Strong Typing Migration
+# Beast-Classic BEAST3 Migration
 
-Status: **complete**. All 67 source files migrated to spec types. 9/9 tests pass.
+Status: **gold standard complete** (Java classes). Example XML migration in progress.
 
-## Summary
+## Java migration
+
+All 67 source files migrated to spec types. 9/9 tests pass.
 
 All `RealParameter`, `BooleanParameter`, and `IntegerParameter` imports removed from
 `src/main/java/`. Replaced with spec types: `RealVectorParam`, `RealScalarParam`,
@@ -12,42 +14,56 @@ All `RealParameter`, `BooleanParameter`, and `IntegerParameter` imports removed 
 with `minordimension` support for matrix-style parameters used by the continuous trait
 likelihood classes.
 
-### Function removal
+All `beast.base.core.Function` usage removed. beast-classic does not depend on beast3
+PR #48 (spec types implementing Function). `Function` is on a deprecation path in beast3.
 
-All `beast.base.core.Function` usage has been removed from beast-classic. This means
-beast-classic no longer requires beast3 PR [#48](https://github.com/CompEvol/beast3/pull/48)
-(spec Param types implement `Function`). That PR is shelved to avoid widening `Function`'s
-footprint — the long-term goal is to deprecate `Function` in beast3. 33 `Input<Function>`
-usages remain in beast3-core itself, each a candidate for strong-typing.
+## Example XML migration
 
-## Remaining work
+### Done
 
-### Integration testing
+- **testSkyGrid.xml**: migrated to spec types, spec Gamma distribution (no Prior wrapper),
+  spec ScaleOperator and RealRandomWalkOperator. AVMN sub-operator removed (no spec
+  equivalent). TreeList wrapper added. TreeHeightLogger → TreeStatLogger. Verified:
+  parses and starts sampling.
 
-The old XML-based integration tests (`RacRABV_LogNRRW2.xml`, `H5N1_HA_discrete2.xml`)
-were removed because they tested the entire posterior (sequence + trait + priors), were
-sensitive to class resolution order between old/spec beast3 classes, and had been
-recalibrated 4 times.
+### TODO
 
-**TODO:** Run the example XMLs for a short MCMC (e.g. 100k steps) under both beast-classic/beast3
-and beast 2.7.8. Compare posterior means of key parameters (tree height, precision matrix,
-population size, trait root position). Values should agree within MCMC noise. This validates
-that the migration hasn't changed model behaviour, independent of class resolution order or
-exact initial state.
+- **testSkyRide.xml**: same pattern as testSkyGrid (3 RealParameter → RealVectorParam/RealScalarParam)
+- **testDiscreteSmall.xml**: adds BoolVectorParam, IntVectorParam, BSSVS operators
+- **H5N1_HA_discrete2.xml**: large discrete phylogeography (3 Real + 1 Boolean)
+- **beast1/testBinaryDollo2.xml**: trivial (1 RealParameter for frequencies)
 
-### H5N1 discrete XML
+### Not applicable (BEAST 1 format, not runnable)
 
-`examples/H5N1_HA_discrete2.xml` has not been updated to use spec param types. It uses
-`Frequencies` which resolves ambiguously between old and spec versions. Low priority since
-the discrete trait model (SVSGeneralSubstitutionModel) is already unit-tested via compilation.
+- H5N1_HA_discrete1.xml
+- RacRABV_LogNRRW1.xml
+- beast1/testBinaryDollo1.xml
+
+### Already clean
+
+- RacRABV_LogNRRW2.xml (no deprecated parameter types)
+
+## Migration pattern for XMLs
+
+Each XML needs these changes for parameters consumed by beast-classic classes:
+
+1. **Parameters**: `spec='parameter.RealParameter' lower='0'` → `spec='RealVectorParam' domain='NonNegativeReal'` (or `RealScalarParam` for scalars)
+2. **Distributions**: `<prior x="@param"><Gamma distr .../></prior>` → `<distribution spec='beast.base.spec.inference.distribution.Gamma' param="@param"><alpha .../><theta .../></distribution>`
+3. **Operators**: old `ScaleOperator`/`BactrianScaleOperator` → `beast.base.spec.inference.operator.ScaleOperator`; old `BactrianRandomWalkOperator` → `beast.base.spec.inference.operator.RealRandomWalkOperator`
+4. **Namespace**: add `beast.base.spec.inference.parameter:beast.base.spec.inference.operator:beast.base.spec.inference.distribution`
+
+Parameters consumed only by beast-base classes (e.g. HKY kappa, clock rate) can stay as old `RealParameter` with old priors/operators (hybrid approach, as in sampled-ancestors bears.xml).
+
+## Other fixes
+
+- **pom.xml**: excluded `com.github.fommil.netlib:all` from mtj to fix JPMS invalid module name error during `exec:exec`
+- **TreeHeightLogger** → `TreeStatLogger` (renamed in beast3)
+- **TreeList** wrapper needed for `GMRFMultilocusSkyrideLikelihood.trees` input
 
 ## Verification
 
 ```sh
-mvn compile -pl beast-classic              # must pass
-mvn test -pl beast-classic                 # 9/9 tests pass
-# Zero old parameter imports:
-grep -rn "beast.base.inference.parameter.RealParameter" beast-classic/src/main/java/ --include="*.java"
-grep -rn "beast.base.inference.parameter.BooleanParameter" beast-classic/src/main/java/ --include="*.java"
-grep -rn "beast.base.inference.parameter.IntegerParameter" beast-classic/src/main/java/ --include="*.java"
+mvn compile           # must pass
+mvn test              # 9/9 tests pass
+mvn exec:exec -Dbeast.args="examples/testSkyGrid.xml"   # starts sampling
 ```
