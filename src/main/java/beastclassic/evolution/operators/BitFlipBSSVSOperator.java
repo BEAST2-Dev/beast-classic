@@ -6,7 +6,7 @@ import beast.base.inference.Operator;
 import beast.base.core.Input.Validate;
 import beast.base.spec.domain.PositiveReal;
 import beast.base.spec.inference.parameter.BoolVectorParam;
-import beast.base.spec.inference.parameter.RealVectorParam;
+import beast.base.spec.inference.parameter.RealScalarParam;
 import beast.base.util.Randomizer;
 
 /**
@@ -19,7 +19,7 @@ import beast.base.util.Randomizer;
 public class BitFlipBSSVSOperator extends Operator {
 
     public Input<BoolVectorParam> indicator = new Input<>("indicator", "the parameter to operate a flip on.", Validate.REQUIRED);
-    public Input<RealVectorParam<? extends PositiveReal>> rateParameter = new Input<>("mu", "the rate parameter in the substitution model " +
+    public Input<RealScalarParam<? extends PositiveReal>> rateParameter = new Input<>("mu", "the rate parameter in the substitution model " +
             "(mutation rate).", Validate.REQUIRED);
     public Input<Double> m_pScaleFactor = new Input<>("scaleFactor", "scaling factor: larger means more bold proposals", 1.0);
 
@@ -73,29 +73,21 @@ public class BitFlipBSSVSOperator extends Operator {
             rand *= -1;
         }
 
-        RealVectorParam<? extends PositiveReal> rates = rateParameter.get();
-        if (rates != null) {
+        RealScalarParam<? extends PositiveReal> rate = rateParameter.get();
+        if (rate != null) {
             final double scale = Math.exp((rand) * scaleFactor);
             logq += Math.log(scale);
 
-            final double oldValue = rates.get(0);
+            final double oldValue = rate.get();
             final double newValue = scale * oldValue;
 
-            if (outsideBounds(newValue, rates))
+            if (!rate.getDomain().isValid(newValue))
                 return Double.NEGATIVE_INFINITY;
 
-            rates.set(0, newValue);
+            rate.set(newValue);
         }
 
         return logq;
-    }
-
-    private boolean outsideBounds(double value, RealVectorParam<?> param) {
-        final Double l = param.getLower();
-        final Double h = param.getUpper();
-
-        return ( value < l || value > h );
-        //return (l != null && value < l || h != null && value > h);
     }
 
 }

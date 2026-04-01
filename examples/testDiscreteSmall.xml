@@ -1,5 +1,5 @@
 <beast version='2.0'
-       namespace='beast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.parameter'>
+       namespace='beast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.base.evolution.tree.coalescent:beast.base.inference.parameter:beast.base.spec.inference.parameter:beast.base.spec.inference.operator:beast.base.spec.inference.distribution'>
 
 	<data dataType="nucleotide" id="alignment" name="alignment">
 		<sequence id="1976.609_CY005917_A/Mall/ALB/31/1976_5.NA" taxon="NA">
@@ -57,19 +57,19 @@
         <siteModel spec='SiteModel' id="geoSiteModel" gammaCategoryCount='1'>
             <substModel spec="beastclassic.evolution.substitutionmodel.SVSGeneralSubstitutionModel" id="svs" rateIndicator='@rateIndicator'>        
             <!--substModel spec="GeneralSubstitutionModel"-->        
-                <frequencies id='freqs' spec='Frequencies'>
-                        <frequencies id='frequencies' spec='parameter.RealParameter' value='.33 .33 .34'/>
+                <frequencies id='freqs' spec='beast.base.spec.evolution.substitutionmodel.Frequencies'>
+                        <frequencies id='frequencies' spec='beast.base.spec.inference.parameter.SimplexParam' value='.33 .33 .34'/>
                 </frequencies>
-                <rates id='relativeGeoRates' spec='parameter.RealParameter' value='1.' dimension='3'/>
+                <rates id='relativeGeoRates' spec='RealVectorParam' domain='PositiveReal' value='1.' dimension='3'/>
             </substModel>
             <!--mutationRate idref="geoMutationRate"/-->
         </siteModel>
-		<branchRateModel id="StrictClockModel" spec="beast.base.evolution.branchratemodel.StrictClockModel">
-			<parameter id="geoclock.rate" name="clock.rate" value="1.0"/>
+		<branchRateModel id="StrictClockModel" spec="beast.base.spec.evolution.branchratemodel.StrictClockModel">
+			<clock.rate id="geoclock.rate" spec='RealScalarParam' domain='PositiveReal' value="1.0"/>
 		</branchRateModel>
     </distribution>
                 
-    <rateIndicator id='rateIndicator' spec='parameter.BooleanParameter' value='true' dimension='3'/>
+    <rateIndicator id='rateIndicator' spec='BoolVectorParam' value='true' dimension='3'/>
 					
 	<distribution spec='TreeLikelihood' id="treeLikelihood" useAmbiguities="false">
 		<data idref="alignment"/>
@@ -92,11 +92,7 @@
 	</distribution>
    
  
-	<!-- b/(d+s) -->
-	<RPNcalculator spec="beast.base.inference.util.RPNcalculator" id="actualGeoRates" expression="relativeGeoRates rateIndicator *"> 
-		<parameter idref="relativeGeoRates"/>
-		<parameter idref="rateIndicator"/>
-    </RPNcalculator>
+	<!-- RPNcalculator removed: uses Function interface incompatible with spec types -->
 	
 <!--
 	<ParameterCumSum spec="beast.core.util.ParameterCumSum" id="nonZeroRates" arg="@rateIndicator"/> 
@@ -125,7 +121,7 @@
 			<stateNode idref="gammaShape"/>
 			<stateNode idref='hky.kappa'/>
 
-			<stateNode spec='parameter.IntegerParameter' id='trait(A_chicken_Fujian_1042_2005)' value='0'/>
+			<stateNode spec='IntVectorParam' id='trait(A_chicken_Fujian_1042_2005)' value='0'/>
 			<stateNode idref='chicken_indices'/>
  		</state>		
 
@@ -150,11 +146,15 @@
 				<distribution  id='kappaPrior' x="@hky.kappa" spec='beast.base.inference.distribution.Prior'>
 					<distr spec='beast.base.inference.distribution.LogNormalDistributionModel' M="1." S="1.25" offset="0.0" meanInRealSpace="false"/>
 				</distribution>
-				<distribution  id='geoclockPrior' x="@geoclock.rate" spec='beast.base.inference.distribution.Prior'>
-					<distr spec='beast.base.inference.distribution.Gamma' alpha="0.001" beta="1000." offset="0.0"/>
+				<distribution id='geoclockPrior' spec='beast.base.spec.inference.distribution.Gamma' param="@geoclock.rate">
+					<alpha spec='RealScalarParam' domain='PositiveReal' value="0.001" estimate="false"/>
+					<theta spec='RealScalarParam' domain='PositiveReal' value="1000" estimate="false"/>
 				</distribution>
-				<distribution  id='discreteTraitPrior' x="@relativeGeoRates" spec='beast.base.inference.distribution.Prior'>
-					<distr spec='beast.base.inference.distribution.Gamma' alpha="1." beta="1." offset="0.0"/>
+				<distribution id='discreteTraitPrior' spec='beast.base.spec.inference.distribution.IID' param="@relativeGeoRates">
+					<distr spec='beast.base.spec.inference.distribution.Gamma'>
+						<alpha spec='RealScalarParam' domain='PositiveReal' value="1" estimate="false"/>
+						<theta spec='RealScalarParam' domain='PositiveReal' value="1" estimate="false"/>
+					</distr>
 				</distribution>
 				<distribution spec='CompoundDistribution' id='coalescentLikelihood'>
 					<distribution id="coalescent" spec="Coalescent">
@@ -173,19 +173,19 @@
 	    <operator id="UniformOperator.chicken_trait" spec="UniformOperator" parameter="@trait(A_chicken_Fujian_1042_2005)" weight="30.0"/>
 -->
 	    <operator id="IntegerOperator.blackbird_Hunan" spec="beastclassic.evolution.operators.GeneralIntegerOperator" parameter="@trait(A_chicken_Fujian_1042_2005)" weight="30.0">
-			<index id='chicken_indices' spec='parameter.IntegerParameter' value='0 2'/>
+			<index id='chicken_indices' spec='IntVectorParam' value='0 2'/>
 		</operator>
 
 		<operator id='kappaScaler' spec='ScaleOperator' scaleFactor=".75" weight="0.1" parameter="@hky.kappa"/>
 		<operator id='gammaShapeScaler' spec='ScaleOperator' scaleFactor=".75" weight="0.1" parameter="@gammaShape"/>
 
-        <operator id='georateScaler' spec='ScaleOperator' scaleFactor="0.99" weight="30" parameter="@relativeGeoRates" scaleAllIndependently="true"/>
-		<operator spec="BitFlipOperator" id="indicatorFlip" parameter="@rateIndicator" weight="30"/>
+        <operator id='georateScaler' spec='beast.base.spec.inference.operator.ScaleOperator' scaleFactor="0.99" weight="30" parameter="@relativeGeoRates" scaleAllIndependently="true"/>
+		<operator spec="beast.base.spec.inference.operator.BitFlipOperator" id="indicatorFlip" parameter="@rateIndicator" weight="30"/>
 
 		<operator id="ucldMeanScaler" spec="ScaleOperator" parameter="@ucld.mean" scaleFactor=".75" weight="3" />
 		<operator id='ucldStdevScaler' spec='ScaleOperator' parameter="@ucld.stdev" scaleFactor="0.75" weight="3"/>		
 
-	 	<operator id='geoMuScaler' spec='ScaleOperator' scaleFactor="0.9" weight="3" parameter="@geoclock.rate"/>  
+	 	<operator id='geoMuScaler' spec='beast.base.spec.inference.operator.ScaleOperator' scaleFactor="0.9" weight="3" parameter="@geoclock.rate"/>  
 		<operator spec="beastclassic.evolution.operators.BitFlipBSSVSOperator" id="BSSVSoperator" indicator="@rateIndicator" mu="@geoclock.rate" weight="30"/>
 	
         <operator spec='Uniform' weight="20" tree="@tree"/>
@@ -201,7 +201,10 @@
 		<operator id="categoriesIntOperator" spec="UniformOperator" weight="10" parameter="@rateCategories"/>
 		<operator id="categorySwap" spec="SwapOperator" weight="10" intparameter="@rateCategories"/>
 		
-		<operator id="treeGeoMutScaler" spec="UpDownOperator" up="@geoclock.rate" down="@tree" scaleFactor=".9" weight="3" />
+		<operator id="treeGeoMutScaler" spec="beast.base.spec.evolution.operator.UpDownOperator" scaleFactor=".9" weight="3">
+			<up idref="geoclock.rate"/>
+			<down idref="tree"/>
+		</operator>
 
         <logger logEvery="1000" fileName="testPhylogeo_H5N1_4taxa_$(seed).log">
 	        <model idref='posterior'/>
@@ -209,7 +212,7 @@
             <log idref="prior"/>
             <log idref="coalescentLikelihood"/>
             <log idref="traitedtreeLikelihood"/>
-            <log spec='beast.base.evolution.tree.TreeHeightLogger' tree='@tree'/>
+            <log spec='beast.base.evolution.tree.TreeStatLogger' tree='@tree'/>
             <log idref="popSize"/>
             <log idref="hky.kappa"/>							
 			<log idref="ucld.mean"/>
@@ -227,7 +230,7 @@
 <!--            <log idref="nonZeroRates"/>-->
             <log idref="relativeGeoRates"/>
             <log idref="rateIndicator"/>
-            <log idref="actualGeoRates"/>
+            <!--<log idref="actualGeoRates"/>-->
         </logger>
         
 		<logger logEvery="10000" fileName="testPhylogeo_H5N1_4taxa_$(seed).trees" mode="tree">
@@ -249,17 +252,16 @@
             <log idref="traitedtreeLikelihood"/>
             <log idref="geoclock.rate"/>
 <!--            <log idref="nonZeroRates"/>-->
-            <log spec='beast.base.evolution.tree.TreeHeightLogger' tree='@tree'/>
+            <log spec='beast.base.evolution.tree.TreeStatLogger' tree='@tree'/>
 							
             <log idref="hky.kappa"/>
 			<log idref="ucld.mean"/>
 			<log idref="ucld.stdev"/>
 			<log idref="gammaShape"/>
 			<log idref='trait(A_chicken_Fujian_1042_2005)'/>
-<!--			
+<!--
             <log idref="relativeGeoRates"/>
             <log idref="rateIndicator"/>
-            <log idref="actualGeoRates"/>
 -->
         </logger>
     </run>
