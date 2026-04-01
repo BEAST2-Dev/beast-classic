@@ -36,7 +36,7 @@
         </fileSet>
         <!-- examples/ from project root -->
         <fileSet>
-            <directory>${project.parent.basedir}/examples</directory>
+            <directory>${project.basedir}/examples</directory>
             <outputDirectory>/examples</outputDirectory>
         </fileSet>
     </fileSets>

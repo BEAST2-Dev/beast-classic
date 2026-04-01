@@ -6,7 +6,6 @@ open module beast.classic {
     requires java.desktop;
     requires java.scripting;
     requires beagle;
-    requires colt;
     requires mtj;
     requires org.apache.commons.statistics.distribution;
     requires static beast.fx;
@@ -34,8 +33,10 @@ open module beast.classic {
     exports beastclassic.phylogeography;
 
     provides beast.base.core.BEASTInterface with
-        beastclassic.continuous.SampledMultivariateTraitLikelihood,
+        beastclassic.app.beauti.BeautiDiscreteTraitProvider,
+        beastclassic.app.beauti.BeautiLocationTraitProvider,
         beastclassic.continuous.MultivariateDiffusionModel,
+        beastclassic.continuous.SampledMultivariateTraitLikelihood,
         beastclassic.evolution.alignment.AlignmentFromTrait,
         beastclassic.evolution.alignment.AlignmentFromTraitMap,
         beastclassic.evolution.datatype.ContinuousDataType,
@@ -79,4 +80,8 @@ open module beast.classic {
         beastclassic.math.distributions.WishartDistribution,
         beastclassic.phylogeography.RateIndicatorInitializer,
         beastclassic.spec.parameter.MatrixVectorParam;
+
+    provides beast.base.evolution.datatype.DataType with
+        beastclassic.evolution.datatype.ContinuousDataType,
+        beastclassic.evolution.datatype.LocationDataType;
 }

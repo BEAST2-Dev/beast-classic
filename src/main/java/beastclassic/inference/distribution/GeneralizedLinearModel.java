@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
-import cern.colt.matrix.impl.DenseDoubleMatrix2D;
-import cern.colt.matrix.linalg.SingularValueDecomposition;
+import org.apache.commons.math4.legacy.linear.Array2DRowRealMatrix;
+import org.apache.commons.math4.legacy.linear.SingularValueDecomposition;
 import beast.base.core.BEASTInterface;
 import beast.base.inference.Distribution;
 import beast.base.inference.State;
@@ -119,9 +119,9 @@ public class GeneralizedLinearModel extends Distribution {
         }
 
         SingularValueDecomposition svd = new SingularValueDecomposition(
-                new DenseDoubleMatrix2D(grandDesignMatrix));
+                new Array2DRowRealMatrix(grandDesignMatrix));
 
-        int rank = svd.rank();
+        int rank = svd.getRank();
         boolean isFullRank = (totalColDim == rank);
         Logger.getLogger("dr.inference").info("\tTotal # of predictors = " + totalColDim + " and rank = " + rank);
         return isFullRank;

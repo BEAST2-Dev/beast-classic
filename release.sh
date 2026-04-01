@@ -2,20 +2,32 @@
 #
 # Build and release a BEAST 3 package.
 #
+# Runs `mvn package` to produce the BEAST package ZIP (via maven-assembly-plugin),
+# then optionally creates a GitHub release with the ZIP attached.
+#
+# Usage:
+#   ./release.sh              # build + create package ZIP
+#   ./release.sh --release    # also create a GitHub release with the ZIP attached
+#
+# The ZIP can then be submitted to CBAN (CompEvol/CBAN) by adding an entry
+# to packages2.8.xml via pull request. See README.md for details.
+#
 set -euo pipefail
 
-VERSION_XML="beast-classic/version.xml"
-if [[ ! -f "$VERSION_XML" ]]; then
-    echo "ERROR: $VERSION_XML not found in $(pwd)" >&2
+# --- Extract metadata from version.xml ---
+
+if [[ ! -f version.xml ]]; then
+    echo "ERROR: version.xml not found in $(pwd)" >&2
     exit 1
 fi
 
-PKG_LINE=$(grep '<package ' "$VERSION_XML" | head -1)
+# Parse only the <package> element (not <provider classname="..."> etc.)
+PKG_LINE=$(grep '<package ' version.xml | head -1)
 PKG_NAME=$(echo "$PKG_LINE" | sed "s/.*name=['\"]\\([^'\"]*\\)['\"].*/\\1/")
 VERSION=$(echo "$PKG_LINE" | sed "s/.*version=['\"]\\([^'\"]*\\)['\"].*/\\1/")
 
 if [[ -z "$PKG_NAME" || -z "$VERSION" ]]; then
-    echo "ERROR: could not parse name/version from $VERSION_XML" >&2
+    echo "ERROR: could not parse name/version from version.xml" >&2
     exit 1
 fi
 
@@ -26,20 +38,26 @@ GITHUB_REPO=$(git remote get-url origin 2>/dev/null \
 echo "=== ${PKG_NAME} v${VERSION} ==="
 echo ""
 
+# --- Step 1: Maven build + assemble package ZIP ---
+
 echo "--- Building with Maven ---"
 mvn clean package -Dmaven.test.skip=true
 echo ""
 
-ZIP_PATH="beast-classic/target/${ZIP_NAME}"
+# Locate the ZIP produced by maven-assembly-plugin
+ZIP_PATH="target/${ZIP_NAME}"
 if [[ ! -f "$ZIP_PATH" ]]; then
     echo "ERROR: expected ZIP not found at ${ZIP_PATH}" >&2
     exit 1
 fi
 
+# Copy to project root for convenience
 cp "$ZIP_PATH" "$ZIP_NAME"
 
 echo "=== Package: ${ZIP_NAME} ==="
 unzip -l "$ZIP_NAME"
+
+# --- Step 2: Optionally create GitHub release ---
 
 if [[ "${1:-}" == "--release" ]]; then
     if [[ -z "$GITHUB_REPO" ]]; then
@@ -60,6 +78,8 @@ if [[ "${1:-}" == "--release" ]]; then
     echo "URL: https://github.com/${GITHUB_REPO}/releases/tag/v${VERSION}"
     echo ""
     echo "--- Next step: submit to CBAN ---"
+    echo "Add this entry to packages2.8.xml in https://github.com/CompEvol/CBAN via pull request:"
+    echo ""
     cat <<XMLEOF
     <package name="${PKG_NAME}" version="${VERSION}"
         url="${DOWNLOAD_URL}"

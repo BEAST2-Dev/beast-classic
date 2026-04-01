@@ -5,7 +5,7 @@ import beast.base.spec.inference.parameter.BoolVectorParam;
 import beast.base.spec.inference.parameter.RealVectorParam;
 import beast.base.evolution.substitutionmodel.SubstitutionModel;
 import beast.base.util.Randomizer;
-import cern.colt.bitvector.BitVector;
+import java.util.BitSet;
 
 /**
  * @author dkuh004
@@ -77,7 +77,7 @@ public interface BayesianStochasticSearchVariableSelection {
         *
         */
         public static boolean isStronglyConnected(double[] indicatorValues, int dim, boolean reversible) {
-            BitVector visited = new BitVector(dim);
+            BitSet visited = new BitSet(dim);
             boolean connected = true;
             for (int i = 0; i < dim && connected; i++) {
                 visited.clear();
@@ -107,7 +107,7 @@ public interface BayesianStochasticSearchVariableSelection {
             return entry;
         }
 
-        private static void depthFirstSearch(int node, BitVector visited, double[] indicatorValues,
+        private static void depthFirstSearch(int node, BitSet visited, double[] indicatorValues,
                                              int dim, boolean reversible) {
             visited.set(node);
             for (int v = 0; v < dim; v++) {

@@ -7,10 +7,9 @@ import java.io.PrintStream;
 import beast.base.core.Description;
 import beast.base.core.Input;
 import beast.base.core.Loggable;
-import beast.base.inference.StateNode;
 import beast.base.core.BEASTObject;
+import beast.base.core.Function;
 import beast.base.core.Input.Validate;
-import beast.base.inference.parameter.Parameter;
 import beast.base.evolution.branchratemodel.BranchRateModel;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
@@ -29,21 +28,21 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 
 	public Input<Boolean> combineParametersInput = new Input<Boolean>("combine", "put all parameters in a single field", false);
 	
-	List<Parameter<?>> parameters;
+	List<Function> parameters;
 	List<BranchRateModel> rates;
 	List<TreeTraitProvider> traits;
 	Boolean combineParameters;
 
 	@Override
 	public void initAndValidate() {
-		parameters = new ArrayList<Parameter<?>>();
+		parameters = new ArrayList<Function>();
 		rates = new ArrayList<BranchRateModel>();
 		traits = new ArrayList<TreeTraitProvider>();
 		combineParameters = combineParametersInput.get();
 
 		for (BEASTObject plugin : metadataInput.get()) {
-			if (plugin instanceof Parameter) {
-				parameters.add((Parameter) plugin);
+			if (plugin instanceof Function) {
+				parameters.add((Function) plugin);
 			} else if (plugin instanceof TreeTraitProvider) {
 				traits.add((TreeTraitProvider) plugin);
 			} else if (plugin instanceof BranchRateModel) {
@@ -97,12 +96,12 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 		
     	if (combineParameters) {
 			if (parameters.size() > 0) {
-				for (Parameter<?> parameter : parameters) {
-					buf.append(parameter.getID());
+				for (Function parameter : parameters) {
+					buf.append(((BEASTObject) parameter).getID());
 				}
 				buf.append("={");
 				int k = 0;
-				for (Parameter<?> parameter : parameters) {
+				for (Function parameter : parameters) {
 					buf.append(parameter.getArrayValue(node.getNr()));
 					k++;
 					if (k < parameters.size()) {
@@ -113,8 +112,8 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 			}
     	} else {
 			if (parameters.size() > 0) {
-				for (Parameter<?> parameter : parameters) {
-					buf.append(parameter.getID()).append('=');
+				for (Function parameter : parameters) {
+					buf.append(((BEASTObject) parameter).getID()).append('=');
 					buf.append(parameter.getArrayValue(node.getNr()));
 					buf.append(',');
 				}
