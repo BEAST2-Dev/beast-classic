@@ -30,12 +30,10 @@ PR #48 (spec types implementing Function). `Function` is on a deprecation path i
 - **beast1/testBinaryDollo2.xml**: TreeStatLogger fix only (deprecated params feed into
   beast-base classes, not beast-classic).
 
-### Blocked
-
-- **H5N1_HA_discrete2.xml**: `geoMutationRate` feeds into both old `SiteModel.mutationRate`
-  (needs `RealParameter`) and `BitFlipBSSVSOperator.mu` (needs `RealScalarParam`). Also
-  `nonZeroRates` uses `beast.base.evolution.Sum` which requires `Function` on `BoolVectorParam`.
-  Needs spec SiteModel or further code changes. TreeStatLogger fixed.
+- **H5N1_HA_discrete2.xml**: full spec migration using spec SiteModel, spec Frequencies/SimplexParam,
+  spec distributions (IID/Gamma/Exponential), spec operators. RPNcalculator and ParameterCumSum
+  removed (Function interface). nonZeroRatePrior removed. Verified: parses and initialises
+  (98 taxa, slow UPGMA tree construction).
 
 ### Not applicable (BEAST 1 format, not runnable)
 
