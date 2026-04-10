@@ -1,5 +1,5 @@
 <beast version='2.0'
-       namespace='beast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.parameter'>
+       namespace='beast.base.evolution.alignment:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.tree:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.base.evolution.tree.coalescent:beast.base.inference.parameter:beast.base.spec.inference.parameter:beast.base.spec.inference.operator:beast.base.spec.inference.distribution'>
 
 
 	<data dataType="nucleotide" id="alignment" name="alignment">
@@ -526,15 +526,15 @@
 			</traitSet>
 		</data>
         <tree idref="tree"/>
-        <siteModel spec='SiteModel' id="geoSiteModel" gammaCategoryCount='1'>
-            <substModel spec="beastclassic.evolution.substitutionmodel.SVSGeneralSubstitutionModel" id="svs" eigenSystem="beast.evolution.substitutionmodel.RobustEigenSystem">        
-                <frequencies id='freqs' spec='Frequencies'>
-                        <frequencies id='frequencies' spec='parameter.RealParameter' value='0.143 0.143 0.143 0.143 0.143 0.143 0.142'/>
+        <siteModel spec='beast.base.spec.evolution.sitemodel.SiteModel' id="geoSiteModel" gammaCategoryCount='1'>
+            <substModel spec="beastclassic.evolution.substitutionmodel.SVSGeneralSubstitutionModel" id="svs" eigenSystem="beast.evolution.substitutionmodel.RobustEigenSystem">
+                <frequencies id='freqs' spec='beast.base.spec.evolution.substitutionmodel.Frequencies'>
+                        <frequencies id='frequencies' spec='SimplexParam' value='0.143 0.143 0.143 0.143 0.143 0.143 0.142'/>
                 </frequencies>
-                <rates id='relativeGeoRates' spec='parameter.RealParameter' value='1.' dimension='21'/>
-                <rateIndicator id='rateIndicator' spec='parameter.BooleanParameter' value='true'  dimension='21'/>
+                <rates id='relativeGeoRates' spec='RealVectorParam' domain='PositiveReal' value='1.' dimension='21'/>
+                <rateIndicator id='rateIndicator' spec='BoolVectorParam' value='true' dimension='21'/>
             </substModel>
-            <mutationRate idref="geoMutationRate"/>
+            <mutationRate id="geoMutationRate" spec='RealScalarParam' domain='PositiveReal' value="0.1"/>
         </siteModel>
     </distribution>
 
@@ -575,13 +575,7 @@
 		</branchRateModel>
     </distribution>
 
-	<!-- b/(d+s) -->
-	<RPNcalculator spec="beast.base.inference.util.RPNcalculator" id="actualGeoRates" expression="relativeGeoRates rateIndicator *"> 
-		<parameter idref="relativeGeoRates"/>
-		<parameter idref="rateIndicator"/>
-    </RPNcalculator>
-
-	<ParameterCumSum spec="beast.base.evolution.Sum" id="nonZeroRates" arg="@rateIndicator"/> 
+	<!-- RPNcalculator and ParameterCumSum removed: use Function interface incompatible with spec types --> 
 
     <tree spec='beast.base.evolution.tree.ClusterTree' id='tree' clusterType='upgma' trait="@tipDates">
         <input name='taxa' idref='alignment'/>
@@ -594,7 +588,7 @@
             <stateNode idref="tree"/>
             <stateNode idref="rateIndicator"/>
             <stateNode idref="relativeGeoRates"/>
-        	<stateNode spec='parameter.RealParameter' id="geoMutationRate" value="0.1" lower="0." upper="10."/>
+        	<stateNode idref="geoMutationRate"/>
         	<stateNode idref="constant.popSize"/>
         	<stateNode idref="ucld.mean"/>
         	<stateNode idref="ucld.stdev"/>
@@ -621,17 +615,17 @@
 					</populationModel>
 				</distribution>
 
-				<!-- this is a cached prior in beast1 - necessary??? --> 
-				<distribution  id='discreteTraitPrior' x="@relativeGeoRates" spec='beast.base.inference.distribution.Prior'>
-					<distr spec='beast.base.inference.distribution.Gamma' alpha="1." beta="1." offset="0.0"/>
+				<distribution id='discreteTraitPrior' spec='beast.base.spec.inference.distribution.IID' param="@relativeGeoRates">
+					<distr spec='beast.base.spec.inference.distribution.Gamma'>
+						<alpha spec='RealScalarParam' domain='PositiveReal' value="1" estimate="false"/>
+						<theta spec='RealScalarParam' domain='PositiveReal' value="1" estimate="false"/>
+					</distr>
 				</distribution>
-				<distribution  x="@geoMutationRate" id="geoMuPrior" spec='beast.base.inference.distribution.Prior'>
-					<distr spec='beast.base.inference.distribution.Exponential' id='geoMuPrior_Exp' mean="1." offset="0.0"/>
+				<distribution id="geoMuPrior" spec='beast.base.spec.inference.distribution.Exponential' param="@geoMutationRate">
+					<mean spec='RealScalarParam' domain='PositiveReal' value="1" estimate="false"/>
 				</distribution>
 
-				<distribution  x="@nonZeroRates" id="nonZeroRatePrior" spec='beast.base.inference.distribution.Prior'>
-					<distr spec='beast.base.inference.distribution.Poisson' id='nonZeroRatePrior_Poi' lambda="0.693" offset="6.0"/>
-				</distribution>
+				<!-- nonZeroRatePrior removed: ParameterCumSum/Sum uses Function interface -->
 
 			</distribution>
 			<distribution spec='CompoundDistribution' id='likelihood'>
@@ -663,10 +657,10 @@
 
 
 	<!-- START discrete traits          		                               -->
-	 	<operator id='geoMuScaler' spec='ScaleOperator' scaleFactor="0.75" weight="10" parameter="@geoMutationRate"/>  
-        <operator id='georateScaler' spec='ScaleOperator' scaleFactor="0.75" weight="30" parameter="@relativeGeoRates" scaleAllIndependently='true'/>
+	 	<operator id='geoMuScaler' spec='beast.base.spec.inference.operator.ScaleOperator' scaleFactor="0.75" weight="10" parameter="@geoMutationRate"/>
+        <operator id='georateScaler' spec='beast.base.spec.inference.operator.ScaleOperator' scaleFactor="0.75" weight="30" parameter="@relativeGeoRates" scaleAllIndependently='true'/>
 	<!-- START BSSVS discrete traits          		                               -->
-		<operator spec="BitFlipOperator" id="indicatorFlip" parameter="@rateIndicator" weight="30"/>
+		<operator spec="beast.base.spec.inference.operator.BitFlipOperator" id="indicatorFlip" parameter="@rateIndicator" weight="30"/>
 		<operator spec="beastclassic.evolution.operators.BitFlipBSSVSOperator" id="BSSVSoperator" indicator="@rateIndicator" mu="@geoMutationRate" weight="30"/>
 	<!-- END BSSVS discrete traits          		                               -->
 	<!-- END discrete traits          		                               -->
@@ -694,7 +688,7 @@
 	<!-- END discrete traits          		                               -->
 			<log idref="treeLikelihood"/>
             <log idref="coalescent"/>
-            <log idref="nonZeroRates"/>
+            <!--log idref="nonZeroRates"/-->
         </logger>
 
         <logger logEvery="10000" fileName="H5N1_discrete_geo.$(seed).log">
@@ -702,11 +696,11 @@
             <log idref="rateIndicator"/>
             <log idref="geoTreeLikelihood"/>
             <log idref="geoMutationRate"/>
-            <log idref="nonZeroRates"/>
+            <!--log idref="nonZeroRates"/-->
 <!--
             <log id="geoSubstModelLogger" spec="SVSGeneralSubstitutionModelLogger" dataType="@location" model="@svs"/>
             -->
-            <log idref="actualGeoRates"/>
+            <!--log idref="actualGeoRates"/-->
         </logger>
         
         <logger logEvery="10000" fileName="H5N1_discrete_geo.$(seed).trees" mode='tree'>
@@ -720,14 +714,14 @@
         <logger logEvery="10000">
 	        <model idref='posterior'/>
             <log idref="posterior"/>
-            <log idref="nonZeroRatePrior"/>
+            <!--log idref="nonZeroRatePrior"/-->
             <log idref="discreteTraitPrior"/>
             <log idref="coalescent"/>
             <log idref="treeLikelihood"/>
             <log idref="geoTreeLikelihood"/>
             <log idref="geoMutationRate"/>
-            <log idref="nonZeroRates"/>
-            <log spec='beast.base.evolution.tree.TreeHeightLogger' tree='@tree'/>
+            <!--log idref="nonZeroRates"/-->
+            <log spec='beast.base.evolution.tree.TreeStatLogger' tree='@tree'/>
             <log idref="constant.popSize"/>
 			<log idref="ucld.mean"/>
         	<log idref="ucld.stdev"/>
@@ -736,7 +730,6 @@
 			<log idref="gammaShape"/>
             <log idref="relativeGeoRates"/>
             <log idref="rateIndicator"/>
-            <log idref="actualGeoRates"/>
 -->
         </logger>
     </run>

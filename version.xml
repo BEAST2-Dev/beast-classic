@@ -1,6 +1,5 @@
-<package name='BEAST_CLASSIC' version='1.6.4'>
-        <depends on='BEAST.base' atleast='2.7.0'/>
-        <depends on='BEAST.app' atleast='2.7.0'/>
+<package name='BEAST_CLASSIC' version='1.7.0'>
+  <depends on='BEAST.base' atleast='2.8.0'/>
 
     <service type="beast.base.core.BEASTInterface">
         <provider classname="beastclassic.app.beauti.BeautiDiscreteTraitProvider"/>
@@ -13,9 +12,6 @@
         <provider classname="beastclassic.evolution.datatype.ContinuousDataType"/>
         <provider classname="beastclassic.evolution.datatype.LocationDataType"/>
         <provider classname="beastclassic.evolution.likelihood.AncestralSequenceLogger"/>
-        <provider classname="beastclassic.evolution.likelihood.AncestralStateCounter"/>
-        <provider classname="beastclassic.evolution.likelihood.AncestralStateCounter2"/>
-        <provider classname="beastclassic.evolution.likelihood.AncestralStateInitialiser"/>
         <provider classname="beastclassic.evolution.likelihood.AncestralStateTreeLikelihood"/>
         <provider classname="beastclassic.evolution.likelihood.LeafTrait"/>
         <provider classname="beastclassic.evolution.operators.BitFlipBSSVSOperator"/>
@@ -27,7 +23,6 @@
         <provider classname="beastclassic.evolution.operators.RegressionGibbsEffectOperator"/>
         <provider classname="beastclassic.evolution.operators.RegressionGibbsPrecisionOperator"/>
         <provider classname="beastclassic.evolution.operators.RootTraitRandowWalkOperator"/>
-        <provider classname="beastclassic.evolution.operators.SampleNonActiveGibbsOperator"/>
         <provider classname="beastclassic.evolution.operators.SphereRandomWalker"/>
         <provider classname="beastclassic.evolution.operators.TraitGibbsOperator"/>
         <provider classname="beastclassic.evolution.speciation.BirthDeathSerialSampling"/>
@@ -54,6 +49,7 @@
         <provider classname="beastclassic.math.distributions.MultivariateNormalDistribution"/>
         <provider classname="beastclassic.math.distributions.WishartDistribution"/>
         <provider classname="beastclassic.phylogeography.RateIndicatorInitializer"/>
+        <provider classname="beastclassic.spec.parameter.MatrixVectorParam"/>
     </service>
 
     <service type="beast.base.evolution.datatype.DataType">

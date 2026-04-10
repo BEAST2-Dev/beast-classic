@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.alignment:beast.base.evolution.tree.coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood" version="2.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast beautitemplate='Standard' beautistatus='' namespace="beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.alignment:beast.base.evolution.tree.coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.base.spec.inference.parameter:beast.base.spec.inference.operator:beast.base.spec.inference.distribution" version="2.0">
 
 
     <data id="x" name="alignment">
@@ -121,16 +121,17 @@ W2P7D54=54.0 <!-- newest sample -->
                 </LogNormal>
             </prior>
 
-			<prior id='skyridePrecisionPrior' name='distribution' x="@skyridePrecision">
-				<Gamma id='GammaPrior.0' name='distr' alpha="0.0010" beta="1000" offset="0.0"/>
-			</prior>
+			<distribution id='skyridePrecisionPrior' spec='beast.base.spec.inference.distribution.Gamma' param="@skyridePrecision">
+				<alpha spec='RealScalarParam' domain='PositiveReal' value="0.001" estimate="false"/>
+				<theta spec='RealScalarParam' domain='PositiveReal' value="1000" estimate="false"/>
+			</distribution>
 
 			<!-- Generate a gmrfSkyrideLikelihood for GMRF Bayesian Skyride process      -->
 			<distribution id="skyride" timeAwareSmoothing="true" spec='beastclassic.evolution.tree.coalescent.GMRFSkyrideLikelihood'> <!-- randomizeTree="false" -->
 				<!-- skyride.logPopSize is in log units unlike other popSize                 -->
-				<populationSizes id="skyrideLogPopSize" dimension="32" value="6.29156913955832"  spec='parameter.RealParameter'/>
-				<groupSizes id="skyrideGroupSize" dimension="32" spec='parameter.RealParameter' value='1'/>
-				<precisionParameter id="skyridePrecision" value="1.0" lower="0.0" upper="50" spec='parameter.RealParameter'/>
+				<populationSizes id="skyrideLogPopSize" dimension="32" value="6.29156913955832" spec='RealVectorParam' domain='Real'/>
+				<groupSizes id="skyrideGroupSize" dimension="32" spec='RealVectorParam' domain='PositiveReal' value='1'/>
+				<precisionParameter id="skyridePrecision" value="1.0" spec='RealScalarParam' domain='PositiveReal'/>
 		        <tree idref="Tree.t:x"/>
 			</distribution>
 
@@ -152,28 +153,12 @@ W2P7D54=54.0 <!-- newest sample -->
 
 
 
-    <operator id="precisionScaler.t:x" scaleFactor="0.5" spec="kernel.BactrianScaleOperator" parameter="@skyridePrecision" weight="0.1"/>
-    
-    <operator id="StrictClockRateScaler.c:$(n)" spec="beast.base.evolution.operator.AdaptableOperatorSampler" weight="10.0">
-        <parameter idref="skyrideLogPopSize"/>
-	    <operator spec='beastclassic.evolution.operators.GMRFSkyrideBlockUpdateOperator' weight="10" scaleFactor="8.6" maxIterations="200" 
-                                 stopValue="0.01" likelihood='@skyride'/> <!-- autoOptimize="true" -->
-	    <operator id="popSizeScaler.t:x" scaleFactor="0.5" spec="kernel.BactrianRandomWalkOperator" parameter="@skyrideLogPopSize" weight="3.0"/>
-		<operator id="skyrideavmOperator.t:x" spec="beast.base.evolution.operator.kernel.AdaptableVarianceMultivariateNormalOperator" weight="3.0" 
-                coefficient="1.0"
-                scaleFactor="1"
-                beta="0.05"
-                initial="800"
-                burnin="400"
-                every="1" allowNonsense="true">
-                <transformations spec="beast.base.inference.operator.kernel.Transform$LogTransform">
-                        <f idref="skyridePrecision"/>
-                </transformations>
-                <transformations spec="beast.base.inference.operator.kernel.Transform$NoTransform">
-                        <f idref="skyrideLogPopSize"/>
-                </transformations>
-	    </operator>
-    </operator>
+    <operator id="precisionScaler.t:x" scaleFactor="0.5" spec="beast.base.spec.inference.operator.ScaleOperator" parameter="@skyridePrecision" weight="0.1"/>
+
+	<operator spec='beastclassic.evolution.operators.GMRFSkyrideBlockUpdateOperator' weight="10" scaleFactor="8.6" maxIterations="200"
+                                 stopValue="0.01" likelihood='@skyride'/>
+
+	<operator id="popSizeScaler.t:x" scaleFactor="0.5" spec="beast.base.spec.inference.operator.RealRandomWalkOperator" parameter="@skyrideLogPopSize" weight="3.0"/>
 
     <operator id="treeScaler.t:x" scaleFactor="0.5" spec="ScaleOperator" tree="@Tree.t:x" weight="3.0"/>
 
@@ -207,7 +192,7 @@ W2P7D54=54.0 <!-- newest sample -->
         <log idref="likelihood"/>
         <log idref="prior"/>
         <log idref="treeLikelihood.x"/>
-        <log id="TreeHeight.t:x" spec="beast.base.evolution.tree.TreeHeightLogger" tree="@Tree.t:x"/>
+        <log id="TreeHeight.t:x" spec="beast.base.evolution.tree.TreeStatLogger" tree="@Tree.t:x"/>
         <log idref="skyride"/>
         <parameter idref="clockRate.c:x" name="log"/>
         <parameter idref="kappa.s:x" name="log"/>

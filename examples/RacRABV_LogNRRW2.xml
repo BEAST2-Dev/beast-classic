@@ -97,7 +97,7 @@
 
     
 	<diffusionModel id="diffusionModel" spec='beastclassic.continuous.MultivariateDiffusionModel'>
-		<precisionMatrix spec='RealParameter' id='precisionMatrix' minordimension='2'>
+		<precisionMatrix spec='beastclassic.spec.parameter.MatrixVectorParam' id='precisionMatrix' minordimension='2'>
 <!--
 				0.05 0.002 
 				0.002 0.05
@@ -108,7 +108,7 @@
 	</diffusionModel>
 
 	<distribution  id="precisionPrior" spec='beastclassic.math.distributions.WishartDistribution' df='2' arg='@precisionMatrix'>
-		<scaleMatrix spec='RealParameter' minordimension='2'>
+		<scaleMatrix spec='beast.base.spec.inference.parameter.RealVectorParam'>
 				1.0 0.0
 				0.0 1.0
 		</scaleMatrix>
@@ -116,14 +116,14 @@
 
 	<distribution id="rootPrior" spec='beastclassic.math.distributions.MultivariateNormalDistribution'>
 		<arg id='rootTrait' spec='beastclassic.evolution.tree.RootTrait' traitmap='@traitmap'/>
-		<mean spec='RealParameter' value='0.0 0.0'/>
-		<precision spec='RealParameter' minordimension='2'>
+		<mean spec='beast.base.spec.inference.parameter.RealVectorParam' value='0.0 0.0'/>
+		<precision spec='beast.base.spec.inference.parameter.RealVectorParam'>
 				0.001 0.0
 				0.0   0.001
 		</precision>
 	</distribution>
 
-    <branchRateModel id="branchRatesDiffusion" spec='UCRelaxedClockModel' tree='@Tree.t:RacRABV'>
+    <branchRateModel id="branchRatesDiffusion" spec='beast.base.evolution.branchratemodel.UCRelaxedClockModel' tree='@Tree.t:RacRABV'>
         <parameter name='clock.rate' id='ucld.mean' value='1'/>
         <distr id='lognormal' spec="beast.base.inference.distribution.LogNormalDistributionModel"  meanInRealSpace="true">
             <M id='ucldDiffusion.mean' spec='RealParameter' value="1"/>
@@ -187,7 +187,7 @@
 
 	<multivariateTraitLikelihood id="traitLikelihood" spec='beastclassic.continuous.SampledMultivariateTraitLikelihood'
 		useTreeLength="true" scaleByTime="true" reportAsMultivariate="true" reciprocalRates="true" tree='@Tree.t:RacRABV'>
-		<traitParameter id='location' spec='RealParameter' value='0 0' minordimension='2'/>
+		<traitParameter id='location' spec='beastclassic.spec.parameter.MatrixVectorParam' value='0 0' minordimension='2'/>
 	    <data spec='beastclassic.evolution.alignment.AlignmentFromTraitMap' traitMap='@traitmap'>
 			<userDataType spec='beastclassic.evolution.datatype.LocationDataType'/>
 		</data>
