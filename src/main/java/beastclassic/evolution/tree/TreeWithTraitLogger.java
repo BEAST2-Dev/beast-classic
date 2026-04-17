@@ -13,6 +13,7 @@ import beast.base.core.Input.Validate;
 import beast.base.evolution.branchratemodel.BranchRateModel;
 import beast.base.evolution.tree.Node;
 import beast.base.evolution.tree.Tree;
+import beast.base.spec.type.Tensor;
 
 
 
@@ -27,32 +28,36 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 			"Otherwise, the metadata will be listed before the Newick tree.", new ArrayList<BEASTObject>());
 
 	public Input<Boolean> combineParametersInput = new Input<Boolean>("combine", "put all parameters in a single field", false);
-	
-	List<Function> parameters;
+
+	List<Tensor<?,?>> parameters;
 	List<BranchRateModel> rates;
 	List<TreeTraitProvider> traits;
+	List<Function> valuables;
 	Boolean combineParameters;
 
 	@Override
 	public void initAndValidate() {
-		parameters = new ArrayList<Function>();
+		parameters = new ArrayList<Tensor<?,?>>();
 		rates = new ArrayList<BranchRateModel>();
 		traits = new ArrayList<TreeTraitProvider>();
+		valuables = new ArrayList<Function>();
 		combineParameters = combineParametersInput.get();
 
 		for (BEASTObject plugin : metadataInput.get()) {
-			if (plugin instanceof Function) {
-				parameters.add((Function) plugin);
+			if (plugin instanceof Tensor<?,?> tensor) {
+				parameters.add(tensor);
 			} else if (plugin instanceof TreeTraitProvider) {
 				traits.add((TreeTraitProvider) plugin);
 			} else if (plugin instanceof BranchRateModel) {
 				rates.add((BranchRateModel) plugin);
+			} else if (plugin instanceof Function) {
+				valuables.add((Function) plugin);
 			} else {
 				throw new IllegalArgumentException ("This entry (id=" + plugin.getID() + ") is not metadata that can be logged with a tree");
 			}
 		}
 	}
-	
+
 	@Override
 	public void init(PrintStream out) {
 		m_tree.get().init(out);
@@ -69,16 +74,53 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
             	treeTraits.add(treeTrait);
             }
         }
-        
+
         // write out the log tree with meta data
         out.print("tree STATE_" + nSample + " = ");
+        if (valuables.size() > 0) {
+        	out.print("[&");
+        	if (combineParameters) {
+	    		for (int j = 0; j < valuables.size(); j++) {
+	    			out.print(((BEASTObject)valuables.get(j)).getID());
+	    		}
+	    		out.print("={");
+	    		for (int j = 0; j < valuables.size(); j++) {
+	    			Function valuable = valuables.get(j);
+	        		for (int i = 0; i < valuable.getDimension(); i++) {
+	        			out.print(valuable.getArrayValue(i));
+	        			if (i < valuable.getDimension() - 1) {
+	        				out.print(",");
+	        			}
+	        		}
+	    			if (j < valuables.size() - 1) {
+	    				out.print(",");
+	    			}
+	        	}
+	    		out.print("}");
+
+        	} else {
+	    		for (int j = 0; j < valuables.size(); j++) {
+	    			Function valuable = valuables.get(j);
+	        		for (int i = 0; i < valuable.getDimension(); i++) {
+	        			out.print(((BEASTObject) valuable).getID() + "=" +  valuable.getArrayValue(i));
+	        			if (i < valuable.getDimension() - 1) {
+	        				out.print(",");
+	        			}
+	        		}
+	    			if (j < valuables.size() - 1) {
+	    				out.print(",");
+	    			}
+	        	}
+    		}
+        	out.print("] ");
+        }
 		tree.getRoot().sort();
 		out.print(toNewick(tree.getRoot(), treeTraits));
         //out.print(tree.getRoot().toShortNewick(false));
         out.print(";");
 	}
 
-	/** convert tree to Newick string annotated with meta-data provided through Valuables and treeTraits **/
+	/** convert tree to Newick string annotated with meta-data provided through Tensors and treeTraits **/
 	String toNewick(Node node, List<TreeTrait<?>> treeTraits) {
 		StringBuffer buf = new StringBuffer();
 		if (node.getLeft() != null) {
@@ -93,16 +135,16 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 			buf.append(node.getNr() + 1);
 		}
 		buf.append("[&");
-		
+
     	if (combineParameters) {
 			if (parameters.size() > 0) {
-				for (Function parameter : parameters) {
+				for (Tensor<?,?> parameter : parameters) {
 					buf.append(((BEASTObject) parameter).getID());
 				}
 				buf.append("={");
 				int k = 0;
-				for (Function parameter : parameters) {
-					buf.append(parameter.getArrayValue(node.getNr()));
+				for (Tensor<?,?> parameter : parameters) {
+					buf.append(parameter.get(node.getNr()));
 					k++;
 					if (k < parameters.size()) {
 						buf.append(',');
@@ -112,9 +154,9 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 			}
     	} else {
 			if (parameters.size() > 0) {
-				for (Function parameter : parameters) {
+				for (Tensor<?,?> parameter : parameters) {
 					buf.append(((BEASTObject) parameter).getID()).append('=');
-					buf.append(parameter.getArrayValue(node.getNr()));
+					buf.append(parameter.get(node.getNr()));
 					buf.append(',');
 				}
 			}
@@ -142,8 +184,8 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 	    buf.append(":").append(node.getLength());
 		return buf.toString();
 	}
-	
-	
+
+
 	@Override
 	public void close(PrintStream out) {
 		m_tree.get().close(out);
