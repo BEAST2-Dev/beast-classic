@@ -44,12 +44,12 @@ public class TreeWithTraitLogger extends BEASTObject implements Loggable {
 		combineParameters = combineParametersInput.get();
 
 		for (BEASTObject plugin : metadataInput.get()) {
-			if (plugin instanceof Tensor<?,?> tensor) {
-				parameters.add(tensor);
-			} else if (plugin instanceof TreeTraitProvider) {
+			if (plugin instanceof TreeTraitProvider) {
 				traits.add((TreeTraitProvider) plugin);
 			} else if (plugin instanceof BranchRateModel) {
 				rates.add((BranchRateModel) plugin);
+			} else if (plugin instanceof Tensor<?,?> tensor) {
+				parameters.add(tensor);
 			} else if (plugin instanceof Function) {
 				valuables.add((Function) plugin);
 			} else {
