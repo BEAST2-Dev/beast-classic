@@ -22,18 +22,13 @@
             <useProjectArtifact>true</useProjectArtifact>
             <scope>runtime</scope>
             <includes>
-                <include>io.github.compevol:beast-classic</include>
+                <include>${project.groupId}:${project.artifactId}</include>
                 <include>com.googlecode.matrix-toolkits-java:mtj</include>
             </includes>
         </dependencySet>
     </dependencySets>
 
     <fileSets>
-        <!-- fxtemplates/ -->
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/beast.classic/fxtemplates</directory>
-            <outputDirectory>/fxtemplates</outputDirectory>
-        </fileSet>
         <!-- examples/ from project root -->
         <fileSet>
             <directory>${project.basedir}/examples</directory>
