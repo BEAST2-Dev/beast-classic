@@ -58,6 +58,10 @@ public class LocationInputEditor extends ListInputEditor {
 		super(doc);
 	}
 
+	public LocationInputEditor() {
+		super();
+	}
+
 	@Override
 	public Class<?> baseType() {
 		return SampledMultivariateTraitLikelihood.class;

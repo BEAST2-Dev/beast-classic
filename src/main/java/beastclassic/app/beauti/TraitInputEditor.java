@@ -45,6 +45,10 @@ public class TraitInputEditor extends ListInputEditor {
 		super(doc);
 	}
 
+	public TraitInputEditor() {
+		super();
+	}
+
 	@Override
 	public Class<?> baseType() {
 		return AncestralStateTreeLikelihood.class;

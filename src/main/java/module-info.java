@@ -35,6 +35,9 @@ open module beast.classic {
     provides beast.base.core.BEASTInterface with
         beastclassic.app.beauti.BeautiDiscreteTraitProvider,
         beastclassic.app.beauti.BeautiLocationTraitProvider,
+        // TODO: FullyConjugateMultivariateTraitLikelihood is disabled until it is ported properly, see
+        // https://github.com/BEAST2-Dev/beast-classic/issues/13 (no public no-arg constructor, broken inputs)
+        // beastclassic.continuous.FullyConjugateMultivariateTraitLikelihood,
         beastclassic.continuous.MultivariateDiffusionModel,
         beastclassic.continuous.SampledMultivariateTraitLikelihood,
         beastclassic.evolution.alignment.AlignmentFromTrait,
@@ -84,4 +87,8 @@ open module beast.classic {
     provides beast.base.evolution.datatype.DataType with
         beastclassic.evolution.datatype.ContinuousDataType,
         beastclassic.evolution.datatype.LocationDataType;
+
+    provides beastfx.app.inputeditor.InputEditor with
+        beastclassic.app.beauti.LocationInputEditor,
+        beastclassic.app.beauti.TraitInputEditor;
 }
