@@ -10,9 +10,9 @@ for substitution rates.
 
 ```xml
 <dependency>
-    <groupId>io.github.compevol</groupId>
+    <groupId>io.github.beast2-dev</groupId>
     <artifactId>beast-classic</artifactId>
-    <version>1.7.0</version>
+    <version>1.7.1</version>
 </dependency>
 ```
 
@@ -31,7 +31,7 @@ mvn compile
 Run BEAST with beast-classic on the module path:
 
 ```bash
-mvn exec:exec -Dbeast.args="examples/testPhylogeography.xml"
+mvn exec:exec -Dbeast.args="examples/testDiscreteSmall.xml"
 ```
 
 Run BEAUti:

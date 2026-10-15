@@ -1,10 +1,12 @@
-<package name='BEAST_CLASSIC' version='1.7.0'>
+<package name='BEAST_CLASSIC' version='1.7.1'>
   <depends on='BEAST.base' atleast='2.8.0'/>
 
     <service type="beast.base.core.BEASTInterface">
         <provider classname="beastclassic.app.beauti.BeautiDiscreteTraitProvider"/>
         <provider classname="beastclassic.app.beauti.BeautiLocationTraitProvider"/>
-        <provider classname="beastclassic.continuous.FullyConjugateMultivariateTraitLikelihood"/>
+        <!-- TODO: FullyConjugateMultivariateTraitLikelihood is disabled until it is ported properly, see
+             https://github.com/BEAST2-Dev/beast-classic/issues/13 -->
+        <!-- <provider classname="beastclassic.continuous.FullyConjugateMultivariateTraitLikelihood"/> -->
         <provider classname="beastclassic.continuous.MultivariateDiffusionModel"/>
         <provider classname="beastclassic.continuous.SampledMultivariateTraitLikelihood"/>
         <provider classname="beastclassic.evolution.alignment.AlignmentFromTrait"/>
